@@ -48,13 +48,11 @@ public class NewOdo extends Mechanism{
     //Change in right odometry module spin distance since last update
     public double deltaRightMM = 0;
     //Change in back odometry module spin distance since last update
-    public double deltabackMM = 0;
+    public double deltaBackMM = 0;
 
     public double deltaLeftTicks = 0;
-
-
-    /*Declares an array of encoder values*/
-    public double[] encoderDeltamm = new double[3];
+    public double deltaRightTicks = 0;
+    public double deltaBackTicks = 0;
 
     //Distance between robot's center and center of arc rotation
     private double rT = 0;
@@ -63,8 +61,18 @@ public class NewOdo extends Mechanism{
     public void updateLocalPosition() {
         rT = (deltaLeftMM+deltaRightMM)/(deltaLeftMM-deltaRightMM);
 
-        //Converts change in ticks from last step into change in MM from last step
-        deltaLeftMM = wheel_circumference * (bulkData.getMotorCurrentPosition(i) - deltaLeftTicks - (preLeftPosition) / encoder_ticks);
+        for (int i = 0; i == 2; i++) {
+            if (i == 1) {
+                //Converts change in ticks from last step into change in MM from last step for the left wheel
+                deltaLeftMM = -wheel_circumference * (bulkData.getMotorCurrentPosition(i) - deltaLeftTicks + (preLeftPosition) / encoder_ticks);
+            } else if (i == 2) {
+                //Converts change in ticks from last step into change in MM from last step for the right wheel
+                deltaRightMM = -wheel_circumference * (bulkData.getMotorCurrentPosition(i) - deltaRightTicks + (preRightPosition) / encoder_ticks);
+            } else {
+                //Converts change in ticks from last step into change in MM from last step for the back wheel
+                deltaBackMM = -wheel_circumference * (bulkData.getMotorCurrentPosition(i) - deltaBackTicks + (preBackPosition) / encoder_ticks);
+            }
+        }
     }
 
 
