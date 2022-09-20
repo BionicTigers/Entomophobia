@@ -119,8 +119,5 @@ public class Intake extends Mechanism {
 /*
     Pseudocode:
     When a button is pressed
-    Turn of intake
-    When another button is pressed
-    Reverse intake
-    (Optionally) Reverse intake when there is more than one cube in the robot
+    Turn on/off intake (Motor or Servo)
 */
