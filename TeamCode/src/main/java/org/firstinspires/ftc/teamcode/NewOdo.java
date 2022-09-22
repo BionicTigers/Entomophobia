@@ -77,6 +77,9 @@ public class NewOdo extends Mechanism{
     //Change in local coordinates that the robot strafed since last cycle
     private double deltaXStrafe = 0;
     private double deltaYStrafe = 0;
+    //Change in global coordinates since last cycle
+    private double deltaGlobalY = 0;
+    private double deltaGlobalX = 0;
 
 
     public NewOdo(HardwareMap hardwareMap) {
@@ -108,12 +111,18 @@ public class NewOdo extends Mechanism{
         addPublicTelemetry("",""+deltaRightMM);
         addPublicTelemetry("",""+deltaBackMM);
 
+        //Calculates the angle of the robot after the movement
         deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
+        //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
+        //Calculates the straight-line distance between the starting and ending points of the robot's travel
         deltaLocalDistance = 2 * rT * Math.sin(deltaLocalRotation / 2);
+        //Determine the local x and y coordinates for a forward/backward arc
         deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
         deltaLocalY = rT * Math.sin(deltaLocalRotation);
+        //Calculates the radius of a strafing arc
         rS = (deltaBackMM / deltaLocalRotation) - back_offset;
+        //Determine the local x and y coordinates for a strafing arc
         deltaXStrafe = rS * Math.sin(deltaLocalRotation);
         deltaYStrafe = rS * (Math.cos(deltaLocalRotation) - 1);
     }
