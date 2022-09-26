@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 
 public class PortTest extends Mechanism {
@@ -17,16 +18,22 @@ public class PortTest extends Mechanism {
     private int index = 0;
     private float speed = 0;
     public Telemetry telemetry;
-    private ArrayList<Object> objects = new ArrayList<Object>();
+    private ArrayList<Object> objects = new ArrayList<>();
 
-    public PortTest(ArrayList<DcMotorEx> m, ArrayList<Object> s)
+    private HashMap<Integer, Double> POWERS = new HashMap<>();
+
+    public PortTest(ArrayList<DcMotorSimple> m, ArrayList<Servo> s)
     {
         objects.addAll(m);
         objects.addAll(s);
+
+        //Comment this out if you are not testing end positions
+        POWERS.put(0, 0.3);
     }
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
+        //Detect for index changes
         if (gp1.left_bumper && !indexChanged) {
             index = Math.max(0, index-1);
             telemetry.addData("Index", index);
@@ -37,12 +44,14 @@ public class PortTest extends Mechanism {
             indexChanged = true;
         }
 
+        //Basically just a trigger for a button
         if (!gp1.left_bumper && indexChanged) {
             indexChanged = false;
         } else if (!gp1.right_bumper && indexChanged) {
             indexChanged = false;
         }
 
+        //Detect for speed changes
         if (gp1.dpad_left && !speedChanged) {
             speed = Math.max(0f, speed - 0.1f);
             telemetry.addData("Speed", speed);
@@ -53,17 +62,14 @@ public class PortTest extends Mechanism {
             speedChanged = true;
         }
 
+        //Basically just a trigger for a button
         if (!gp1.dpad_left && speedChanged) {
             speedChanged = false;
         } else if (!gp1.dpad_right && speedChanged) {
             speedChanged = false;
         }
 
-        if (gp1.x) {
-            activate = true;
-        } else {
-            activate = false;
-        }
+        activate = gp1.x;
         telemetry.update();
     }
 
@@ -75,7 +81,8 @@ public class PortTest extends Mechanism {
             if (thingToActivate instanceof DcMotorSimple) {
                 ((DcMotorSimple) thingToActivate).setPower(speed);
             } else if (thingToActivate instanceof Servo) {
-                ((Servo) thingToActivate).setPosition(speed);
+                //Little Confusing - Explanation: If POWERS contains index then get the value, else return the set speed
+                ((Servo) thingToActivate).setPosition(POWERS.containsKey(index) ? POWERS.get(index) : speed);
             }
         } else {
             if (thingToActivate instanceof DcMotorSimple) {
