@@ -43,10 +43,10 @@ public class NewOdo extends Mechanism{
     public double wheel_circumference = effective_diameter * Math.PI;
 
 
-    //Distance the odometry wheel was at last cycle
-    public double previousLeftPosition = 0;
-    public double previousRightPosition = 0;
-    public double previousBackPosition = 0;
+    //Distance the odometry wheel was at last cycle in ticks
+    public double previousLeftTicks = 0;
+    public double previousRightTicks = 0;
+    public double previousBackTicks = 0;
 
     //Change in odometry module spin distance in MM since last cycle
     public double deltaLeftMM = 0;
@@ -67,7 +67,7 @@ public class NewOdo extends Mechanism{
     private double deltaLocalRotation = 0;
     //Distance between robot's center and center of arc rotation
     private double rT = 0;
-    //Change in straight line distance since last cycle
+    //Change in local straight line distance since last cycle
     private double deltaLocalDistance = 0;
     //Change in local coordinates that the robot moved since last cycle
     private double  deltaLocalX = 0;
@@ -77,9 +77,21 @@ public class NewOdo extends Mechanism{
     //Change in local coordinates that the robot strafed since last cycle
     private double deltaXStrafe = 0;
     private double deltaYStrafe = 0;
+    //Change in local coordinates of strafe and forward arcs since last cycle
+    private double deltaXFinal = 0;
+    private double deltaYFinal = 0;
+    //Change in global straight line distance since last cycle
+    private double deltaGlobalDistance = 0;
     //Change in global coordinates since last cycle
     private double deltaGlobalY = 0;
     private double deltaGlobalX = 0;
+
+
+    //The rotation of the robot relative to it's starting rotation
+    private double globalRotation = 0;
+    //The global x and y position of the robot relative to it's starting location
+    private double globalX = 0;
+    private double globalY = 0;
 
 
     public NewOdo(HardwareMap hardwareMap) {
@@ -99,23 +111,24 @@ public class NewOdo extends Mechanism{
         //Converts change in ticks from last cycle into change in MM from last cycle for each wheel, and 1 & 2 are inversed
         for (int i = 0; i == 2; i++) {
             if (i == 0) {
-                deltaLeftMM = wheel_circumference * ((postResetLeftTicks - previousLeftPosition) / encoder_ticks);
+                deltaLeftMM = wheel_circumference * ((postResetLeftTicks - previousLeftTicks) / encoder_ticks);
             } else if (i == 1) {
-                deltaRightMM = -wheel_circumference * ((postResetRightTicks + previousRightPosition) / encoder_ticks);
+                deltaRightMM = -wheel_circumference * ((postResetRightTicks + previousRightTicks) / encoder_ticks);
             } else {
-                deltaBackMM = -wheel_circumference * ((postResetBackTicks + previousBackPosition) / encoder_ticks);
+                deltaBackMM = -wheel_circumference * ((postResetBackTicks + previousBackTicks) / encoder_ticks);
             }
         }
+
         //Displays telemetry for the change in MM from last cycle for each wheel
         addPublicTelemetry("",""+deltaLeftMM);
         addPublicTelemetry("",""+deltaRightMM);
         addPublicTelemetry("",""+deltaBackMM);
 
-        //Calculates the angle of the robot after the movement
+        //Calculates the change in local angle of the robot after the movement
         deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
-        //Calculates the straight-line distance between the starting and ending points of the robot's travel
+        //Calculates the straight-line distance between the starting and ending points of the robot's local travel
         deltaLocalDistance = 2 * rT * Math.sin(deltaLocalRotation / 2);
         //Determine the local x and y coordinates for a forward/backward arc
         deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
@@ -124,11 +137,32 @@ public class NewOdo extends Mechanism{
         rS = (deltaBackMM / deltaLocalRotation) - back_offset;
         //Determine the local x and y coordinates for a strafing arc
         deltaXStrafe = rS * Math.sin(deltaLocalRotation);
-        deltaYStrafe = rS * (Math.cos(deltaLocalRotation) - 1);
+        deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
+        deltaXFinal = deltaLocalX + deltaXStrafe;
+        deltaYFinal = deltaLocalY + deltaYStrafe;
+
+        //Sets the previous move tick amounts to whatever the ticks were at the end of this last cycle
+        previousLeftTicks = postResetLeftTicks;
+        previousRightTicks = postResetRightTicks;
+        previousBackTicks = postResetBackTicks;
     }
 
     public void updateGlobalPosition() {
+        deltaGlobalDistance = Math.sqrt((deltaXFinal * deltaXFinal) + (deltaYFinal * deltaYFinal));
+        deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
+        deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
+        globalX = globalX + deltaGlobalX;
+        globalY = globalY + deltaGlobalY;
+    }
 
+    public void reset() {
+        globalRotation = 0;
+        globalX = 0;
+        globalY = 0;
+
+        junkLeftTicks = bulkData.getMotorCurrentPosition(0);
+        junkRightTicks = bulkData.getMotorCurrentPosition(1);
+        junkBackTicks = bulkData.getMotorCurrentPosition(2);
     }
 
 
