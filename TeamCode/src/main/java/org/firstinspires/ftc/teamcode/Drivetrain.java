@@ -32,7 +32,6 @@ public class Drivetrain extends Mechanism {
     private double DMPX = 0;
     private double DMPZ = 0;
     private double DMPROT = 0;
-
     /*
     Declares instances of Location to move the robot forward, backward, left, right, clockwise,
     counterclockwise, and to the center of the field
@@ -58,19 +57,25 @@ public class Drivetrain extends Mechanism {
     public boolean altMode = false;
 
     //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
-    public Drivetrain(@NonNull org.firstinspires.ftc.teamcode.Robot bot, @NonNull int[] motorNumbers, Telemetry T, Servo SDrive1, Servo SDrive2, Servo SDrive3) {
+    public Drivetrain(@NonNull org.firstinspires.ftc.teamcode.Robot bot, @NonNull int[] motorNumbers, Telemetry T/*, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
         DcMotorEx motorPlaceholder;
         robot = bot;
         motorIndices = motorNumbers;
         telemetry = T;
 
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-        dashboard.updateConfig();
+//        FtcDashboard dashboard = FtcDashboard.getInstance();
+//        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+//        dashboard.updateConfig();
+//        //odo = bot.odometry;
+//        dashboard = FtcDashboard.getInstance();
+//        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
+        /*
         getServos().add(SDrive1);
         getServos().add(SDrive2);
         getServos().add(SDrive3);
+        */
+
 
         for (int motNum : motorNumbers) {
             motorPlaceholder = robot.motors.get(motNum);
@@ -134,13 +139,13 @@ public class Drivetrain extends Mechanism {
 
     //Updates data for Telemetry, motor powers, and servo movements
     public void update (Gamepad gp1, Gamepad gp2) {
-        if (gp1.b) {
-            odoUp();
-        } else if (gp1.back && gp1.start) {
-            robot.odometry.reset();
-        } else if (gp1.back) {
-            odoDown();
-        }
+//        if (gp1.b) {
+//            odoUp();
+//        } else if (gp1.back && gp1.start) {
+//            robot.odometry.reset();
+//        } else if (gp1.back) {
+//            odoDown();
+//        }
 
         if (gp1.right_bumper && gp1.dpad_up) {
             altMode = true;
@@ -150,24 +155,24 @@ public class Drivetrain extends Mechanism {
             altMode = false;
         }
 
-//        if(gp1.dpad_up){ //precision movement forward, very slow
-//            DMPZ = DMPZ + 0.45;
-//        }
-//        if(gp1.dpad_down){ //precision movement backward, very slow
-//            DMPZ = DMPZ - 0.45;
-//        }
-//        if(gp1.dpad_left) {
-//            DMPROT = DMPROT - 0.4;
-//        }
-//        if(gp1.dpad_right) {
-//            DMPROT = DMPROT + 0.4;
-//        }
-//        if(gp1.right_bumper){
-//            DMPX= DMPX + 0.55;
-//        }
-//        if(gp1.left_bumper){
-//            DMPX= DMPX - 0.55;
-//        }
+        if(gp1.dpad_up){ //precision movement forward, very slow
+            DMPZ = DMPZ + 0.45;
+        }
+        if(gp1.dpad_down){ //precision movement backward, very slow
+            DMPZ = DMPZ - 0.45;
+        }
+        if(gp1.dpad_left) {
+            DMPROT = DMPROT - 0.4;
+        }
+        if(gp1.dpad_right) {
+            DMPROT = DMPROT + 0.4;
+        }
+        if(gp1.right_bumper){
+            DMPX= DMPX + 0.55;
+        }
+        if(gp1.left_bumper){
+            DMPX= DMPX - 0.55;
+        }
 
         if (DMPX != 0 || DMPZ != 0 || DMPROT != 0) {
             determineMotorPowers(DMPX,DMPZ,DMPROT);
@@ -194,15 +199,15 @@ public class Drivetrain extends Mechanism {
         dashboardtelemetry.addData("Front Left Power", motorPowers[1]);
         dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
         dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
-        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
-        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
-        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(3));
-        //Records Location as X, Z, rot
-        dashboardtelemetry.addData("X", robot.odometry.realMaybe.getLocation(0));
-        dashboardtelemetry.addData("Z ", robot.odometry.realMaybe.getLocation(2));
-        dashboardtelemetry.addData("Rotation ", robot.odometry.realMaybe.getLocation(3));
-//        dashboardtelemetry.addData("encoder delta MM 0", robot.odometry.getEncoderPosition()[0]);
-        dashboardtelemetry.addData("encoder delta MM 0, 1, 2:", robot.odometry.currentEncoderMMPosString());
+//        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
+//        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
+//        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(3));
+//        //Records Location as X, Z, rot
+//        dashboardtelemetry.addData("X", robot.odometry.realMaybe.getLocation(0));
+//        dashboardtelemetry.addData("Z ", robot.odometry.realMaybe.getLocation(2));
+//        dashboardtelemetry.addData("Rotation ", robot.odometry.realMaybe.getLocation(3));
+////        dashboardtelemetry.addData("encoder delta MM 0", robot.odometry.getEncoderPosition()[0]);
+//        dashboardtelemetry.addData("encoder delta MM 0, 1, 2:", robot.odometry.currentEncoderMMPosString());
         telemetry.update();
         dashboardtelemetry.update();
     }
@@ -220,7 +225,7 @@ public class Drivetrain extends Mechanism {
 //            dashboardTelemetry.addData("x-error",error.getLocation(0) );
 //            dashboardTelemetry.addData("y-error",error.getLocation(2) );
 //            dashboardTelemetry.addData("r-error",error.getLocation(3) );
-            // dashboardTelemetry.update();
+//             dashboardTelemetry.update();
         }
         stopDrivetrain();
     }
@@ -444,17 +449,17 @@ public class Drivetrain extends Mechanism {
         this.write();
     }
 
-    public void odoUp () {
-        servos.get(0).setPosition(0.45);
-        servos.get(1).setPosition(0.3);
-        servos.get(2).setPosition(0.45);
-    }
+//    public void odoUp () {
+//        servos.get(0).setPosition(0.45);
+//        servos.get(1).setPosition(0.3);
+//        servos.get(2).setPosition(0.45);
+//    }
 
-    public void odoDown () {
-        servos.get(0).setPosition(0.71);//R
-        servos.get(1).setPosition(0.64);//M
-        servos.get(2).setPosition(.17);//L
-    }
+//    public void odoDown () {
+//        servos.get(0).setPosition(0.71);//R
+//        servos.get(1).setPosition(0.64);//M
+//        servos.get(2).setPosition(.17);//L
+//    }
 
     /*
      * Determines motor powers

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-//import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,8 +22,8 @@ public class PIDloops extends Drivetrain {
     private Location center = new Location (0, 0, 0, 0);
     private String cap;
 
-    public PIDloops(Robot bot, int[] motorNumbers, Telemetry telem, Servo servo1, Servo servo2, Servo servo3, PID pidx, PID pidz, PID pidr){
-        super(bot, motorNumbers, telem, servo1, servo2, servo3);
+    public PIDloops(Robot bot, int[] motorNumbers, Telemetry telem/*, Servo servo1, Servo servo2, Servo servo3*/, PID pidx, PID pidz, PID pidr){
+        super(bot, motorNumbers, telem/*, servo1, servo2, servo3*/);
         dtPIDx = pidx;
         dtPIDz = pidz;
         dtPIDr = pidr;
@@ -35,7 +35,7 @@ public class PIDloops extends Drivetrain {
     public Location determineError(Location location) {
         error.setLocation(0, location.getLocation(0) - robot.odometry.realMaybe.getLocation(0));
         error.setLocation(2, location.getLocation(2) - robot.odometry.realMaybe.getLocation(2));
-        error.setLocation(3, rotationError(location.getLocation(3), robot.odometry.realMaybe.getLocation(3)));
+        //error.setLocation(3, rotationError(location.getLocation(3), robot.odometry.realMaybe.getLocation(3)));
 
         return error;
     }
@@ -50,7 +50,7 @@ public class PIDloops extends Drivetrain {
                 i++;
             }
         }
-        fieldRelDetermineMotorPowers(dtPIDx.getCv(), dtPIDz.getCv(), dtPIDr.getCv()); // just switched x and z
+        //fieldRelDetermineMotorPowers(dtPIDx.getCv(), dtPIDz.getCv(), dtPIDr.getCv()); // just switched x and z
     }
 
     @Override
