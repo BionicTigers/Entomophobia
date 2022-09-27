@@ -8,6 +8,7 @@ import org.openftc.revextensions2.RevBulkData;
 
 public class NewOdo extends Mechanism{
 
+    public double[] position;
 
     private final ExpansionHubEx expansionHub;
     //Bulk data
@@ -97,6 +98,9 @@ public class NewOdo extends Mechanism{
     public NewOdo(HardwareMap hardwareMap) {
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 1");
         //reset();
+
+        position = new double[4];
+        setLocation(0, 0, 0, 0);
     }
 
     public void updateLocalPosition() {
@@ -139,7 +143,7 @@ public class NewOdo extends Mechanism{
         deltaXStrafe = rS * Math.sin(deltaLocalRotation);
         deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
         deltaXFinal = deltaLocalX + deltaXStrafe;
-        deltaYFinal = deltaLocalY + deltaYStrafe;
+        deltaYFinal = deltaLocalY - deltaYStrafe;
 
         //Sets the previous move tick amounts to whatever the ticks were at the end of this last cycle
         previousLeftTicks = postResetLeftTicks;
@@ -174,5 +178,16 @@ public class NewOdo extends Mechanism{
     @Override
     public void write() {
 
+    }
+
+    public void setLocation(double x, double y, double z, double rot) {
+        position[0] = x;
+        position[1] = y;
+        position[2] = z;
+        position[3] = rot % 360;
+    }
+
+    public String toString() {
+        return "[" + Math.round(position[0]*1000)/1000f + ","+ Math.round(1000* position[2] )/1000f+ "," + Math.round(1000* position[3])/1000 + "]";
     }
 }
