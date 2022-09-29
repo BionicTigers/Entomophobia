@@ -20,11 +20,12 @@ public class Drivetrain extends Mechanism {
     public Robot robot; //declares a new instance of Robot
     public double[] motorPowers; //declares an array of motor powers
     public int[] motorIndices; //declares a new array of motor indices
-    public Telemetry telemetry; //declares a new instance of Telemetry
-    public Telemetry dashboardtelemetry;
+//    public Telemetry telemetry; //declares a new instance of Telemetry
+//    public Telemetry dashboardtelemetry;
     public PIDloops loops;
     private FtcDashboard dashboard;
     public Location location;
+    public Odometry odo;
 
     private double robotheading;
     private double magnitude;
@@ -57,16 +58,16 @@ public class Drivetrain extends Mechanism {
     public boolean altMode = false;
 
     //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
-    public Drivetrain(@NonNull org.firstinspires.ftc.teamcode.Robot bot, @NonNull int[] motorNumbers, Telemetry T/*, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
+    public Drivetrain(Robot bot, @NonNull int[] motorNumbers/*, Telemetry T, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
         DcMotorEx motorPlaceholder;
         robot = bot;
         motorIndices = motorNumbers;
-        telemetry = T;
+        //telemetry = T;
 
 //        FtcDashboard dashboard = FtcDashboard.getInstance();
 //        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 //        dashboard.updateConfig();
-//        //odo = bot.odometry;
+        odo = bot.odometry;
 //        dashboard = FtcDashboard.getInstance();
 //        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
@@ -99,8 +100,8 @@ public class Drivetrain extends Mechanism {
 
         final double v1 = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontRight
         final double v2 = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontLeft
-        final double v3 = (-P * sinRAngle) + (P * cosRAngle) + rightX;  //backRight
-        final double v4 = (-P * sinRAngle) - (P * cosRAngle) - rightX;  //backLeft
+        final double v3 = (-P * sinRAngle) - (P * cosRAngle) - rightX; //backLeft
+        final double v4 = (-P * sinRAngle) + (P * cosRAngle) + rightX; //backRight
 
         if (driverPad.right_bumper) {
             motorPowers[0] = v1*0.3;
@@ -110,8 +111,8 @@ public class Drivetrain extends Mechanism {
         } else {
             motorPowers[0] = v1;
             motorPowers[1] = v2;
-            motorPowers[2] = v3;
-            motorPowers[3] = v4;
+            motorPowers[2] = -v3;
+            motorPowers[3] = -v4;
         }
     }
 
@@ -194,11 +195,11 @@ public class Drivetrain extends Mechanism {
         }
         robot.odometry.updatePosition();
         //Sets all telemetry for the drivetrain
-        telemetry.addLine("Motor Powers");
-        dashboardtelemetry.addData("Front Right Power", motorPowers[0]);
-        dashboardtelemetry.addData("Front Left Power", motorPowers[1]);
-        dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
-        dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
+//        telemetry.addLine("Motor Powers");
+//        dashboardtelemetry.addData("Front Right Power", motorPowers[0]);
+//        dashboardtelemetry.addData("Front Left Power", motorPowers[1]);
+//        dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
+//        dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
 //        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
 //        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
 //        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(3));
@@ -208,8 +209,8 @@ public class Drivetrain extends Mechanism {
 //        dashboardtelemetry.addData("Rotation ", robot.odometry.realMaybe.getLocation(3));
 ////        dashboardtelemetry.addData("encoder delta MM 0", robot.odometry.getEncoderPosition()[0]);
 //        dashboardtelemetry.addData("encoder delta MM 0, 1, 2:", robot.odometry.currentEncoderMMPosString());
-        telemetry.update();
-        dashboardtelemetry.update();
+//        telemetry.update();
+//        dashboardtelemetry.update();
     }
 
 

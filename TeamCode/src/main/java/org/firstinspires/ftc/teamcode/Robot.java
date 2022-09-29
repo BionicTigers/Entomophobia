@@ -89,7 +89,9 @@ public  class Robot {
         odometry = new Odometry(hardwareMap);
     }
 
-    public Robot(){}
+    public Robot(){
+
+    }
 
      //Returns the time
     public long getTimeMS(){

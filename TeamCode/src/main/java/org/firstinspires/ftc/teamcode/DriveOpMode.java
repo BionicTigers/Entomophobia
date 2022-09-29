@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -16,8 +18,8 @@ public class DriveOpMode extends LinearOpMode {
     public Telemetry telemetry;
 
     public void runOpMode(){
-        robot = new Robot();
-        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
+        robot = new Robot(this);
+        drivetrain = new Drivetrain(robot, motorNumbers);
         waitForStart();
         while (opModeIsActive()){
             drivetrain.update(gamepad1, gamepad2);
