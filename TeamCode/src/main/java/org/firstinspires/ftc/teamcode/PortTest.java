@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,6 +8,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+
+//"Object" is any class
+//In the future it would be better to change to it's own
 
 public class PortTest extends Mechanism {
     private boolean activate = false;
@@ -24,6 +25,7 @@ public class PortTest extends Mechanism {
 
     public PortTest(ArrayList<DcMotorSimple> m, ArrayList<Servo> s)
     {
+        //Merge the Motor and Servo list
         objects.addAll(m);
         objects.addAll(s);
 
@@ -69,6 +71,7 @@ public class PortTest extends Mechanism {
             speedChanged = false;
         }
 
+        //Don't hold down x and change the index.
         activate = gp1.x;
         telemetry.update();
     }
@@ -79,9 +82,9 @@ public class PortTest extends Mechanism {
 
         if (activate) {
             if (thingToActivate instanceof DcMotorSimple) {
-                ((DcMotorSimple) thingToActivate).setPower(speed);
-            } else if (thingToActivate instanceof Servo) {
                 //Little Confusing - Explanation: If POWERS contains index then get the value, else return the set speed
+                ((DcMotorSimple) thingToActivate).setPower(POWERS.containsKey(index) ? POWERS.get(index) : speed);
+            } else if (thingToActivate instanceof Servo) {
                 ((Servo) thingToActivate).setPosition(POWERS.containsKey(index) ? POWERS.get(index) : speed);
             }
         } else {
