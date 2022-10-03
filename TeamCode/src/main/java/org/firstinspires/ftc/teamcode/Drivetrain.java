@@ -135,7 +135,7 @@ public class Drivetrain extends Mechanism {
         final double v3 = (-P * sinRAngle) + (P * cosRAngle) + rightX;  //backRight
         final double v4 = (-P * sinRAngle) - (P * cosRAngle) - rightX;  //backLeft
 
-        motorPowers[0] = v1; motorPowers[1] = v2; motorPowers[2] = v3; motorPowers[3] = v4;
+        motorPowers[0] = v1; motorPowers[1] = v2; motorPowers[2] = -v3; motorPowers[3] = -v4;
     }
 
     //Updates data for Telemetry, motor powers, and servo movements

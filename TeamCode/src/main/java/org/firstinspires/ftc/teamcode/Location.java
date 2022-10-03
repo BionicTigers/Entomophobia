@@ -12,7 +12,6 @@ public class Location {
         position = new float[4];
         setLocation(0, 0, 0, 0);
     }
-
     public Location(float[] location) {
         position = new float[4];
         setLocation(location);

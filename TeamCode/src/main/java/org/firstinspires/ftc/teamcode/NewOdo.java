@@ -71,7 +71,7 @@ public class NewOdo extends Mechanism{
     //Change in local straight line distance since last cycle
     private double deltaLocalDistance = 0;
     //Change in local coordinates that the robot moved since last cycle
-    private double  deltaLocalX = 0;
+    private double deltaLocalX = 0;
     private double deltaLocalY = 0;
     //Radius of the strafe to arc center
     private double rS = 0;
@@ -98,9 +98,6 @@ public class NewOdo extends Mechanism{
     public NewOdo(HardwareMap hardwareMap) {
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 1");
         //reset();
-
-        position = new double[4];
-        setLocation(0, 0, 0, 0);
     }
 
     public void updateLocalPosition() {
@@ -172,7 +169,8 @@ public class NewOdo extends Mechanism{
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-
+        updateLocalPosition();
+        updateGlobalPosition();
     }
 
     @Override
@@ -180,11 +178,21 @@ public class NewOdo extends Mechanism{
 
     }
 
-    public void setLocation(double x, double y, double z, double rot) {
+    public void setLocation(double x, double z, double rot) {
         position[0] = x;
-        position[1] = y;
-        position[2] = z;
-        position[3] = rot % 360;
+        position[1] = z;
+        position[2] = rot % 360;
+    }
+
+    public void newLocation(double x, double z, double rot) {
+        position = new double[3];
+        setLocation(x, z, rot);
+    }
+
+    public float getLocation(double index) {
+        if (index < 0 || index > 4)
+            throw new IllegalArgumentException("getLocation requires range of 1-4.");
+        return position[index];
     }
 
     public String toString() {
