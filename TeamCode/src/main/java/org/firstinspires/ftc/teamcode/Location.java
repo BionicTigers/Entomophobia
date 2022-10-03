@@ -2,7 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 
-/*
+/**
  * A custom class to store the robot's position data. Stores X, Y, Z, and Azimuth (degrees).
  */
 public class Location {
@@ -18,23 +18,21 @@ public class Location {
     }
 
     public Location(float x, float y, float z, float rot) {
-        position = new float[4];
-        setLocation(x, y, z, rot);
+        this((double)x, (double)y, (double)z, (double)rot);
     }
     public Location(double x, double y, double z, double rot) {
         position = new float[4];
         setLocation(x, y, z, rot);
     }
-    /*
+    /**
      * Returns float array of current position. [x,y,z,rotation]
-     *
      * @return float[]
      */
     public float[] getLocation() {
         return position;
     }
 
-    /*
+    /**
      * Returns float of desired index of position. [x,y,z,rotation]
      *
      * @param index index of the desired return value.
@@ -46,7 +44,7 @@ public class Location {
         return position[index];
     }
 
-    /*
+    /**
      * Sets location to input.
      *
      * @param location Float array of length 4. [x,y,z,rotation in degrees].
@@ -58,7 +56,7 @@ public class Location {
         } else throw new IllegalArgumentException("Invalid location array: x,y,z,rot required.");
     }
 
-    /*
+    /**
      * Sets location to input.
      *
      * @param x   X coordinate.
@@ -67,10 +65,7 @@ public class Location {
      * @param rot Rotation in degrees.
      */
     public void setLocation(float x, float y, float z, float rot) {
-        position[0] = x;
-        position[1] = y;
-        position[2] = z;
-        position[3] = rot % 360;
+        setLocation((double)x, (double)y, (double)z, (double)rot);
     }
     public void setLocation(double x, double y, double z, double rot) {
         position[0] = (float)x;
@@ -79,7 +74,7 @@ public class Location {
         position[3] = (float)(rot % 360);
     }
 
-    /*
+    /**
      * Sets location coordinate to whatever is input.
      *
      * @param co coordinate of the thing from 0 to 3
@@ -89,7 +84,7 @@ public class Location {
         position[co] = x;
     }
 
-    /*
+    /**
      * Sets location to input.
      *
      * @param o OpenGLMatrix for position.
@@ -101,19 +96,15 @@ public class Location {
         position[3] = o.getTranslation().get(3); //<- test plz
     }
 
-    /*
+    /**
      * Sets stored rotation.
      *     *New function to correct for negative angle
      * @param rot Rotation in degrees.
      */
     public void setRotation(float rot) {
-        double angle = (float) rot % 360;
-        if (angle<0){
-            angle = 360f+angle;
-        }
-        position[3] = (float) angle;
+        setRotation((double)rot);
     }
-    /*
+    /**
      * Sets stored rotation.
      *New function to correct for negative angle
      * @param rot Rotation in degrees.
@@ -127,7 +118,7 @@ public class Location {
     }
 
 
-    /*
+    /**
      * Translates stored location forward given units based on object rotation.
      * Use negative values for opposite direction.
      *
@@ -137,7 +128,7 @@ public class Location {
         translateLocal(forward, 0f,0f);
     }
 
-    /*
+    /**
      * Translates stored location forward and right given units based on object rotation.
      * Use negative values for opposite direction.
      *
@@ -150,7 +141,7 @@ public class Location {
         translateLocal((float) forward, 0f, (float) right);
     }
 
-    /*
+    /**
      * Translates stored location forward, up, and right given units based on object rotation.
      * Use negative values for opposite direction.
      *
@@ -168,7 +159,7 @@ public class Location {
         setLocation(new OpenGLMatrix(new float[]{right,forward,0,(float ) Math.toDegrees(rot)}));
     }
 
-    /*
+    /**
      * Translates object x and z in world coordinates.
      * Use negative values for opposite direction.
      * @param x Translates position given distance on x axis.
@@ -179,7 +170,7 @@ public class Location {
         position[1] += z;
     }
 
-    /*
+    /**
      * Returns string representation of location.
      *
      * @return String
