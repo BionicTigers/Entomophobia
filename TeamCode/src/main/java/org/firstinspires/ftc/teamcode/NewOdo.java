@@ -8,8 +8,6 @@ import org.openftc.revextensions2.RevBulkData;
 
 public class NewOdo extends Mechanism{
 
-    public double[] position;
-
     private final ExpansionHubEx expansionHub;
     //Bulk data
     public RevBulkData bulkData;
@@ -97,7 +95,7 @@ public class NewOdo extends Mechanism{
 
     public NewOdo(HardwareMap hardwareMap) {
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 1");
-        //reset();
+        reset();
     }
 
     public void updateLocalPosition() {
@@ -107,7 +105,6 @@ public class NewOdo extends Mechanism{
         postResetLeftTicks = bulkData.getMotorCurrentPosition(0) - junkLeftTicks;
         postResetRightTicks = bulkData.getMotorCurrentPosition(1) - junkRightTicks;
         postResetBackTicks = bulkData.getMotorCurrentPosition(2) - junkBackTicks;
-
 
         //Converts change in ticks from last cycle into change in MM from last cycle for each wheel, and 1 & 2 are inversed
         for (int i = 0; i == 2; i++) {
@@ -176,26 +173,5 @@ public class NewOdo extends Mechanism{
     @Override
     public void write() {
 
-    }
-
-    public void setLocation(double x, double z, double rot) {
-        position[0] = x;
-        position[1] = z;
-        position[2] = rot % 360;
-    }
-
-    public void newLocation(double x, double z, double rot) {
-        position = new double[3];
-        setLocation(x, z, rot);
-    }
-
-    public float getLocation(double index) {
-        if (index < 0 || index > 4)
-            throw new IllegalArgumentException("getLocation requires range of 1-4.");
-        return position[index];
-    }
-
-    public String toString() {
-        return "[" + Math.round(position[0]*1000)/1000f + ","+ Math.round(1000* position[2] )/1000f+ "," + Math.round(1000* position[3])/1000 + "]";
     }
 }
