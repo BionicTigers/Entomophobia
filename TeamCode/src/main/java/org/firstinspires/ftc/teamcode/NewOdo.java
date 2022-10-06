@@ -146,9 +146,14 @@ public class NewOdo extends Mechanism{
     }
 
     public void updateGlobalPosition() {
+        //Change in straight line distance of move on the global
         deltaGlobalDistance = Math.sqrt((deltaXFinal * deltaXFinal) + (deltaYFinal * deltaYFinal));
+        //Updates the global rotation of the robot compared to the starting angle
+        globalRotation = globalRotation + deltaLocalRotation;
+        //
         deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
         deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
+        //Updates the x and y coordinates of the robot compared to the starting position
         globalX = globalX + deltaGlobalX;
         globalY = globalY + deltaGlobalY;
     }

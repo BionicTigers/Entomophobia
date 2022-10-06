@@ -28,7 +28,7 @@ public class NOdoDrivetrain extends Mechanism {
     private double magnitude;
 
 //    private double DMPX = 0;
-//    private double DMPZ = 0;
+//    private double DMPY = 0;
 //    private double DMPROT = 0;
     /*
     Declares instances of Location to move the robot forward, backward, left, right, clockwise,
@@ -44,7 +44,7 @@ public class NOdoDrivetrain extends Mechanism {
     private double lastRotationError; //Most recent rotation error
 
 
-    //Declares a new instance of location to store x y and z errors
+    //Declares a new instance of location to store x and y errors
     public NOdoLocation error = new NOdoLocation();
 
     public double[] integralValues = new double[3];
@@ -111,11 +111,11 @@ public class NOdoDrivetrain extends Mechanism {
         }
     }
 
-    public void determineMotorPowers(double x, double z, double rot) {
+    public void determineMotorPowers(double x, double y, double rot) {
         //Power
-        double P = Math.hypot(-x, z);
+        double P = Math.hypot(-x, y);
         //The angle that the robot is in right now
-        double robotAngle = Math.atan2(z, -x);
+        double robotAngle = Math.atan2(y, -x);
         //The value that figures out the rotation that you want to go to
         double rightX = rot;
 
@@ -152,10 +152,10 @@ public class NOdoDrivetrain extends Mechanism {
         }
 
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPZ = DMPZ + 0.45;
+            DMPY = DMPY + 0.45;
         }
         if(gp1.dpad_down){ //precision movement backward, very slow
-            DMPZ = DMPZ - 0.45;
+            DMPY = DMPY - 0.45;
         }
         if(gp1.dpad_left) {
             DMPROT = DMPROT - 0.4;
@@ -170,10 +170,10 @@ public class NOdoDrivetrain extends Mechanism {
             DMPX= DMPX - 0.55;
         }
 
-        if (DMPX != 0 || DMPZ != 0 || DMPROT != 0) {
-            determineMotorPowers(DMPX,DMPZ,DMPROT);
+        if (DMPX != 0 || DMPY != 0 || DMPROT != 0) {
+            determineMotorPowers(DMPX,DMPY,DMPROT);
             DMPX = 0;
-            DMPZ = 0;
+            DMPY = 0;
             DMPROT = 0;
         }
 */
@@ -196,7 +196,7 @@ public class NOdoDrivetrain extends Mechanism {
 //        dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
 //        dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
 //        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
-//        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
+//        dashboardtelemetry.addData("ErrorY", + error.getLocation(2));
 //        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(2));
 //        telemetry.update();
 //        dashboardtelemetry.update();
@@ -204,11 +204,11 @@ public class NOdoDrivetrain extends Mechanism {
 
 
     //Moves to robot to the target position within a set amount of time
-    public void moveToPosition(NOdoLocation goalPos, double xTolerance, double zTolerance, double rotTolerance,int maxTime) {
+    public void moveToPosition(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance,int maxTime) {
         integralValues = new double[3];
         error = findError(goalPos);
         double startTime = robot.getTimeMS();
-        while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive() && (Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > zTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+        while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive() && (Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             error = findError(goalPos);
             write();
             robot.odometry.updatePosition();
@@ -220,10 +220,10 @@ public class NOdoDrivetrain extends Mechanism {
         stopDrivetrain();
     }
 
-    public void moveToPosition(NOdoLocation goalPos, double xTolerance, double zTolerance, double rotTolerance) {
+    public void moveToPosition(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance) {
         integralValues = new double[3];
         error = findError(goalPos);
-        while (robot.linoop.opModeIsActive() && (Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > zTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+        while (robot.linoop.opModeIsActive() && (Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             error = findError(goalPos);
             write();
             robot.odometry.updatePosition();
@@ -235,11 +235,11 @@ public class NOdoDrivetrain extends Mechanism {
         stopDrivetrain();
     }
 
-    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double zTolerance, double rotTolerance, int maxTime, double mod) {
+    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, int maxTime, double mod) {
         integralValues = new double[3];
         error = findErrorMod(goalPos, mod);
         double startTime = robot.getTimeMS();
-        while ((robot.getTimeMS() - startTime < maxTime) &&robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > zTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+        while ((robot.getTimeMS() - startTime < maxTime) &&robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             error = findErrorMod(goalPos, mod);
             write();
             robot.odometry.updatePosition();
@@ -251,10 +251,10 @@ public class NOdoDrivetrain extends Mechanism {
         stopDrivetrain();
     }
 
-    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double zTolerance, double rotTolerance, double mod) {
+    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, double mod) {
         integralValues = new double[3];
         error = findErrorMod(goalPos, mod);
-        while (robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > zTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+        while (robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             error = findErrorMod(goalPos, mod);
             write();
             robot.odometry.updatePosition();
@@ -334,13 +334,13 @@ public class NOdoDrivetrain extends Mechanism {
     /*
      * Determines powers for each motor
      */
-    public void fieldRelDetermineMotorPowers(double x, double z, double rot) {
+    public void fieldRelDetermineMotorPowers(double x, double y, double rot) {
         //P is the power
         //robotAngle is the angle to which you want to go
         //rightX is the value of the x-axis from the right joystick
 
-        double P = Math.hypot(-x, z);
-        double robotAngle = Math.atan2(z, -x);
+        double P = Math.hypot(-x, y);
+        double robotAngle = Math.atan2(y, -x);
         double rightX = rot;
 
         double sinRAngle = Math.sin(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(2)));
@@ -398,11 +398,4 @@ public class NOdoDrivetrain extends Mechanism {
 //        servos.get(1).setPosition(0.64);//M
 //        servos.get(2).setPosition(.17);//L
 //    }
-
-    /*
-     * Determines motor powers
-     * @param x final x coordinate
-     * @param z final z coordinate
-     * @param rot final rotation
-     */
 }
