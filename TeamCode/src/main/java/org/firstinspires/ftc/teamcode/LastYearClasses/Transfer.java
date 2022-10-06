@@ -14,8 +14,8 @@ public class Transfer extends Mechanism {
     public Transfer(DcMotorEx transferMotor, Servo transferServo1, Servo transferservo2){
         super();
         motors.add(transferMotor);
-        getServos().add(transferServo1);
-        getServos().add(transferservo2);
+        servos.add(transferServo1);
+        servos.add(transferservo2);
     }
 
     @Override

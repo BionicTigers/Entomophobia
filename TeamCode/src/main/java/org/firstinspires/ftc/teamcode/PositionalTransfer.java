@@ -34,8 +34,8 @@ public class PositionalTransfer extends Mechanism{
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sensors.add(channel);
         sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
-        getServos().add(servo1);
-        getServos().add(servo2);
+        servos.add(servo1);
+        servos.add(servo2);
     }
 
      //Moves the arm to the bottom

@@ -15,16 +15,7 @@ public abstract class  Mechanism {
 
     public ArrayList<Servo> servos;
 
-    public ArrayList<Servo> getServos() {
-        return servos;
-    }
-
-
     protected ArrayList<CRServo> crServos;
-
-    public ArrayList<CRServo> getCRServos() {
-        return crServos;
-    }
 
     protected ArrayList<DigitalChannel> sensors;
 

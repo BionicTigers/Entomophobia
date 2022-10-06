@@ -18,7 +18,7 @@ public class Output extends Mechanism {
     public Output(Servo d) {
         super();
         servo = d;
-        getServos().add(servo);
+        servos.add(servo);
     }
 
 
