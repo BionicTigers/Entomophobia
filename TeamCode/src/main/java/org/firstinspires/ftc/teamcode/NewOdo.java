@@ -27,8 +27,6 @@ public class NewOdo extends Mechanism{
     private static final double odo_diameter = 35.28670491;
     //Gear ratio of the odometry wheels
     private static final double gear_ratio = 2.5;
-    //Effective diameter of the odometry wheels based on the gear ratio
-    private static final double effective_diameter = odo_diameter * gear_ratio;
     //Number of ticks on the encoders
     private static final double encoder_ticks = 8192;
     //Distance between left odometry module and the center of the robot
@@ -38,7 +36,9 @@ public class NewOdo extends Mechanism{
     //Distance between back odometry module and the center of the robot
     private static final double back_offset = 15.5*25.4;
 
-
+    //Calculates the effective diameter of the odometry wheels based on the gear ratio
+    private static final double effective_diameter = odo_diameter * gear_ratio;
+    //Calculates the circumference of the odometry wheel
     public double wheel_circumference = effective_diameter * Math.PI;
 
 
@@ -150,7 +150,7 @@ public class NewOdo extends Mechanism{
         deltaGlobalDistance = Math.sqrt((deltaXFinal * deltaXFinal) + (deltaYFinal * deltaYFinal));
         //Updates the global rotation of the robot compared to the starting angle
         globalRotation = globalRotation + deltaLocalRotation;
-        //
+        //Calculates the change in global x and y coordinates since last cycle
         deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
         deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
         //Updates the x and y coordinates of the robot compared to the starting position
@@ -159,10 +159,12 @@ public class NewOdo extends Mechanism{
     }
 
     public void reset() {
+        //Sets x, y, and rotation to 0
         globalRotation = 0;
         globalX = 0;
         globalY = 0;
 
+        //Sets the leftover junk ticks to the current motor rotations
         junkLeftTicks = bulkData.getMotorCurrentPosition(0);
         junkRightTicks = bulkData.getMotorCurrentPosition(1);
         junkBackTicks = bulkData.getMotorCurrentPosition(2);
