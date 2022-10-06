@@ -5,12 +5,12 @@ public class NOdoLocation {
     public double[] position;
 
     public NOdoLocation() {
-        position = new double[4];
+        position = new double[3];
         setLocation(0, 0, 0);
     }
 
     public NOdoLocation(double x, double y, double rot) {
-        position = new double[4];
+        position = new double[3];
         setLocation(x, y, rot);
     }
     /**
@@ -27,14 +27,14 @@ public class NOdoLocation {
      * @return float
      */
     public double getLocation(int index) {
-        if (index < 0 || index > 4)
+        if (index < 0 || index > 2)
             throw new IllegalArgumentException("getLocation requires range of 0-3.");
         return position[index];
     }
 
     /**
      * Sets location to input.
-     * @param location Float array of length 4. [x,y,rotation in degrees].
+     * @param location Float array of length 3. [x,y,rotation in degrees].
      */
     public void setLocation(double[] location) {
         if (location.length == 3) {
