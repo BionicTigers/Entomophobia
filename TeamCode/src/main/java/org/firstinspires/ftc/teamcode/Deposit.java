@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  * @author Jack Gerber
  */
 public class Deposit extends Mechanism {
-    private final Servo servo;
 
     /**
      * Adds values to the variables
@@ -16,8 +15,7 @@ public class Deposit extends Mechanism {
      */
     public Deposit (Servo s) {
         super();
-        servo = s;
-        getServos().add(s);
+        servos.add(s);
     }
 
     /**
@@ -28,10 +26,10 @@ public class Deposit extends Mechanism {
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
         if(gp2.a) {
-            servo.setPosition(0.625);
+            servos.get(0).setPosition(0.625);
         }
         else if(gp2.b){
-            servo.setPosition(0.5);
+            servos.get(0).setPosition(0.5);
         }
     }
 
