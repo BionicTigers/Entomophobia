@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.LastYearClasses;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Transfer extends Mechanism{
+import org.firstinspires.ftc.teamcode.Mechanism;
+
+public class Transfer extends Mechanism {
 
     public boolean up;
     public boolean down;
