@@ -14,12 +14,12 @@ public class BlueAuto extends LinearOpMode {
     public Drivetrain drivetrain;
     public String[] motorNames = {"frontRight","frontLeft","backLeft","backRight"};
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
-    public Output output;
+    public Deposit deposit;
 
     public void runOpMode() throws InterruptedException {
         robot = new Robot(this);
         drivetrain = new Drivetrain(robot, motorNumbers);
-        output = new Output(hardwareMap.get(Servo.class, "outputServo"));
+        deposit = new Deposit(hardwareMap.get(Servo.class, "outputServo"));
         Deadline stop = new Deadline(500, TimeUnit.MILLISECONDS);
         waitForStart();
         stop.reset();

@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  * @author Jack Gerber
  */
 public class Lift extends Mechanism {
-    private final DcMotorEx left;
-    private final DcMotorEx right;
+    public DcMotorEx left;
+    public DcMotorEx right;
 
     /**
      * Adds motors to the left and right variables
