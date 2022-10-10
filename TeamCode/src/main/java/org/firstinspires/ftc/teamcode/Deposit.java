@@ -14,9 +14,11 @@ public class Deposit extends Mechanism {
      */
     public Deposit (Servo s) {
         super();
-        servos.add(s);
+        servo = s;
+        servos.add(servo);
     }
 
+    public Servo servo;
     /**
      * Takes inputs from controllers and translates them into robot movement
      * @param gp1 the gamepad controlling the drivetrain
