@@ -24,7 +24,7 @@ public class Intake extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        active = gp1.right_trigger > 0.3;
+        active = gp2.right_trigger > 0.3;
     }
 
     @Override

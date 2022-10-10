@@ -16,7 +16,7 @@ public class BlueAuto extends LinearOpMode {
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
     public Deposit deposit;
 
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode(){
         robot = new Robot(this);
         drivetrain = new Drivetrain(robot, motorNumbers);
         deposit = new Deposit(hardwareMap.get(Servo.class, "outputServo"));
