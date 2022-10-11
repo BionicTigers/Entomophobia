@@ -136,6 +136,7 @@ public class NewOdo extends Mechanism{
         //Determine the local x and y coordinates for a strafing arc
         deltaXStrafe = rS * Math.sin(deltaLocalRotation);
         deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
+        //Calculates the total local x and y changes since last cycle
         deltaXFinal = deltaLocalX + deltaXStrafe;
         deltaYFinal = deltaLocalY - deltaYStrafe;
 

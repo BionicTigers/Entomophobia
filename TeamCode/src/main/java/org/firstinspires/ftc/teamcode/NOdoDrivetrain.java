@@ -67,9 +67,9 @@ public class NOdoDrivetrain extends Mechanism {
 //        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         /*
-        getServos().add(SDrive1);
-        getServos().add(SDrive2);
-        getServos().add(SDrive3);
+        servos.add(SDrive1);
+        servos.add(SDrive2);
+        servos.add(SDrive3);
         */
 
 
