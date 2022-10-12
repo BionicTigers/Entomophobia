@@ -16,21 +16,23 @@ public class PortTest extends Mechanism {
     private boolean activate = false;
     private boolean indexChanged = false;
     private boolean speedChanged = false;
-    private int index = 0;
-    private float speed = 0;
+    public int index = 0;
+    public float speed = 0;
     public Telemetry telemetry;
     private ArrayList<Object> objects = new ArrayList<>();
 
     private HashMap<Integer, Double> POWERS = new HashMap<>();
 
-    public PortTest(ArrayList<DcMotorSimple> m, ArrayList<Servo> s)
+    public PortTest(Telemetry T, ArrayList<DcMotorSimple> m, ArrayList<Servo> s)
     {
+        telemetry = T;
+
         //Merge the Motor and Servo list
         objects.addAll(m);
         objects.addAll(s);
 
         //Comment this out if you are not testing end positions
-        POWERS.put(0, 0.3);
+        //POWERS.put(0, 0.3);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class PortTest extends Mechanism {
             telemetry.addData("Index", index);
             indexChanged = true;
         } else if (gp1.right_bumper && !indexChanged) {
-            index = Math.min(objects.size(), index+1);
+            index = Math.min(objects.size()-1, index+1);
             telemetry.addData("Index", index);
             indexChanged = true;
         }
@@ -59,15 +61,14 @@ public class PortTest extends Mechanism {
             telemetry.addData("Speed", speed);
             speedChanged = true;
         } else if (gp1.dpad_right && !speedChanged) {
-            speed = Math.max(1f, speed + 0.1f);
+            speed = Math.min(1.0f, speed + 0.1f);
             telemetry.addData("Speed", speed);
+
             speedChanged = true;
         }
 
         //Basically just a trigger for a button
-        if (!gp1.dpad_left && speedChanged) {
-            speedChanged = false;
-        } else if (!gp1.dpad_right && speedChanged) {
+        if (!gp1.dpad_left && !gp1.dpad_right && speedChanged) {
             speedChanged = false;
         }
 

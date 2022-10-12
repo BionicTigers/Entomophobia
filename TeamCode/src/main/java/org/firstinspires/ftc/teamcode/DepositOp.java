@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "DepositOp")
 public class DepositOp extends LinearOpMode {
 
-    public Deposit deposit;
+
     @Override
     public void runOpMode() {
 
-        deposit = new Deposit(hardwareMap.get(Servo.class, "depositServo"));
+         Deposit deposit = new Deposit(hardwareMap.get(Servo.class, "0"));
 
         waitForStart();
 

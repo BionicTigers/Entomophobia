@@ -20,7 +20,7 @@ public class PortTestOp extends LinearOpMode {
         motors = new ArrayList<>(hardwareMap.getAll(DcMotorSimple.class));
         servos = new ArrayList<>(hardwareMap.getAll(Servo.class));
 
-        test = new PortTest(motors, servos);
+        test = new PortTest(telemetry, motors, servos);
 
         waitForStart();
 
