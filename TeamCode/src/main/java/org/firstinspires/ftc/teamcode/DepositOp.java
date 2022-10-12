@@ -11,7 +11,7 @@ public class DepositOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-         Deposit deposit = new Deposit(hardwareMap.get(Servo.class, "0"));
+         Deposit deposit = new Deposit(hardwareMap.get(Servo.class, "depositServo"));
 
         waitForStart();
 
