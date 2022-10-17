@@ -18,7 +18,7 @@ public class KentuckyTeleOp extends LinearOpMode {
         robot = new Robot(this);
         drive = new Drivetrain(robot, motorNumbers);
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
-        lift = new Lift(hardwareMap.get(DcMotorEx.class, "rightLiftMotor"), hardwareMap.get(DcMotorEx.class, "leftLiftMotor"));
+        lift = new Lift(hardwareMap.get(DcMotorEx.class, "rightLiftMotor")/*, hardwareMap.get(DcMotorEx.class, "leftLiftMotor")*/);
         deposit = new Deposit(hardwareMap.get(Servo.class, "depositServo"));
         Mechanism[] mechanisms = {drive, intake, lift, deposit};
 

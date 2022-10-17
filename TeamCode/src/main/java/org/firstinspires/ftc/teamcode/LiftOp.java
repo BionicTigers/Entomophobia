@@ -10,7 +10,7 @@ public class LiftOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Lift lift = new Lift(hardwareMap.get(DcMotorEx.class, "rightLiftMotor"), hardwareMap.get(DcMotorEx.class, "leftLiftMotor"));
+        Lift lift = new Lift(hardwareMap.get(DcMotorEx.class, "rightLiftMotor")/*, hardwareMap.get(DcMotorEx.class, "leftLiftMotor")*/);
 
         waitForStart();
 
