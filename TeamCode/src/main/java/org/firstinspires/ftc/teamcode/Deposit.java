@@ -20,17 +20,15 @@ public class Deposit extends Mechanism {
     }
     /**
      * Takes inputs from controllers and translates them into robot movement
-     * @param gp1 the 2gamepad controlling the drivetrain
+     * @param gp1 the gamepad controlling the drivetrain
      * @param gp2 the gamepad controlling the lift
      */
     public void update(Gamepad gp1, Gamepad gp2) {
         if(gp2.a) {
             servos.get(0).setPosition(0.625);
-            System.out.println("a: " + servos.get(0).getConnectionInfo());
         }
         else if(gp2.b){
             servos.get(0).setPosition(0.5);
-            System.out.println("b: " + servos.get(0).getConnectionInfo());
         }
     }
 

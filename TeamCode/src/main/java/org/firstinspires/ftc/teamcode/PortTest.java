@@ -40,29 +40,27 @@ public class PortTest extends Mechanism {
         //Detect for index changes
         if (gp1.left_bumper && !indexChanged) {
             index = Math.max(0, index-1);
-            telemetry.addData("Index", index);
+            telemetry.addLine("Index: " + index);
             indexChanged = true;
         } else if (gp1.right_bumper && !indexChanged) {
             index = Math.min(objects.size()-1, index+1);
-            telemetry.addData("Index", index);
+            telemetry.addLine("Index: " + index);
             indexChanged = true;
         }
 
         //Basically just a trigger for a button
-        if (!gp1.left_bumper && indexChanged) {
-            indexChanged = false;
-        } else if (!gp1.right_bumper && indexChanged) {
+        if (!gp1.left_bumper && !gp1.right_bumper && indexChanged) {
             indexChanged = false;
         }
 
         //Detect for speed changes
         if (gp1.dpad_left && !speedChanged) {
             speed = Math.max(0f, speed - 0.1f);
-            telemetry.addData("Speed", speed);
+            telemetry.addLine("Speed: " + speed);
             speedChanged = true;
         } else if (gp1.dpad_right && !speedChanged) {
             speed = Math.min(1.0f, speed + 0.1f);
-            telemetry.addData("Speed", speed);
+            telemetry.addLine("Speed: " + speed);
 
             speedChanged = true;
         }
@@ -80,6 +78,7 @@ public class PortTest extends Mechanism {
     @Override
     public void write() {
         Object thingToActivate = objects.get(index);
+        telemetry.addLine("Help: " + thingToActivate.toString());
 
         if (activate) {
             if (thingToActivate instanceof DcMotorSimple) {

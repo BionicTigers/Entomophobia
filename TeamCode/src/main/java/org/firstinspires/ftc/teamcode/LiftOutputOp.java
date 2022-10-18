@@ -1,18 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+@TeleOp(name = "LiftOp")
 public class LiftOutputOp extends LinearOpMode {
 
     public Lift lift;
     public Deposit deposit;
+    public Telemetry telemetry;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        lift = new Lift (hardwareMap.get(DcMotorEx.class, "lift"));
+        lift = new Lift (hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
         deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
 
         waitForStart();
