@@ -12,7 +12,7 @@ public class LiftOp extends LinearOpMode {
 
     public void runOpMode() {
 
-        Lift lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
+        Lift lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"));
         waitForStart();
 
         while (opModeIsActive()) {

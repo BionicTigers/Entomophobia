@@ -23,7 +23,7 @@ public class PIDloops extends Drivetrain {
     private String cap;
 
     public PIDloops(Robot bot, int[] motorNumbers, Telemetry telem/*, Servo servo1, Servo servo2, Servo servo3*/, PID pidx, PID pidz, PID pidr){
-        super(bot, motorNumbers/*, telem, servo1, servo2, servo3*/);
+        super(bot, motorNumbers, telem/*, servo1, servo2, servo3*/);
         dtPIDx = pidx;
         dtPIDz = pidz;
         dtPIDr = pidr;

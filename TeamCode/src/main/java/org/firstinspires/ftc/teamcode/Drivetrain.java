@@ -20,8 +20,8 @@ public class Drivetrain extends Mechanism {
     public Robot robot; //declares a new instance of Robot
     public double[] motorPowers; //declares an array of motor powers
     public int[] motorIndices; //declares a new array of motor indices
-//    public Telemetry telemetry; //declares a new instance of Telemetry
-//    public Telemetry dashboardtelemetry;
+    public Telemetry telemetry; //declares a new instance of Telemetry
+    public Telemetry dashboardtelemetry;
     public PIDloops loops;
     private FtcDashboard dashboard;
     public Location location;
@@ -58,11 +58,11 @@ public class Drivetrain extends Mechanism {
     public boolean altMode = false;
 
     //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
-    public Drivetrain(Robot bot, @NonNull int[] motorNumbers/*, Telemetry T, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
+    public Drivetrain(Robot bot, @NonNull int[] motorNumbers, Telemetry T/*, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
         DcMotorEx motorPlaceholder;
         robot = bot;
         motorIndices = motorNumbers;
-        //telemetry = T;
+        telemetry = T;
 
 //        FtcDashboard dashboard = FtcDashboard.getInstance();
 //        dashboardtelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());

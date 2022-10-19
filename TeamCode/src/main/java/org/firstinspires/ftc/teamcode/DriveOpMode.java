@@ -18,7 +18,7 @@ public class DriveOpMode extends LinearOpMode {
 
     public void runOpMode(){
         robot = new Robot(this);
-        drivetrain = new Drivetrain(robot, motorNumbers);
+        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
         waitForStart();
         while (opModeIsActive()){
             drivetrain.update(gamepad1, gamepad2);

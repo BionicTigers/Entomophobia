@@ -7,17 +7,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@TeleOp(name = "LiftOp")
+@TeleOp(name = "LiftOut")
 public class LiftOutputOp extends LinearOpMode {
 
     public Lift lift;
     public Deposit deposit;
     public Telemetry telemetry;
+    public Robot robot;
+    public Drivetrain drivetrain;
+
+    public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        lift = new Lift (hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
+        robot = new Robot(this);
+        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
+        lift = new Lift (hardwareMap.get(DcMotorEx.class, "liftMotor"));
         deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
 
         waitForStart();
@@ -27,6 +33,7 @@ public class LiftOutputOp extends LinearOpMode {
             lift.write();
             deposit.update(gamepad1, gamepad2);
             deposit.write();
+            telemetry.update();
         }
     }
 }
