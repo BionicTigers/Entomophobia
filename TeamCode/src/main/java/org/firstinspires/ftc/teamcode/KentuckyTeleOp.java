@@ -15,18 +15,18 @@ public class KentuckyTeleOp extends LinearOpMode {
     public Intake intake;
     public Lift lift;
     public Deposit deposit;
-    public Telemetry telemetry;
+    public Claw claw;
 
     public void runOpMode() {
         robot = new Robot(this);
         drive = new Drivetrain(robot, motorNumbers, telemetry);
-        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
-        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"));
-        deposit = new Deposit(hardwareMap.get(Servo.class, "depositServo"));
-        Mechanism[] mechanisms = {drive, intake, lift, deposit};
+//        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
+        deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
+        claw = new Claw(hardwareMap.get(Servo.class, "clawl"), hardwareMap.get(Servo.class, "clawr"));
+        Mechanism[] mechanisms = {drive, /*intake,*/ lift, deposit, claw};
 
         waitForStart();
-
         while(opModeIsActive()) {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array
                 mech.update(gamepad1, gamepad2); //Run their respective update methods
@@ -35,6 +35,7 @@ public class KentuckyTeleOp extends LinearOpMode {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array
                 mech.write(); //Run their respective write methods
             }
+            telemetry.update();
         }
     }
 }
