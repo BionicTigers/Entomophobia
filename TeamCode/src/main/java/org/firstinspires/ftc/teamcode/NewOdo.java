@@ -20,6 +20,8 @@ public class NewOdo extends Mechanism{
     2 = Back
     */
 
+    public NOdoLocation location;
+
     //Declares constants that relate to odometry wheels
     //Measurements are all in millimeters
 
@@ -67,6 +69,7 @@ public class NewOdo extends Mechanism{
     //Distance between robot's center and center of arc rotation
     private double rT = 0;
     //Change in local straight line distance since last cycle
+    //Currently unused, just needed to calculate for a proof but, this is the code so proofs aren't as important
     private double deltaLocalDistance = 0;
     //Change in local coordinates that the robot moved since last cycle
     private double deltaLocalX = 0;
@@ -165,12 +168,14 @@ public class NewOdo extends Mechanism{
         globalX = 0;
         globalY = 0;
 
+        //Sets our current position to the zero point
+        location.setLocation(0, 0, 0);
+
         //Sets the leftover junk ticks to the current motor rotations
         junkLeftTicks = bulkData.getMotorCurrentPosition(0);
         junkRightTicks = bulkData.getMotorCurrentPosition(1);
         junkBackTicks = bulkData.getMotorCurrentPosition(2);
     }
-
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {

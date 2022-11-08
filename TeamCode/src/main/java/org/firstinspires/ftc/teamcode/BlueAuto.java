@@ -18,7 +18,7 @@ public class BlueAuto extends LinearOpMode {
 
     public void runOpMode(){
         robot = new Robot(this);
-        drivetrain = new Drivetrain(robot, motorNumbers);
+        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
         deposit = new Deposit(hardwareMap.get(Servo.class, "outputServo"));
         Deadline stop = new Deadline(500, TimeUnit.MILLISECONDS);
         waitForStart();

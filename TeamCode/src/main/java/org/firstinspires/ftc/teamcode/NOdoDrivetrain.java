@@ -30,10 +30,6 @@ public class NOdoDrivetrain extends Mechanism {
 //    private double DMPX = 0;
 //    private double DMPY = 0;
 //    private double DMPROT = 0;
-    /*
-    Declares instances of Location to move the robot forward, backward, left, right, clockwise,
-    counterclockwise, and to the center of the field
-     */
 
     //Spin PID variables
     public double spinError;
@@ -72,7 +68,6 @@ public class NOdoDrivetrain extends Mechanism {
         servos.add(SDrive3);
         */
 
-
         for (int motNum : motorNumbers) {
             motorPlaceholder = robot.motors.get(motNum);
             motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -80,7 +75,6 @@ public class NOdoDrivetrain extends Mechanism {
         }
         motorPowers = new double[]{0, 0, 0, 0};
     }
-
 
     //Sets the motorNumbers array based on input from joysticks
     public void determineMotorPowers (Gamepad driverPad){
@@ -127,8 +121,8 @@ public class NOdoDrivetrain extends Mechanism {
 
         final double v1 = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontRight
         final double v2 = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontLeft
-        final double v3 = (-P * sinRAngle) + (P * cosRAngle) + rightX;  //backRight
-        final double v4 = (-P * sinRAngle) - (P * cosRAngle) - rightX;  //backLeft
+        final double v3 = (-P * sinRAngle) - (P * cosRAngle) - rightX; //backLeft
+        final double v4 = (-P * sinRAngle) + (P * cosRAngle) + rightX; //backRight
 
         motorPowers[0] = v1; motorPowers[1] = v2; motorPowers[2] = -v3; motorPowers[3] = -v4;
     }
