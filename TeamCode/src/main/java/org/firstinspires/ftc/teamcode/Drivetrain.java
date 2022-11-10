@@ -91,8 +91,9 @@ public class Drivetrain extends Mechanism {
     public void determineMotorPowers (Gamepad driverPad){
         double dpadVal=0;
 
-        double P = Math.hypot(-driverPad.left_stick_x, -driverPad.left_stick_y);
-        double robotAngle = Math.atan2(-driverPad.left_stick_y, -driverPad.left_stick_x);
+
+        double P = Math.hypot(driverPad.left_stick_x, driverPad.left_stick_y);
+        double robotAngle = Math.atan2(driverPad.left_stick_y, driverPad.left_stick_x);
         double rightX = driverPad.right_stick_x+dpadVal;
 
         double sinRAngle = Math.sin(robotAngle);
@@ -157,16 +158,16 @@ public class Drivetrain extends Mechanism {
         }
 
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPZ = DMPZ + 0.45;
-        }
-        if(gp1.dpad_down){ //precision movement backward, very slow
             DMPZ = DMPZ - 0.45;
         }
+        if(gp1.dpad_down){ //precision movement backward, very slow
+            DMPZ = DMPZ + 0.45;
+        }
         if(gp1.dpad_left) {
-            DMPROT = DMPROT - 0.4;
+            DMPROT = DMPROT + 0.4;
         }
         if(gp1.dpad_right) {
-            DMPROT = DMPROT + 0.4;
+            DMPROT = DMPROT - 0.4;
         }
         if(gp1.right_bumper){
             DMPX= DMPX + 0.55;

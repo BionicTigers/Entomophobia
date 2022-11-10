@@ -49,19 +49,17 @@ public class Lift extends Mechanism {
 //            height = 0;
 //        }
 
-        if (gp2.dpad_up) {
-            height = -2000;
-        } else if (gp2.dpad_down) {
+        if (gp2.left_stick_y <= -0.3) {
+            height = -2150;
+        } else if (gp2.left_stick_y >= 0.3) {
             height = 0;
-            if (trim < 0) {
-                trim = 0;
-            }
+            trim = 0;
         }
 
         if (gp2.right_stick_y >= 0.3) {
             trim = trim + 10;
         }
-        if (gp2.right_stick_y <= 0.3) {
+        if (gp2.right_stick_y <= -0.3) {
             trim = trim - 10;
         }
     }
