@@ -61,9 +61,9 @@ public class Vision extends OpenCvPipeline {
     public Mat processFrame(Mat source0) {
         Mat hiarchy = new Mat();
 
-        double[] hslThresholdHue = {0, 30};
-        double[] hslThresholdSaturation = {177, 255};
-        double[] hslThresholdLuminance = {32 , 161};
+        double[] hslThresholdHue = {41, 180};
+        double[] hslThresholdSaturation = {54, 255};
+        double[] hslThresholdLuminance = {11 , 255};
         //takes values for hue, saturation, and luminance and apply's them to what the camera sees
         hslThreshold(source0, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
         List<MatOfPoint> contoursBlack = new ArrayList<>();
