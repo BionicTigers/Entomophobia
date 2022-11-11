@@ -40,7 +40,7 @@ public class Claw extends Mechanism{
     }
 
     public void initopen() {
-        servos.get(0).setPosition(0.85);
+        servos.get(0).setPosition(0.80);
         servos.get(1).setPosition(0.12);
     }
 }

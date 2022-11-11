@@ -47,6 +47,5 @@ private Vision vision;
             drivetrain.motors.get(2).setPower(0);
             drivetrain.motors.get(3).setPower(0);
         }
-
     }
 }
