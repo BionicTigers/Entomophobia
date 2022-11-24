@@ -36,25 +36,25 @@ public class TestingAuto extends LinearOpMode {
         sleep(1000);
 
         //LEFT
-        drivetrain.motors.get(0).setPower(0.5);
-        drivetrain.motors.get(1).setPower(-0.5);
-        drivetrain.motors.get(2).setPower(0.5);
-        drivetrain.motors.get(3).setPower(-0.5);
-        sleep(1100);
-        drivetrain.motors.get(0).setPower(0);
-        drivetrain.motors.get(1).setPower(0);
-        drivetrain.motors.get(2).setPower(0);
-        drivetrain.motors.get(3).setPower(0);
-
-        //RIGHT
-        drivetrain.motors.get(0).setPower(-0.5);
-        drivetrain.motors.get(1).setPower(0.5);
-        drivetrain.motors.get(2).setPower(-0.5);
-        drivetrain.motors.get(3).setPower(0.5);
-        sleep(1100);
-        drivetrain.motors.get(0).setPower(0);
-        drivetrain.motors.get(1).setPower(0);
-        drivetrain.motors.get(2).setPower(0);
-        drivetrain.motors.get(3).setPower(0);
+//        drivetrain.motors.get(0).setPower(0.5);
+//        drivetrain.motors.get(1).setPower(-0.5);
+//        drivetrain.motors.get(2).setPower(0.5);
+//        drivetrain.motors.get(3).setPower(-0.5);
+//        sleep(1100);
+//        drivetrain.motors.get(0).setPower(0);
+//        drivetrain.motors.get(1).setPower(0);
+//        drivetrain.motors.get(2).setPower(0);
+//        drivetrain.motors.get(3).setPower(0);
+//
+//        //RIGHT
+//        drivetrain.motors.get(0).setPower(-0.5);
+//        drivetrain.motors.get(1).setPower(0.5);
+//        drivetrain.motors.get(2).setPower(-0.5);
+//        drivetrain.motors.get(3).setPower(0.5);
+//        sleep(1100);
+//        drivetrain.motors.get(0).setPower(0);
+//        drivetrain.motors.get(1).setPower(0);
+//        drivetrain.motors.get(2).setPower(0);
+//        drivetrain.motors.get(3).setPower(0);
     }
 }

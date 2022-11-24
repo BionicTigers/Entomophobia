@@ -26,7 +26,7 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/PowerPlay.tflite";
 
     private static final String[] LABELS = {
             "Duck"

@@ -77,6 +77,7 @@ public class Lift extends Mechanism {
 
     @Override
     public void write() {
+        motors.get(0).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         //Sets the height of the lift to height + trim
         motors.get(0).setTargetPosition(height + trim);
         //Makes the lift motor move

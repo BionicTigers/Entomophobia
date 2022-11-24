@@ -55,8 +55,6 @@ public class Drivetrain extends Mechanism {
     public double cosrang = 0;
     public double pow = 0;
 
-    public boolean altMode = false;
-
     //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
     public Drivetrain(Robot bot, @NonNull int[] motorNumbers, Telemetry T/*, Servo SDrive1, Servo SDrive2, Servo SDrive3*/) {
         DcMotorEx motorPlaceholder;
@@ -149,19 +147,11 @@ public class Drivetrain extends Mechanism {
 //            odoDown();
 //        }
 
-        if (gp1.right_bumper && gp1.dpad_up) {
-            altMode = true;
-        }
-
-        if (gp1.right_bumper && gp1.dpad_down) {
-            altMode = false;
-        }
-
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPZ = DMPZ - 0.45;
+            DMPZ = DMPZ - 0.40;
         }
         if(gp1.dpad_down){ //precision movement backward, very slow
-            DMPZ = DMPZ + 0.45;
+            DMPZ = DMPZ + 0.40;
         }
         if(gp1.dpad_left) {
             DMPROT = DMPROT + 0.4;
@@ -181,7 +171,7 @@ public class Drivetrain extends Mechanism {
             DMPX = 0;
             DMPZ = 0;
             DMPROT = 0;
-        } else if (!altMode) {
+        } else {
             determineMotorPowers(gp1); //Updates values in motorPowers array
         }
     }
