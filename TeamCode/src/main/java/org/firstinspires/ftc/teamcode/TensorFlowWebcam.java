@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-/**
+/**+
  * <h1>TensorFlow Object Detection</h1>
  * In FTC, TensorFlow is used to detect what is inside an image, (The PowerPlay season it would be a signal sleeve.)<br><br>
  * In it's essence, TensorFlow is not very good at differentiating geometric shapes,
@@ -26,10 +26,12 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/PowerPlay.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/old.tflite";
 
     private static final String[] LABELS = {
-            "Duck"
+            "Zebra",
+            "Teddy Bear",
+            "Chair"
     };
 
     private static final String VUFORIA_KEY = "ATwrk3v/////AAABmaeTGhT4Ek/vlsivypnpHgozTllYm5abCieT9lemzCyirZ+6wd4GT5iiP3MQe34vBvCSqW3f7hjtIRAXO3jCr1/Tbw3IMT3T6QnefgPHOt/UbwmxexRX67I1M4PP/EitLzL5uZhrpnMPgOLcThIXA17F5HQDclLglJ/C8ZVRkVuer3L3HGjl/1jXTx6CisGaNARfEq3c4GMMEdKnFpY+v7MCwycT6Z4ihX3tgFM4/2gYIpID0Fe8teqcOv0CjWwX2kDaPzk6i0HCetvt+WEpRA17UeZ7nQqYglZSG4ZFkDfZhpZfEzJL7XbVvTG9vC+ZdbRNU+bgGKz56WsDWI0bh6BMUxXKm+F8ClfqXPsq2Vrk";

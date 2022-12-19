@@ -74,8 +74,8 @@ public  class Robot {
         motors.add((DcMotorEx)hardwareMap.get(DcMotor.class,"frontLeft"));
         motors.add((DcMotorEx)hardwareMap.get(DcMotor.class,"backLeft"));
         motors.add((DcMotorEx)hardwareMap.get(DcMotor.class,"backRight"));
-        motors.get(0).setDirection(DcMotorSimple.Direction.REVERSE);
-        motors.get(3).setDirection(DcMotorSimple.Direction.REVERSE);
+        motors.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
+        motors.get(2).setDirection(DcMotorSimple.Direction.REVERSE);
         time = new ElapsedTime();
 
         gamepad1 = linoop.gamepad1;

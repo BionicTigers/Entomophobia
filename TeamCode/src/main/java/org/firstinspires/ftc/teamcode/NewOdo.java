@@ -22,6 +22,8 @@ public class NewOdo extends Mechanism{
 
     public NOdoLocation location;
 
+    public NOdoLocation position = new NOdoLocation();
+
     //Declares constants that relate to odometry wheels
     //Measurements are all in millimeters
 
@@ -97,10 +99,9 @@ public class NewOdo extends Mechanism{
 
 
     public NewOdo(HardwareMap hardwareMap) {
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 1");
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         reset();
     }
-
     public void updateLocalPosition() {
         bulkData = expansionHub.getBulkInputData();
 
@@ -168,8 +169,10 @@ public class NewOdo extends Mechanism{
         globalX = 0;
         globalY = 0;
 
+        bulkData = expansionHub.getBulkInputData();
+
         //Sets our current position to the zero point
-        location.setLocation(0, 0, 0);
+        position.setLocation(0, 0, 0);
 
         //Sets the leftover junk ticks to the current motor rotations
         junkLeftTicks = bulkData.getMotorCurrentPosition(0);
