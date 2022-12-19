@@ -95,8 +95,8 @@ public class NOdoDrivetrain extends Mechanism {
         if (gp1.right_bumper) {
             motorPowers[0] = v1*0.3;
             motorPowers[1] = v2*0.3;
-            motorPowers[2] = v3*0.3;
-            motorPowers[3] = v4*0.3;
+            motorPowers[2] = -v3*0.3;
+            motorPowers[3] = -v4*0.3;
         } else {
             motorPowers[0] = v1;
             motorPowers[1] = v2;
@@ -176,10 +176,18 @@ public class NOdoDrivetrain extends Mechanism {
     //Sets the motor powers based on the determineMotorPowers() method that was run in the update() method
     public void write () {
         int i = 0;
-        for (DcMotorEx motor : motors.subList(motorIndices[0], motorIndices[3])) {
+        for (DcMotorEx motor : motors) {
             motor.setPower(motorPowers[i]);
             i++;
         }
+//        motors.get(0).setPower(motorPowers[0]);
+//        motors.get(1).setPower(motorPowers[1]);
+//        motors.get(2).setPower(motorPowers[2]);
+//        motors.get(3).setPower(motorPowers[3]);
+//        motors.get(0).setPower(1);
+//        motors.get(1).setPower(1);
+//        motors.get(2).setPower(1);
+//        motors.get(3).setPower(1);
         //////////
 //        robot.odometry.updatePosition();
         //////////
@@ -383,13 +391,13 @@ public class NOdoDrivetrain extends Mechanism {
 
     public void odoUp () {
         servos.get(0).setPosition(0.45);
-        servos.get(1).setPosition(0.3);
-        servos.get(2).setPosition(0.45);
+//        servos.get(1).setPosition(0.3);
+//        servos.get(2).setPosition(0.45);
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0.71);//R
-        servos.get(1).setPosition(0.64);//M
-        servos.get(2).setPosition(.17);//L
+        servos.get(0).setPosition(1);//R
+//        servos.get(1).setPosition(0.64);//M
+//        servos.get(2).setPosition(.17);//L
     }
 }
