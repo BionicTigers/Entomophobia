@@ -23,6 +23,7 @@ public class EncoderTest extends Mechanism{
         telemetry.addData("Position: ", motors.get(0).getCurrentPosition());
     }
 
+    @Override
     public void write() {
 
     }

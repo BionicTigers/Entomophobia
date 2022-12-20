@@ -95,6 +95,7 @@ public class PositionalTransfer extends Mechanism{
 //        telemetry.update();
     }
 
+    @Override
     public void write(){
         if(motors.get(0).getCurrent(CurrentUnit.AMPS) >= 5.5 && position.equals("Up") && motors.get(0).getCurrentPosition() > 2000 * 223/312){
             trim = 1650 - motors.get(0).getCurrentPosition();

@@ -35,6 +35,7 @@ public class Spinner extends Mechanism {
 
     }
 
+    @Override
     public void write() {
         if (spinning && motors.get(0).getCurrentPosition() <= startSpot - (1300*4/3)) {
             motors.get(0).setVelocity(2500);

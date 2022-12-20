@@ -40,11 +40,11 @@ public class PortTest extends Mechanism {
         //Detect for index changes
         if (gp1.left_bumper && !indexChanged) {
             index = Math.max(0, index-1);
-            telemetry.addLine("Index: " + index);
+            telemetry.addData("Index: ", index);
             indexChanged = true;
         } else if (gp1.right_bumper && !indexChanged) {
             index = Math.min(objects.size()-1, index+1);
-            telemetry.addLine("Index: " + index);
+            telemetry.addData("Index: ", index);
             indexChanged = true;
         }
 
@@ -56,11 +56,11 @@ public class PortTest extends Mechanism {
         //Detect for speed changes
         if (gp1.dpad_left && !speedChanged) {
             speed = Math.max(0f, speed - 0.1f);
-            telemetry.addLine("Speed: " + speed);
+            telemetry.addData("Speed: ", speed);
             speedChanged = true;
         } else if (gp1.dpad_right && !speedChanged) {
             speed = Math.min(1.0f, speed + 0.1f);
-            telemetry.addLine("Speed: " + speed);
+            telemetry.addData("Speed: ", speed);
 
             speedChanged = true;
         }

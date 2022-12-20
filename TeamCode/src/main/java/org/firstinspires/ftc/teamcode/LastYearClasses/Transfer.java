@@ -30,6 +30,7 @@ public class Transfer extends Mechanism {
         }
     }
 
+    @Override
     public void write() {
         //Controls transfer
         if (up){

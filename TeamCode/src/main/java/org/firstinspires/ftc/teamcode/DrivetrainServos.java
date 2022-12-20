@@ -16,6 +16,7 @@ public class DrivetrainServos extends Mechanism {
 
     }
 
+    @Override
     public void write(){
 
     }

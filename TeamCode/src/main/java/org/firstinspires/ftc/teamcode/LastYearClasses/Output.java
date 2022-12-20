@@ -45,6 +45,7 @@ public class Output extends Mechanism {
         }
     }
 
+    @Override
     public void write() {
         if (drop && !mid) { //If A is being pressed
             servo.setPosition(1); //Move to dropping position
