@@ -4,25 +4,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw extends Mechanism{
-    public Servo servol;
-    public Servo servor;
+    public Servo servo;
 
-    public Claw (Servo l, Servo r) {
+    public Claw (Servo grab) {
         super();
         //Servos.get(0), bigger # = Counter-clockwise
-        servol = l;
-        servos.add(servol);
-        //Servos.get(1), bigger # = Counter-clockwise
-        servor = r;
-        servos.add(servor);
+        servos.add(grab);
     }
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
         if (gp2.right_trigger > 0.3) {
             //Closes the claw
-            servos.get(0).setPosition(0.5);
-            servos.get(1).setPosition(0.5);
+            close();
         } else if (gp2.left_trigger > 0.3) {
             //Opens the claw
             open();
@@ -35,12 +29,14 @@ public class Claw extends Mechanism{
     }
 
     public void open() {
-        servos.get(0).setPosition(0.75);
-        servos.get(1).setPosition(0.25);
+        servos.get(0).setPosition(0.075);
+    }
+
+    public void close() {
+        servos.get(0).setPosition(0);
     }
 
     public void initopen() {
-        servos.get(0).setPosition(0.80);
-        servos.get(1).setPosition(0.12);
+        servos.get(0).setPosition(0);
     }
 }

@@ -100,7 +100,7 @@ public class Odometry extends Mechanism {
      * Odometry Constructor
      */
     public Odometry(HardwareMap hardwareMap) {
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 1");
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         reset();
     }
 

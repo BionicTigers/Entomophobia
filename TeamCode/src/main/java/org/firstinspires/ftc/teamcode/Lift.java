@@ -19,13 +19,18 @@ public class Lift extends Mechanism {
      * Adds motors to the left and right variables
      * @param l imported left motor
      */
-    public Lift (DcMotorEx l, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r, Telemetry T) {
         super();
         motors.add(l);
+        motors.add(r);
         motors.get(0).setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motors.get(0).setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motors.get(0).setTargetPosition(0);
         motors.get(0).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        motors.get(1).setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motors.get(1).setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        motors.get(1).setTargetPosition(0);
+        motors.get(1).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         telemetry = T;
         height = 0;
@@ -64,27 +69,22 @@ public class Lift extends Mechanism {
         }
     }
 
-//    //FOR SHOWCASE NIGHT USE ONLY
-//    public void update(Gamepad gp1, Gamepad gp2) {
-//        if (gp1.right_trigger >= 0.25) {
-//            height = height + 10;
-//        }
-//        else if (gp1.left_trigger >= 0.25) {
-//            height = height - 10;
-//        }
-//        telemetry.addData("Current position: ", motors.get(0).getCurrentPosition());
-//    }
 
     @Override
     public void write() {
         motors.get(0).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        motors.get(1).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         //Sets the height of the lift to height + trim
         motors.get(0).setTargetPosition(height + trim);
+        motors.get(1).setTargetPosition(height + trim);
         //Makes the lift motor move
         motors.get(0).setVelocity(1000);
+        motors.get(1).setVelocity(1000);
 
         //Provides telemetry for the motor's current position and the trim value
-        telemetry.addData("Current position: ", motors.get(0).getCurrentPosition());
+        telemetry.addData("Left Current position: ", motors.get(0).getCurrentPosition());
+        telemetry.addData("Right Current position: ", motors.get(1).getCurrentPosition());
         telemetry.addData("Trim", trim);
+        telemetry.addData("Height Value", height);
     }
 }

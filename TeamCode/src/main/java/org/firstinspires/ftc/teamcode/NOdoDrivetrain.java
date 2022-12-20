@@ -133,6 +133,8 @@ public class NOdoDrivetrain extends Mechanism {
             odoUp();
         } else if (gp1.b) {
             odoDown();
+        } else if (gp1.x) {
+            servos.get(0).setPosition(0);
         }
         /*
         if (gp1.right_bumper && gp1.dpad_up) {
