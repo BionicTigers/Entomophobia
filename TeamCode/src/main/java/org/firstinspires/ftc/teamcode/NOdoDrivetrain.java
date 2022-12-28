@@ -135,6 +135,8 @@ public class NOdoDrivetrain extends Mechanism {
             odoDown();
         } else if (gp1.x) {
             servos.get(0).setPosition(0);
+            servos.get(1).setPosition(1);
+            servos.get(2).setPosition(0);
         }
         /*
         if (gp1.right_bumper && gp1.dpad_up) {
@@ -394,13 +396,13 @@ public class NOdoDrivetrain extends Mechanism {
 
     public void odoUp () {
         servos.get(0).setPosition(0.45);
-//        servos.get(1).setPosition(0.3);
-//        servos.get(2).setPosition(0.45);
+        servos.get(1).setPosition(0.45);
+        servos.get(2).setPosition(0.45);
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(1);//R
-//        servos.get(1).setPosition(0.64);//M
-//        servos.get(2).setPosition(.17);//L
+        servos.get(0).setPosition(0);//R
+        servos.get(1).setPosition(0.5);//M
+        servos.get(2).setPosition(0.8);//L
     }
 }
