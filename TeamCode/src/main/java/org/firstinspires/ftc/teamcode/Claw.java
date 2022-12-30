@@ -29,7 +29,7 @@ public class Claw extends Mechanism{
     }
 
     public void open() {
-        servos.get(0).setPosition(0.2);
+        servos.get(0).setPosition(0.1);
     }
 
     public void close() {

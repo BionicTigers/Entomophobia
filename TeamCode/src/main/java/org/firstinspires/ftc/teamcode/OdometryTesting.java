@@ -21,7 +21,7 @@ public class OdometryTesting extends LinearOpMode {
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
 //        deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
 //        claw = new Claw(hardwareMap.get(Servo.class, "clawl"), hardwareMap.get(Servo.class, "clawr"));
-        Mechanism[] mechanisms = {drive/*, lift/*, claw*/};
+        Mechanism[] mechanisms = {drive, robot.odometry/*, lift/*, claw*/};
 
         waitForStart();
 //        claw.initopen();

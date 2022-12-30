@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 
 public class NewOdo extends Mechanism{
 
     private final ExpansionHubEx expansionHub;
+    public Telemetry telemetry;
     //Bulk data
     public RevBulkData bulkData;
     //bulkData.getMotorCurrentPosition(i) gets the total ticks rotated since power up
@@ -28,15 +30,15 @@ public class NewOdo extends Mechanism{
     //Measurements are all in millimeters
 
     //Diameter of the odometry wheels
-    private static final double odo_diameter = 35.28670491;
+    private static final double odo_diameter = 25.4;
     //Gear ratio of the odometry wheels
     private static final double gear_ratio = 2.5;
     //Number of ticks on the encoders
     private static final double encoder_ticks = 8192;
     //Distance between left odometry module and the center of the robot
-    private static final double left_offset = 265.7401;
+    private static final double left_offset = 167.5;
     //Distance between right odometry module and the center of the robot
-    private static final double right_offset = 265.7401;
+    private static final double right_offset = 167.5;
     //Distance between back odometry module and the center of the robot
     private static final double back_offset = 15.5*25.4;
 
@@ -98,9 +100,11 @@ public class NewOdo extends Mechanism{
     private double globalY = 0;
 
 
-    public NewOdo(HardwareMap hardwareMap) {
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+    public NewOdo(HardwareMap hardwareMap, Telemetry T) {
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Control Hub");
         reset();
+
+        telemetry = T;
     }
     public void updateLocalPosition() {
         bulkData = expansionHub.getBulkInputData();
@@ -111,15 +115,9 @@ public class NewOdo extends Mechanism{
         postResetBackTicks = bulkData.getMotorCurrentPosition(2) - junkBackTicks;
 
         //Converts change in ticks from last cycle into change in MM from last cycle for each wheel, and 1 & 2 are inversed
-        for (int i = 0; i == 2; i++) {
-            if (i == 0) {
-                deltaLeftMM = wheel_circumference * ((postResetLeftTicks - previousLeftTicks) / encoder_ticks);
-            } else if (i == 1) {
-                deltaRightMM = -wheel_circumference * ((postResetRightTicks + previousRightTicks) / encoder_ticks);
-            } else {
-                deltaBackMM = -wheel_circumference * ((postResetBackTicks + previousBackTicks) / encoder_ticks);
-            }
-        }
+        deltaLeftMM = wheel_circumference * ((postResetLeftTicks - previousLeftTicks) / encoder_ticks);
+        deltaRightMM = -wheel_circumference * ((postResetRightTicks - previousRightTicks) / encoder_ticks);
+        deltaBackMM = -wheel_circumference * ((postResetBackTicks - previousBackTicks) / encoder_ticks);
 
         //Displays telemetry for the change in MM from last cycle for each wheel
         addPublicTelemetry("",""+deltaLeftMM);
@@ -129,17 +127,32 @@ public class NewOdo extends Mechanism{
         //Calculates the change in local angle of the robot after the movement
         deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
-        rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
+        //If statement ensures that if deltaLeftMM - deltaRightMM equals 0, our rT won't return as null
+        if ((deltaRightMM - deltaLeftMM) != 0) {
+            rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
+            //Determine the local x and y coordinates for a forward/backward arc
+            deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
+            deltaLocalY = rT * Math.sin(deltaLocalRotation);
+        } else {
+            deltaLocalX = deltaLeftMM;
+            deltaLocalY = 0;
+        }
+
         //Calculates the straight-line distance between the starting and ending points of the robot's local travel
+        //Currently unused, just needed to calculate for a proof but, this is the code so proofs aren't as important
         deltaLocalDistance = 2 * rT * Math.sin(deltaLocalRotation / 2);
-        //Determine the local x and y coordinates for a forward/backward arc
-        deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
-        deltaLocalY = rT * Math.sin(deltaLocalRotation);
+
         //Calculates the radius of a strafing arc
-        rS = (deltaBackMM / deltaLocalRotation) - back_offset;
-        //Determine the local x and y coordinates for a strafing arc
-        deltaXStrafe = rS * Math.sin(deltaLocalRotation);
-        deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
+        //If statement ensures that if deltaLocalRotation is 0, our rS won't return as null
+        if (deltaLocalRotation != 0) {
+            rS = (deltaBackMM / deltaLocalRotation) - back_offset;
+            //Determine the local x and y coordinates for a strafing arc
+            deltaXStrafe = rS * Math.sin(deltaLocalRotation);
+            deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
+        } else {
+            deltaXStrafe = 0;
+            deltaYStrafe = deltaBackMM;
+        }
         //Calculates the total local x and y changes since last cycle
         deltaXFinal = deltaLocalX + deltaXStrafe;
         deltaYFinal = deltaLocalY - deltaYStrafe;
@@ -188,6 +201,13 @@ public class NewOdo extends Mechanism{
 
     @Override
     public void write() {
-
+        telemetry.addData("","");
+        telemetry.addData("Left Tick Rotation: ", postResetLeftTicks);
+        telemetry.addData("Right Tick Rotation: ", postResetRightTicks);
+        telemetry.addData("Back Tick Rotation: ", postResetBackTicks);
+        telemetry.addData("Position", "");
+        telemetry.addData("X", globalX);
+        telemetry.addData("Y", globalY);
+        telemetry.addData("Rot", globalRotation);
     }
 }

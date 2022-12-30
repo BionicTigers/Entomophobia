@@ -59,7 +59,7 @@ public  class NOdoRobot {
 //
 
 
-        odometry = new NewOdo(hardwareMap);
+        odometry = new NewOdo(hardwareMap, telemetry);
     }
 
 
@@ -86,7 +86,7 @@ public  class NOdoRobot {
 
 
 
-        odometry = new NewOdo(hardwareMap);
+        odometry = new NewOdo(hardwareMap, telemetry);
     }
 
     public NOdoRobot() {}

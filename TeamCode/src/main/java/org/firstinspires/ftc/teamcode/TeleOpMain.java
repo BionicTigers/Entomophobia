@@ -25,7 +25,7 @@ public class TeleOpMain extends LinearOpMode {
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         waitForStart();
-        claw.initopen();
+        claw.init();
         while(opModeIsActive()) {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array
                 mech.update(gamepad1, gamepad2); //Run their respective update methods
