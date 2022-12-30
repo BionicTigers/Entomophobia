@@ -36,11 +36,11 @@ public class NewOdo extends Mechanism{
     //Number of ticks on the encoders
     private static final double encoder_ticks = 8192;
     //Distance between left odometry module and the center of the robot
-    private static final double left_offset = 167.5;
+    private static final double left_offset = 165.5;
     //Distance between right odometry module and the center of the robot
-    private static final double right_offset = 167.5;
+    private static final double right_offset = 165.5;
     //Distance between back odometry module and the center of the robot
-    private static final double back_offset = 15.5*25.4;
+    private static final double back_offset = 73;
 
     //Calculates the effective diameter of the odometry wheels based on the gear ratio
     private static final double effective_diameter = odo_diameter * gear_ratio;
@@ -99,6 +99,9 @@ public class NewOdo extends Mechanism{
     private double globalX = 0;
     private double globalY = 0;
 
+    //Our robot's global rotation in degrees
+    public double rotationInDegrees = 0;
+
 
     public NewOdo(HardwareMap hardwareMap, Telemetry T) {
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Control Hub");
@@ -128,7 +131,7 @@ public class NewOdo extends Mechanism{
         deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         //If statement ensures that if deltaLeftMM - deltaRightMM equals 0, our rT won't return as null
-        if ((deltaRightMM - deltaLeftMM) != 0) {
+        if (deltaRightMM != deltaLeftMM) {
             rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
             //Determine the local x and y coordinates for a forward/backward arc
             deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
@@ -163,17 +166,25 @@ public class NewOdo extends Mechanism{
         previousBackTicks = postResetBackTicks;
     }
 
+
     public void updateGlobalPosition() {
         //Change in straight line distance of move on the global
         deltaGlobalDistance = Math.sqrt((deltaXFinal * deltaXFinal) + (deltaYFinal * deltaYFinal));
         //Updates the global rotation of the robot compared to the starting angle
         globalRotation = globalRotation + deltaLocalRotation;
         //Calculates the change in global x and y coordinates since last cycle
-        deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
-        deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
-        //Updates the x and y coordinates of the robot compared to the starting position
-        globalX = globalX + deltaGlobalX;
-        globalY = globalY + deltaGlobalY;
+//        deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
+//        deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
+//        //Updates the x and y coordinates of the robot compared to the starting position
+//        globalX = globalX + deltaGlobalX;
+//        globalY = globalY + deltaGlobalY;
+
+        //Testing stuff.. Yipeee!!
+        globalX += deltaXFinal * Math.cos(globalRotation) + deltaYFinal * Math.cos(globalRotation - (Math.PI / 2));
+        globalY += deltaXFinal * Math.sin(globalRotation) + deltaYFinal * Math.sin(globalRotation - (Math.PI / 2));
+
+        //Converts our global rotation to degrees
+        rotationInDegrees = Math.toDegrees(globalRotation);
     }
 
     public void reset() {
@@ -201,13 +212,15 @@ public class NewOdo extends Mechanism{
 
     @Override
     public void write() {
-        telemetry.addData("","");
-        telemetry.addData("Left Tick Rotation: ", postResetLeftTicks);
-        telemetry.addData("Right Tick Rotation: ", postResetRightTicks);
-        telemetry.addData("Back Tick Rotation: ", postResetBackTicks);
+        telemetry.addData("",")");
+        telemetry.addData("Left Tick Rotation", postResetLeftTicks);
+        telemetry.addData("Right Tick Rotation", postResetRightTicks);
+        telemetry.addData("Back Tick Rotation", postResetBackTicks);
+        telemetry.addData("Back Tick Delta", deltaBackMM);
         telemetry.addData("Position", "");
         telemetry.addData("X", globalX);
         telemetry.addData("Y", globalY);
-        telemetry.addData("Rot", globalRotation);
+        telemetry.addData("Rot", rotationInDegrees);
+        telemetry.addData("DeltaGlobalY", deltaGlobalY);
     }
 }
