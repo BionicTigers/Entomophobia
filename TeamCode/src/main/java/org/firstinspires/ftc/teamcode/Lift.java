@@ -13,26 +13,41 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Lift extends Mechanism {
     public Telemetry telemetry;
+
     public int height = 0;
     public int trim = 0;
+
+    public DcMotorEx left;
+    public DcMotorEx right;
     /**
      * Adds motors to the left and right variables
      * @param l imported left motor
      */
     public Lift (DcMotorEx l, DcMotorEx r, Telemetry T) {
         super();
-        motors.add(l);
-        motors.add(r);
-        motors.get(0).setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motors.get(0).setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motors.get(0).setTargetPosition(0);
-        motors.get(0).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motors.get(1).setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motors.get(1).setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motors.get(1).setTargetPosition(0);
-        motors.get(1).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
+        //Sets the fields to parameter values
+        left = l;
+        right = r;
         telemetry = T;
+
+        //Adds to motors ArrayList
+        motors.add(left);
+        motors.add(right);
+
+        //Prepares the left motor
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        left.setTargetPosition(0);
+        left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        //Prepares the right motor
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        right.setTargetPosition(0);
+        right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        //Sets the height starting position
         height = 0;
     }
 
@@ -72,18 +87,18 @@ public class Lift extends Mechanism {
 
     @Override
     public void write() {
-        motors.get(0).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motors.get(1).setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         //Sets the height of the lift to height + trim
-        motors.get(0).setTargetPosition(height + trim);
-        motors.get(1).setTargetPosition(height + trim);
+        right.setTargetPosition(height + trim);
+        left.setTargetPosition(height + trim);
         //Makes the lift motor move
-        motors.get(0).setVelocity(1000);
-        motors.get(1).setVelocity(1000);
+        right.setVelocity(1000);
+        left.setVelocity(1000);
 
         //Provides telemetry for the motor's current position and the trim value
-        telemetry.addData("Left Current position: ", motors.get(0).getCurrentPosition());
-        telemetry.addData("Right Current position: ", motors.get(1).getCurrentPosition());
+        telemetry.addData("Right Current position: ", right.getCurrentPosition());
+        telemetry.addData("Left Current position: ", left.getCurrentPosition());
         telemetry.addData("Trim", trim);
         telemetry.addData("Height Value", height);
     }

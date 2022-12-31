@@ -32,6 +32,7 @@ public abstract class  Mechanism {
         sensors = new ArrayList<DigitalChannel>();
     }
 
+
     public abstract void update(Gamepad gp1, Gamepad gp2);
 
     public abstract void write();
