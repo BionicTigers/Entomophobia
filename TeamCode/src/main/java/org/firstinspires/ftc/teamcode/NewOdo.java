@@ -166,12 +166,9 @@ public class NewOdo extends Mechanism{
         previousBackTicks = postResetBackTicks;
     }
 
-
     public void updateGlobalPosition() {
         //Change in straight line distance of move on the global
         deltaGlobalDistance = Math.sqrt((deltaXFinal * deltaXFinal) + (deltaYFinal * deltaYFinal));
-        //Updates the global rotation of the robot compared to the starting angle
-        globalRotation = globalRotation + deltaLocalRotation;
         //Calculates the change in global x and y coordinates since last cycle
 //        deltaGlobalX = deltaGlobalDistance * Math.sin(globalRotation + (deltaLocalRotation / 2));
 //        deltaGlobalY = deltaGlobalDistance * Math.cos(globalRotation + (deltaLocalRotation / 2));
@@ -182,6 +179,9 @@ public class NewOdo extends Mechanism{
         //Testing stuff.. Yipeee!!
         globalX += deltaXFinal * Math.cos(globalRotation) + deltaYFinal * Math.cos(globalRotation - (Math.PI / 2));
         globalY += deltaXFinal * Math.sin(globalRotation) + deltaYFinal * Math.sin(globalRotation - (Math.PI / 2));
+
+        //Updates the global rotation of the robot compared to the starting angle
+//        globalRotation += deltaLocalRotation;
 
         //Converts our global rotation to degrees
         rotationInDegrees = Math.toDegrees(globalRotation);
