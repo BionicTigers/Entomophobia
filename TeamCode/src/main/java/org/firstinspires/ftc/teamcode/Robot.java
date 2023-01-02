@@ -32,6 +32,11 @@ public  class Robot {
     public HardwareMap hardwareMap;
     public Odometry odometry;
 
+    public DcMotorEx frontLeft;
+    public DcMotorEx frontRight;
+    public DcMotorEx backLeft;
+    public DcMotorEx backRight;
+
 
     public String[] motorNames = {"frontRight","frontLeft","backLeft","backRight"};
 
@@ -41,14 +46,25 @@ public  class Robot {
         oop = opMode;
         hardwareMap = oop.hardwareMap;
 
+        //Creates motors ArrayList
         motors = new ArrayList<>();
+
+        //Adds motors to motors ArrayList
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"frontLeft"));
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"frontRight"));
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"backLeft"));
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"backRight"));
+
+        //Declares fields
+        frontLeft = motors.get(0);
+        frontRight = motors.get(1);
+        backLeft = motors.get(2);
+        backRight = motors.get(3);
+
         motors.get(0).setDirection(DcMotorSimple.Direction.REVERSE);
         motors.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
         motors.get(3).setDirection(DcMotorSimple.Direction.REVERSE);
+
         time = new ElapsedTime();
 //
         gamepad1 = oop.gamepad1;
@@ -78,6 +94,12 @@ public  class Robot {
         motors.get(2).setDirection(DcMotorSimple.Direction.REVERSE);
         time = new ElapsedTime();
 
+        //Declares fields
+//        frontLeft = motors.get(0);
+//        frontRight = motors.get(1);
+//        backLeft = motors.get(2);
+//        backRight = motors.get(3);
+
         gamepad1 = linoop.gamepad1;
         gamepad2 = linoop.gamepad2;
 
@@ -86,7 +108,7 @@ public  class Robot {
 
 
 
-        odometry = new Odometry(hardwareMap);
+//        odometry = new Odometry(hardwareMap);
     }
 
     public Robot() {}
