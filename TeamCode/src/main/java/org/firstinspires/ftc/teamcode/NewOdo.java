@@ -30,7 +30,7 @@ public class NewOdo extends Mechanism{
     //Measurements are all in millimeters
 
     //Diameter of the odometry wheels
-    private static final double odo_diameter = 25.4;
+    private static final double odo_diameter = 35;
     //Gear ratio of the odometry wheels
     private static final double gear_ratio = 2.5;
     //Number of ticks on the encoders
@@ -109,6 +109,7 @@ public class NewOdo extends Mechanism{
 
         telemetry = T;
     }
+
     public void updateLocalPosition() {
         bulkData = expansionHub.getBulkInputData();
 

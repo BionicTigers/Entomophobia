@@ -10,7 +10,6 @@ public class OdometryTesting extends LinearOpMode {
     public NOdoRobot robot;
     public NOdoDrivetrain drive;
     public int[] motorNumbers = {0, 1, 2, 3};
-    public Intake intake;
     public Lift lift;
     public Claw claw;
 
