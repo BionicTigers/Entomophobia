@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The lift class has 2 motors that lift a double reverse four bar lift.
@@ -82,6 +85,14 @@ public class Lift extends Mechanism {
         if (gp2.right_stick_y <= -0.3) {
             trim = trim - 10;
         }
+
+//        //Moves the lift up when claw is closed so that cones can move over ground junctions
+//        if(gp2.left_trigger > 0.3) {
+//            Deadline hold = new Deadline(300, TimeUnit.MILLISECONDS);
+//            if(hold.hasExpired()) {
+//                height = -200;
+//            }
+//        }
     }
 
 

@@ -394,12 +394,12 @@ public class NOdoDrivetrain extends Mechanism {
     public void odoUp () {
         servos.get(0).setPosition(0);
         servos.get(1).setPosition(1);
-        servos.get(2).setPosition(0);
+        servos.get(2).setPosition(0.6);
     }
 
     public void odoDown () {
         servos.get(0).setPosition(0.85);//L
         servos.get(1).setPosition(0.35);//M
-        servos.get(2).setPosition(0.6);//R
+        servos.get(2).setPosition(0);//R
     }
 }

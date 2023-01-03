@@ -165,7 +165,7 @@ public class Drivetrain extends Mechanism {
 //        } else if (gp1.back) {
 //            odoDown();
 //        }
-
+        //Slow mode buttons
         if(gp1.dpad_up){ //precision movement forward, very slow
             DMPZ = DMPZ - 0.40;
         }
@@ -182,6 +182,16 @@ public class Drivetrain extends Mechanism {
             DMPX= DMPX + 0.55;
         }
         if(gp1.left_bumper){
+            DMPX= DMPX - 0.55;
+        }
+
+        //Hold down a for slow mode
+        if(gp1.a){
+            DMPZ = DMPZ - 0.40;
+            DMPZ = DMPZ + 0.40;
+            DMPROT = DMPROT + 0.4;
+            DMPROT = DMPROT - 0.4;
+            DMPX= DMPX + 0.55;
             DMPX= DMPX - 0.55;
         }
 
@@ -209,14 +219,14 @@ public class Drivetrain extends Mechanism {
         }
 //        robot.odometry.updatePosition();
         //Sets all telemetry for the drivetrain
-        telemetry.addLine("Motor Powers");
-        dashboardtelemetry.addData("Front Right Power", motorPowers[0]);
-        dashboardtelemetry.addData("Front Left Power", motorPowers[1]);
-        dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
-        dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
-        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
-        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
-        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(3));
+//        telemetry.addLine("Motor Powers");
+//        dashboardtelemetry.addData("Front Right Power", motorPowers[0]);
+//        dashboardtelemetry.addData("Front Left Power", motorPowers[1]);
+//        dashboardtelemetry.addData("Back Right Power", motorPowers[2]);
+//        dashboardtelemetry.addData("Back Left Power", motorPowers[3]);
+//        dashboardtelemetry.addData("ErrorX", + error.getLocation(0));
+//        dashboardtelemetry.addData("ErrorZ", + error.getLocation(2));
+//        dashboardtelemetry.addData("ErrorRotation", + error.getLocation(3));
 
         //Records Location as X, Z, rot
 //        dashboardtelemetry.addData("X", robot.odometry.realMaybe.getLocation(0));
@@ -224,8 +234,8 @@ public class Drivetrain extends Mechanism {
 //        dashboardtelemetry.addData("Rotation ", robot.odometry.realMaybe.getLocation(3));
 ////        dashboardtelemetry.addData("encoder delta MM 0", robot.odometry.getEncoderPosition()[0]);
 //        dashboardtelemetry.addData("encoder delta MM 0, 1, 2:", robot.odometry.currentEncoderMMPosString());
-        telemetry.update();
-        dashboardtelemetry.update();
+//        telemetry.update();
+//        dashboardtelemetry.update();
     }
 
 
