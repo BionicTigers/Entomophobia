@@ -26,12 +26,12 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/old.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/FTC_Zoo.tflite";
 
     private static final String[] LABELS = {
-            "Zebra",
-            "Teddy Bear",
-            "Chair"
+            "Tiger",
+            "Banana",
+            "Apple"
     };
 
     private static final String VUFORIA_KEY = "ATwrk3v/////AAABmaeTGhT4Ek/vlsivypnpHgozTllYm5abCieT9lemzCyirZ+6wd4GT5iiP3MQe34vBvCSqW3f7hjtIRAXO3jCr1/Tbw3IMT3T6QnefgPHOt/UbwmxexRX67I1M4PP/EitLzL5uZhrpnMPgOLcThIXA17F5HQDclLglJ/C8ZVRkVuer3L3HGjl/1jXTx6CisGaNARfEq3c4GMMEdKnFpY+v7MCwycT6Z4ihX3tgFM4/2gYIpID0Fe8teqcOv0CjWwX2kDaPzk6i0HCetvt+WEpRA17UeZ7nQqYglZSG4ZFkDfZhpZfEzJL7XbVvTG9vC+ZdbRNU+bgGKz56WsDWI0bh6BMUxXKm+F8ClfqXPsq2Vrk";
@@ -58,7 +58,7 @@ public class TensorFlowWebcam extends LinearOpMode {
             You can increase the magnification value (parameter 1/v)
             Make sure to use the right aspect ratio so you don't have any distortion (parameter 2/v1)
              */
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.5, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -117,7 +117,7 @@ public class TensorFlowWebcam extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
+        tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
