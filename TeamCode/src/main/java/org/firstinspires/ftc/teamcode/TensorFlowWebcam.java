@@ -26,7 +26,7 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/FTC_Zoo.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/Robot_To_Code.tflite";
 
     private static final String[] LABELS = {
             "banana",
@@ -57,7 +57,7 @@ public class TensorFlowWebcam extends LinearOpMode {
             You can increase the magnification value (parameter 1/v)
             Make sure to use the right aspect ratio so you don't have any distortion (parameter 2/v1)
              */
-            tfod.setZoom(1, 16.0/9.0);
+            tfod.setZoom(1.25, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
