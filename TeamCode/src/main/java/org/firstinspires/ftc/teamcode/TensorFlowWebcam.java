@@ -26,11 +26,12 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/Robot_To_Code.tflite";
+    private static final String TFOD_MODEL_ASSET = "Let_There_Be_Light.tflite";
 
     private static final String[] LABELS = {
-            "banana",
-            "apple"
+            "Bear",
+            "Chair",
+            "Zerba"
     };
 
     private static final String VUFORIA_KEY = "ATwrk3v/////AAABmaeTGhT4Ek/vlsivypnpHgozTllYm5abCieT9lemzCyirZ+6wd4GT5iiP3MQe34vBvCSqW3f7hjtIRAXO3jCr1/Tbw3IMT3T6QnefgPHOt/UbwmxexRX67I1M4PP/EitLzL5uZhrpnMPgOLcThIXA17F5HQDclLglJ/C8ZVRkVuer3L3HGjl/1jXTx6CisGaNARfEq3c4GMMEdKnFpY+v7MCwycT6Z4ihX3tgFM4/2gYIpID0Fe8teqcOv0CjWwX2kDaPzk6i0HCetvt+WEpRA17UeZ7nQqYglZSG4ZFkDfZhpZfEzJL7XbVvTG9vC+ZdbRNU+bgGKz56WsDWI0bh6BMUxXKm+F8ClfqXPsq2Vrk";
