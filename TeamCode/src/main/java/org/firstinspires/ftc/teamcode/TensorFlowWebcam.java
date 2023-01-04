@@ -29,7 +29,6 @@ public class TensorFlowWebcam extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "tflitemodels/FTC_Zoo.tflite";
 
     private static final String[] LABELS = {
-            "tiger",
             "banana",
             "apple"
     };
@@ -58,7 +57,7 @@ public class TensorFlowWebcam extends LinearOpMode {
             You can increase the magnification value (parameter 1/v)
             Make sure to use the right aspect ratio so you don't have any distortion (parameter 2/v1)
              */
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(1, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
