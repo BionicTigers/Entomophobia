@@ -13,21 +13,12 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="VisAuto", group="autonomous")
 public class VisAuto extends LinearOpMode {
-    public Robot robot;
-    public Drivetrain drivetrain;
-    public String[] motorNames = {"frontRight", "frontLeft", "backLeft", "backRight"};
-    public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
     //    public Deposit deposit;
     private Vision vision;
 
     public void runOpMode() {
-        robot = new Robot(this);
-        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
-//        deposit = new Deposit(hardwareMap.get(Servo.class, "outputServo"));
         vision = new Vision();
-        Deadline stop = new Deadline(500, TimeUnit.MILLISECONDS);
         waitForStart();
-        stop.reset();
         OpenCvCamera webcam;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -41,14 +32,5 @@ public class VisAuto extends LinearOpMode {
             telemetry.addData("Area", vision.getArea());
             telemetry.update();
         }
-//        drivetrain.motors.get(0).setPower(0.5);
-//        drivetrain.motors.get(1).setPower(0.5);
-//        drivetrain.motors.get(2).setPower(0.5);
-//        drivetrain.motors.get(3).setPower(0.5);
-//        if(stop.hasExpired()){
-//            drivetrain.motors.get(0).setPower(0);
-//            drivetrain.motors.get(1).setPower(0);
-//            drivetrain.motors.get(2).setPower(0);
-//            drivetrain.motors.get(3).setPower(0);
     }
 }

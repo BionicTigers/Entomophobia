@@ -28,7 +28,8 @@ public class Vision extends OpenCvPipeline {
 
     /**
      * @param input - input matrix
-     * @param hue   - values for hue
+     * @param hue   - values
+     *             -for hue
      * @param sat   - values for saturation
      * @param lum   - values for luminance
      * @param out   - output matrix
@@ -61,14 +62,13 @@ public class Vision extends OpenCvPipeline {
     public Mat processFrame(Mat source0) {
         Mat hiarchy = new Mat();
 
-        double[] hslThresholdHue = {0, 30};
-        double[] hslThresholdSaturation = {177, 255};
-        double[] hslThresholdLuminance = {32 , 161};
+        double[] hslThresholdHue = {46, 66};
+        double[] hslThresholdSaturation = {43, 255};
+        double[] hslThresholdLuminance = {95 , 255};
         //takes values for hue, saturation, and luminance and apply's them to what the camera sees
         hslThreshold(source0, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
         List<MatOfPoint> contoursBlack = new ArrayList<>();
 
-        Imgproc.GaussianBlur(source0, source0, new Size(9,9), 0);
 
         //adds a blur to what the camera sees
 
@@ -80,7 +80,7 @@ public class Vision extends OpenCvPipeline {
         List<MatOfPoint> Shipppingelement = new ArrayList<>();
 
         for(MatOfPoint con :contoursBlack){
-            if(Imgproc.contourArea(con) <= 100){
+            if(Imgproc.contourArea(con) >= 0){
                 Shipppingelement.add(con);
             }
         }
@@ -90,7 +90,7 @@ public class Vision extends OpenCvPipeline {
         Imgproc.drawContours(source0, Shipppingelement, -1, new Scalar(250,0,250),1);
 
         //gets the area of the contours around the rings
-        if(Shipppingelement.size() > 0){
+        if(Shipppingelement.size() >= 50){
             area = Imgproc.contourArea(Shipppingelement.get(0));
         }
         else {

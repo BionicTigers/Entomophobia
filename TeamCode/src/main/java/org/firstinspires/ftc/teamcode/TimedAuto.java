@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="TimedAuto", group="autonomous")
@@ -16,6 +19,10 @@ public class TimedAuto extends LinearOpMode {
     //Declares mechanisms
     public Robot robot;
     public Drivetrain drivetrain;
+    public TensorFlow tensorflow;
+
+    private List<Recognition> detected;
+    private byte randomization = 2;
     //public TensorFlowWebcam tensorFlow = new TensorFlowWebcam();
 
     @Override
@@ -23,8 +30,33 @@ public class TimedAuto extends LinearOpMode {
         //On initialization
         robot = new Robot(this);
         drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
+        tensorflow = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
+        System.out.println("Init Tensorflow");
 
-        byte randomization = 3;
+        do {
+            detected = tensorflow.getDetected();
+            System.out.println(this.detected);
+            if (detected != null && detected.size() != 0) {
+                telemetry.addData("Start", detected.get(0).getLabel());
+                System.out.println("Detection");
+                telemetry.update();
+                break;
+            }
+        } while (!isStarted());
+//               Started: True or detected: False or size: true
+        System.out.println("Passed");
+
+
+        if (detected != null) {
+            if (detected.size() != 0) {
+                if (detected.get(0).getLabel() == "Apple") {
+                    randomization = 1;
+                } else if (detected.get(0).getLabel() == "Banana") {
+                    randomization = 3;
+                }
+            }
+        }
 
         waitForStart();
         //On start
@@ -55,7 +87,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(1).setPower(-0.55);
                 drivetrain.robot.motors.get(2).setPower(0.8);
                 drivetrain.robot.motors.get(3).setPower(-0.55);
-                sleep(1050);
+                sleep(1200);
                 drivetrain.robot.motors.get(0).setPower(0);
                 drivetrain.robot.motors.get(1).setPower(0);
                 drivetrain.robot.motors.get(2).setPower(0);
@@ -63,11 +95,11 @@ public class TimedAuto extends LinearOpMode {
                 break;
             //Moves forward 1 tile
             case 2:
-                drivetrain.robot.motors.get(0).setPower(0.8);
+                drivetrain.robot.motors.get(0).setPower(0.85);
                 drivetrain.robot.motors.get(1).setPower(0.8);
                 drivetrain.robot.motors.get(2).setPower(0.8);
-                drivetrain.robot.motors.get(3).setPower(0.8);
-                sleep(600);
+                drivetrain.robot.motors.get(3).setPower(0.85);
+                sleep(700);
                 drivetrain.robot.motors.get(0).setPower(0);
                 drivetrain.robot.motors.get(1).setPower(0);
                 drivetrain.robot.motors.get(2).setPower(0);
@@ -80,7 +112,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(1).setPower(0.7);
                 drivetrain.robot.motors.get(2).setPower(0.7);
                 drivetrain.robot.motors.get(3).setPower(0.8);
-                sleep(600);
+                sleep(650);
                 drivetrain.robot.motors.get(0).setPower(0);
                 drivetrain.robot.motors.get(1).setPower(0);
                 drivetrain.robot.motors.get(2).setPower(0);
@@ -90,7 +122,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(1).setPower(0.8); //front left
                 drivetrain.robot.motors.get(2).setPower(-0.7); //back left
                 drivetrain.robot.motors.get(3).setPower(0.7); // back right
-                sleep(1100);
+                sleep(1250);
                 drivetrain.robot.motors.get(0).setPower(0);
                 drivetrain.robot.motors.get(1).setPower(0);
                 drivetrain.robot.motors.get(2).setPower(0);

@@ -101,7 +101,7 @@ public class Drivetrain extends Mechanism {
 
         double P = Math.hypot(driverPad.left_stick_x, driverPad.left_stick_y);
         double robotAngle = Math.atan2(driverPad.left_stick_y, driverPad.left_stick_x);
-        double rightX = driverPad.right_stick_x+dpadVal;
+        double rightX = -driverPad.right_stick_x+dpadVal;
 
         double sinRAngle = Math.sin(robotAngle);
         double cosRAngle = Math.cos(robotAngle);
@@ -111,17 +111,10 @@ public class Drivetrain extends Mechanism {
         final double v3 = (-P * sinRAngle) - (P * cosRAngle) - rightX; //backLeft
         final double v4 = (-P * sinRAngle) + (P * cosRAngle) + rightX; //backRight
 
-        if (driverPad.right_bumper) {
-            motorPowers[0] = v1*0.3;
-            motorPowers[1] = v2*0.3;
-            motorPowers[2] = v3*0.3;
-            motorPowers[3] = v4*0.3;
-        } else {
-            motorPowers[0] = v1;
-            motorPowers[1] = v2;
-            motorPowers[2] = -v3;
-            motorPowers[3] = -v4;
-        }
+            motorPowers[0] = -v1;
+            motorPowers[1] = -v2;
+            motorPowers[2] = v3;
+            motorPowers[3] = v4;
     }
 
     /**
@@ -167,16 +160,16 @@ public class Drivetrain extends Mechanism {
 //        }
         //Slow mode buttons
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPZ = DMPZ - 0.40;
-        }
-        if(gp1.dpad_down){ //precision movement backward, very slow
             DMPZ = DMPZ + 0.40;
         }
+        if(gp1.dpad_down){ //precision movement backward, very slow
+            DMPZ = DMPZ - 0.40;
+        }
         if(gp1.dpad_left) {
-            DMPROT = DMPROT + 0.4;
+            DMPROT = DMPROT - 0.4;
         }
         if(gp1.dpad_right) {
-            DMPROT = DMPROT - 0.4;
+            DMPROT = DMPROT + 0.4;
         }
         if(gp1.right_bumper){
             DMPX= DMPX + 0.55;
