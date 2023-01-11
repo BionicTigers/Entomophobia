@@ -224,4 +224,12 @@ public class NewOdo extends Mechanism{
         telemetry.addData("Rot", rotationInDegrees);
         telemetry.addData("DeltaGlobalY", deltaGlobalY);
     }
+
+    //Gets the position
+    public NOdoLocation getPosition() {
+        try {return position;}
+        catch (NullPointerException e) {
+            return new NOdoLocation();
+        }
+    }
 }

@@ -47,9 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This class does Blackmagic
- */
+// This class does black magic
 
 class Utils
 {
