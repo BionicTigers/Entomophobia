@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Mechanism;
+import org.firstinspires.ftc.teamcode.util.Mechanism;
 
 public class Transfer extends Mechanism {
 

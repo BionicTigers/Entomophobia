@@ -99,13 +99,13 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../org/firstinspires/ftc/teamcode/Mechanism.html" title="class in org.firstinspires.ftc.teamcode">org.firstinspires.ftc.teamcode.Mechanism</a></li>
+<li><a href="../../../../org/firstinspires/ftc/teamcode/Mechanism.html" title="class in org.firstinspires.ftc.teamcode">org.firstinspires.ftc.teamcode.util.Mechanism</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" title="class in org.firstinspires.ftc.teamcode">org.firstinspires.ftc.teamcode.Drivetrain</a></li>
+<li><a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" title="class in org.firstinspires.ftc.teamcode">org.firstinspires.ftc.teamcode.mechanisms.Drivetrain</a></li>
 <li>
 <ul class="inheritance">
-<li>org.firstinspires.ftc.teamcode.PIDloops</li>
+<li>org.firstinspires.ftc.teamcode.mechanisms.PIDloops</li>
 </ul>
 </li>
 </ul>
@@ -156,14 +156,14 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.org.firstinspires.ftc.teamcode.Drivetrain">
+<li class="blockList"><a name="fields.inherited.from.class.org.firstinspires.ftc.teamcode.mechanisms.Drivetrain">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.firstinspires.ftc.teamcode.<a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" title="class in org.firstinspires.ftc.teamcode">Drivetrain</a></h3>
 <code><a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#altMode">altMode</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#cosrang">cosrang</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#dashboardtelemetry">dashboardtelemetry</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#error">error</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#integralValues">integralValues</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#location">location</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#loops">loops</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#motorIndices">motorIndices</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#motorPowers">motorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#pow">pow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#previousSpinError">previousSpinError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#robot">robot</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#sinrang">sinrang</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#spinError">spinError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#telemetry">telemetry</a></code></li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.org.firstinspires.ftc.teamcode.Mechanism">
+<li class="blockList"><a name="fields.inherited.from.class.org.firstinspires.ftc.teamcode.util.Mechanism">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.firstinspires.ftc.teamcode.<a href="../../../../org/firstinspires/ftc/teamcode/Mechanism.html" title="class in org.firstinspires.ftc.teamcode">Mechanism</a></h3>
@@ -183,7 +183,7 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#PIDloops-org.firstinspires.ftc.teamcode.Robot-int:A-org.firstinspires.ftc.robotcore.external.Telemetry-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-org.firstinspires.ftc.teamcode.PID-org.firstinspires.ftc.teamcode.PID-org.firstinspires.ftc.teamcode.PID-">PIDloops</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Robot.html" title="class in org.firstinspires.ftc.teamcode">Robot</a>&nbsp;bot,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#PIDloops-org.firstinspires.ftc.teamcode.mechanisms.Robot-int:A-org.firstinspires.ftc.robotcore.external.Telemetry-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-org.firstinspires.ftc.teamcode.mechanisms.PID-org.firstinspires.ftc.teamcode.mechanisms.PID-org.firstinspires.ftc.teamcode.mechanisms.PID-">PIDloops</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Robot.html" title="class in org.firstinspires.ftc.teamcode">Robot</a>&nbsp;bot,
         int[]&nbsp;motorNumbers,
         org.firstinspires.ftc.robotcore.external.Telemetry&nbsp;telem,
         com.qualcomm.robotcore.hardware.Servo&nbsp;servo1,
@@ -210,11 +210,11 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#determineError-org.firstinspires.ftc.teamcode.Location-">determineError</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;location)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#determineError-org.firstinspires.ftc.teamcode.util.Location-">determineError</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;location)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#pidGo-org.firstinspires.ftc.teamcode.Location-">pidGo</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;location)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/firstinspires/ftc/teamcode/PIDloops.html#pidGo-org.firstinspires.ftc.teamcode.util.Location-">pidGo</a></span>(<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;location)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -223,14 +223,14 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.firstinspires.ftc.teamcode.Drivetrain">
+<li class="blockList"><a name="methods.inherited.from.class.org.firstinspires.ftc.teamcode.mechanisms.Drivetrain">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.firstinspires.ftc.teamcode.<a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" title="class in org.firstinspires.ftc.teamcode">Drivetrain</a></h3>
-<code><a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#determineMotorPowers-double-double-double-">determineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#determineMotorPowers-com.qualcomm.robotcore.hardware.Gamepad-">determineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#fieldRelDetermineMotorPowers-double-double-double-">fieldRelDetermineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findError-org.firstinspires.ftc.teamcode.Location-">findError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findErrorSlow-org.firstinspires.ftc.teamcode.Location-">findErrorSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findErrorSuperSlow-org.firstinspires.ftc.teamcode.Location-">findErrorSuperSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPosition-org.firstinspires.ftc.teamcode.Location-double-double-double-">moveToPosition</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPosition-org.firstinspires.ftc.teamcode.Location-double-double-double-int-">moveToPosition</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSlow-org.firstinspires.ftc.teamcode.Location-double-double-double-">moveToPositionSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSlow-org.firstinspires.ftc.teamcode.Location-double-double-double-int-">moveToPositionSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSuperSlow-org.firstinspires.ftc.teamcode.Location-double-double-double-int-">moveToPositionSuperSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#odoDown--">odoDown</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#odoUp--">odoUp</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#rotationError-float-float-">rotationError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#stopDrivetrain--">stopDrivetrain</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#write--">write</a></code></li>
+<code><a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#determineMotorPowers-double-double-double-">determineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#determineMotorPowers-com.qualcomm.robotcore.hardware.Gamepad-">determineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#fieldRelDetermineMotorPowers-double-double-double-">fieldRelDetermineMotorPowers</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findError-org.firstinspires.ftc.teamcode.util.Location-">findError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findErrorSlow-org.firstinspires.ftc.teamcode.util.Location-">findErrorSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#findErrorSuperSlow-org.firstinspires.ftc.teamcode.util.Location-">findErrorSuperSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPosition-org.firstinspires.ftc.teamcode.util.Location-double-double-double-">moveToPosition</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPosition-org.firstinspires.ftc.teamcode.util.Location-double-double-double-int-">moveToPosition</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSlow-org.firstinspires.ftc.teamcode.util.Location-double-double-double-">moveToPositionSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSlow-org.firstinspires.ftc.teamcode.util.Location-double-double-double-int-">moveToPositionSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#moveToPositionSuperSlow-org.firstinspires.ftc.teamcode.util.Location-double-double-double-int-">moveToPositionSuperSlow</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#odoDown--">odoDown</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#odoUp--">odoUp</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#rotationError-float-float-">rotationError</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#stopDrivetrain--">stopDrivetrain</a>, <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html#write--">write</a></code></li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.firstinspires.ftc.teamcode.Mechanism">
+<li class="blockList"><a name="methods.inherited.from.class.org.firstinspires.ftc.teamcode.util.Mechanism">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.firstinspires.ftc.teamcode.<a href="../../../../org/firstinspires/ftc/teamcode/Mechanism.html" title="class in org.firstinspires.ftc.teamcode">Mechanism</a></h3>
@@ -301,7 +301,7 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PIDloops-org.firstinspires.ftc.teamcode.Robot-int:A-org.firstinspires.ftc.robotcore.external.Telemetry-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-org.firstinspires.ftc.teamcode.PID-org.firstinspires.ftc.teamcode.PID-org.firstinspires.ftc.teamcode.PID-">
+<a name="PIDloops-org.firstinspires.ftc.teamcode.mechanisms.Robot-int:A-org.firstinspires.ftc.robotcore.external.Telemetry-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-com.qualcomm.robotcore.hardware.Servo-org.firstinspires.ftc.teamcode.mechanisms.PID-org.firstinspires.ftc.teamcode.mechanisms.PID-org.firstinspires.ftc.teamcode.mechanisms.PID-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -326,7 +326,7 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="determineError-org.firstinspires.ftc.teamcode.Location-">
+<a name="determineError-org.firstinspires.ftc.teamcode.util.Location-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -335,7 +335,7 @@ extends <a href="../../../../org/firstinspires/ftc/teamcode/Drivetrain.html" tit
 <pre>public&nbsp;<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;determineError(<a href="../../../../org/firstinspires/ftc/teamcode/Location.html" title="class in org.firstinspires.ftc.teamcode">Location</a>&nbsp;location)</pre>
 </li>
 </ul>
-<a name="pidGo-org.firstinspires.ftc.teamcode.Location-">
+<a name="pidGo-org.firstinspires.ftc.teamcode.util.Location-">
 <!--   -->
 </a>
 <ul class="blockList">
