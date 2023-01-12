@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -12,6 +13,10 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
  * @author Jack Gerber
  */
 public class Lift extends Mechanism {
+    //Declares fields
+    private  DigitalChannel topLimitSwitch;
+    private  DigitalChannel bottomLimitSwitch;
+
     public Telemetry telemetry;
 
     public int height = 0;
@@ -19,11 +24,16 @@ public class Lift extends Mechanism {
 
     public DcMotorEx left;
     public DcMotorEx right;
+
     /**
      * Adds motors to the left and right variables
      * @param l imported left motor
+     * @param r imported right motor
+     * @param top imported top limit switch
+     * @param bottom imported bottom limit switch
+     * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r, DigitalChannel top, DigitalChannel bottom, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -49,6 +59,14 @@ public class Lift extends Mechanism {
 
         //Sets the height starting position
         height = 0;
+
+        //Declares limit switches
+        topLimitSwitch = top;
+        bottomLimitSwitch = bottom;
+        sensors.add(topLimitSwitch);
+        sensors.add(bottomLimitSwitch);
+        topLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     /**
@@ -69,17 +87,17 @@ public class Lift extends Mechanism {
 //            height = 0;
 //        }
 
-        if (gp2.left_stick_y <= -0.3) {
+        if (gp2.left_stick_y <= -0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
             height = -1500;
-        } else if (gp2.left_stick_y >= 0.3) {
+        } else if (gp2.left_stick_y >= 0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
             height = 0;
             trim = 0;
         }
 
-        if (gp2.right_stick_y >= 0.3) {
+        if (gp2.right_stick_y >= 0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
             trim = trim + 10;
         }
-        if (gp2.right_stick_y <= -0.3) {
+        if (gp2.right_stick_y <= -0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
             trim = trim - 10;
         }
 
@@ -92,7 +110,9 @@ public class Lift extends Mechanism {
 //        }
     }
 
-
+    /**
+     * Writes the motor powers to the motors
+     */
     @Override
     public void write() {
         right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);

@@ -336,9 +336,9 @@ public class Drivetrain extends Mechanism {
 
         double sinRAngle = Math.sin(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(3)));
         double cosRAngle = 1.2*Math.cos(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(3)));
-//        telemetry.addData("robot angle",robotAngle);
-//        telemetry.addData("sin angle",sinRAngle);
-//        telemetry.addData("cos angle",cosRAngle);
+        telemetry.addData("robot angle",robotAngle);
+        telemetry.addData("sin angle",sinRAngle);
+        telemetry.addData("cos angle",cosRAngle);
 
         final double frPower = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontRight
         final double flPower = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontLeft
