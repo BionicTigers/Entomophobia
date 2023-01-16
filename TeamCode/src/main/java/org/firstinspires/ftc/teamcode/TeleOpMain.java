@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "TeleOpMain")
@@ -21,7 +22,7 @@ public class TeleOpMain extends LinearOpMode {
         lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR"), telemetry);
 //        deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry);
+        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry, hardwareMap.get(DigitalChannel.class, "limit1"), hardwareMap.get(DigitalChannel.class, "limit2"));
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         waitForStart();
