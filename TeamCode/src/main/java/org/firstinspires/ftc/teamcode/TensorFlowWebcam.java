@@ -26,11 +26,11 @@ import java.util.List;
 @TeleOp(name="TensorFlowWebcam")
 public class TensorFlowWebcam extends LinearOpMode {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/old.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/NewModel.tflite";
 
     private static final String[] LABELS = {
-            "Zebra",
-            "Teddy Bear",
+            "Zerba",
+            "Bear",
             "Chair"
     };
 

@@ -17,12 +17,13 @@ apply from: '../build.dependencies.gradle'
 
 android {
 
+
     androidResources {
         noCompress 'tflite'
     }
     packagingOptions {
         jniLibs {
-            pickFirsts += ['**/*.so']
+            pickFirsts += ['**/*.so', '**/*.so']
         }
     }
     namespace 'org.firstinspires.ftc.teamcode'
@@ -34,5 +35,4 @@ dependencies {
     implementation 'org.openftc:easyopencv:1.5.1'
 
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    implementation 'com.acmerobotics.roadrunner:core:0.5.5'
 }

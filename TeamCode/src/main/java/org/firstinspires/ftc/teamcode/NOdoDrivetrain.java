@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -22,7 +22,7 @@ public class NOdoDrivetrain extends Mechanism {
     public Telemetry telemetry; //declares a new instance of Telemetry
 //    public Telemetry dashboardtelemetry;
     public PIDloops loops;
-    private FtcDashboard dashboard;
+    //private FtcDashboard dashboard;
     public NOdoLocation location;
     public NewOdo odo;
 
