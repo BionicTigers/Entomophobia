@@ -20,9 +20,9 @@ public class ControlHub {
     }
 
     private int[] internalRefreshBulkData() {
-        int[] bulkData = new int[4];
+        int[] bulkData = new int[3];
 
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<3; i++) {
             bulkData[i] = hub.getMotorCurrentPosition(i);
         }
 
