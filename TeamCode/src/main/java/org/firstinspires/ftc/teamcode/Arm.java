@@ -41,11 +41,12 @@ public class Arm extends Mechanism{
     @Override
     public void write() {
         telemetry.addData("Position", position);
-        if(!sensors.get(0).getState()){
-
-        }
-        if(!sensors.get(1).getState()){
-
+        if(!sensors.get(0).getState() && position <= 0){
+            crServos.get(0).setPower(0);
+            crServos.get(1).setPower(0);
+        } else if(!sensors.get(1).getState() && position >= 1){
+            crServos.get(0).setPower(0);
+            crServos.get(1).setPower(0);
         }
     }
 
