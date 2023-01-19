@@ -8,23 +8,22 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 
-import java.util.Dictionary;
-
 public class Arm extends Mechanism {
     public Telemetry telemetry;
     public double position;
     private DigitalChannel limit1;
     private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel switch1, DigitalChannel switch2) {
+    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel limit1, DigitalChannel limit2) {
         super();
         crServos.add(l);
         crServos.add(r);
         crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
-        limit1 = switch1;
-        limit2 = switch2;
-        sensors.add(switch1);
-        sensors.add(switch2);
+        sensors.add(limit1);
+        sensors.add(limit2);
+        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
+        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
+
 
         telemetry = T;
     }
