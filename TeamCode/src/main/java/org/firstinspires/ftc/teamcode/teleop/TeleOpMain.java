@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.icu.text.LocaleDisplayNames;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.util.Mechanism;
@@ -27,7 +30,7 @@ public class TeleOpMain extends LinearOpMode {
         drive = new Drivetrain(robot, motorNumbers, telemetry);
         lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR"), telemetry);
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry);
+        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry, hardwareMap.get(DigitalChannel.class, "limit1"), hardwareMap.get(DigitalChannel.class, "limit2"));
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         waitForStart();
