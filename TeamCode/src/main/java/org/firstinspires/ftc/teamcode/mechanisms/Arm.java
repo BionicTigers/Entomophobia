@@ -14,7 +14,7 @@ public class Arm extends Mechanism {
     private DigitalChannel limit1;
     private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel limit1, DigitalChannel limit2) {
+    public Arm (CRServo l, CRServo r, Telemetry T/*, DigitalChannel limit1, DigitalChannel limit2*/) {
         super();
         crServos.add(l);
         crServos.add(r);

@@ -30,7 +30,7 @@ public class TeleOpMain extends LinearOpMode {
         drive = new Drivetrain(robot, motorNumbers, telemetry);
         lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR"), telemetry);
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry, hardwareMap.get(DigitalChannel.class, "limit1"), hardwareMap.get(DigitalChannel.class, "limit2"));
+        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry/*, hardwareMap.get(DigitalChannel.class, "limit1"), hardwareMap.get(DigitalChannel.class, "limit2")*/);
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         waitForStart();
