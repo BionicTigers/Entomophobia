@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.ControlHub;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
 import org.openftc.revextensions2.ExpansionHubEx;
@@ -11,10 +13,10 @@ import org.openftc.revextensions2.RevBulkData;
 
 public class NewOdo extends Mechanism {
 
-    private final ExpansionHubEx expansionHub;
     public Telemetry telemetry;
     //Bulk data
     public RevBulkData bulkData;
+    public ControlHub controlHub;
     //bulkData.getMotorCurrentPosition(i) gets the total ticks rotated since power up
 
     /*
@@ -106,19 +108,19 @@ public class NewOdo extends Mechanism {
 
 
     public NewOdo(HardwareMap hardwareMap, Telemetry T) {
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Control Hub");
+        controlHub = new ControlHub(hardwareMap, hardwareMap.get(LynxDcMotorController.class, "Control Hub"));
         reset();
 
         telemetry = T;
     }
 
     public void updateLocalPosition() {
-        bulkData = expansionHub.getBulkInputData();
+        controlHub.refreshBulkData();
 
         //Calculates the amount of ticks spun since reset by subtracting the junk from before rest from total rotated
-        postResetLeftTicks = bulkData.getMotorCurrentPosition(0) - junkLeftTicks;
-        postResetRightTicks = bulkData.getMotorCurrentPosition(1) - junkRightTicks;
-        postResetBackTicks = bulkData.getMotorCurrentPosition(2) - junkBackTicks;
+        postResetLeftTicks = controlHub.getEncoderTicks(0) - junkLeftTicks;
+        postResetRightTicks = controlHub.getEncoderTicks(1) - junkRightTicks;
+        postResetBackTicks = controlHub.getEncoderTicks(2) - junkBackTicks;
 
         //Converts change in ticks from last cycle into change in MM from last cycle for each wheel, and 1 & 2 are inversed
         deltaLeftMM = wheel_circumference * ((postResetLeftTicks - previousLeftTicks) / encoder_ticks);
@@ -196,15 +198,15 @@ public class NewOdo extends Mechanism {
         globalX = 0;
         globalY = 0;
 
-        bulkData = expansionHub.getBulkInputData();
+        controlHub.refreshBulkData();
 
         //Sets our current position to the zero point
         position.setLocation(0, 0, 0);
 
         //Sets the leftover junk ticks to the current motor rotations
-        junkLeftTicks = bulkData.getMotorCurrentPosition(0);
-        junkRightTicks = bulkData.getMotorCurrentPosition(1);
-        junkBackTicks = bulkData.getMotorCurrentPosition(2);
+        junkLeftTicks = controlHub.getEncoderTicks(0);
+        junkRightTicks = controlHub.getEncoderTicks(1);
+        junkBackTicks = controlHub.getEncoderTicks(2);
     }
 
     @Override
