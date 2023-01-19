@@ -19,10 +19,10 @@ public class Arm extends Mechanism {
         crServos.add(l);
         crServos.add(r);
         crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
-        sensors.add(limit1);
-        sensors.add(limit2);
-        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
-        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
+//        sensors.add(limit1);
+//        sensors.add(limit2);
+//        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
+//        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
 
 
         telemetry = T;

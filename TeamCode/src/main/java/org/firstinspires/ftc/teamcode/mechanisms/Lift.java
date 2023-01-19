@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
  */
 public class Lift extends Mechanism {
     //Declares fields
-    private  DigitalChannel topLimitSwitch;
-    private  DigitalChannel bottomLimitSwitch;
+    /*private  DigitalChannel topLimitSwitch;
+    private  DigitalChannel bottomLimitSwitch;*/
 
     public Telemetry telemetry;
 
@@ -26,14 +26,25 @@ public class Lift extends Mechanism {
     public DcMotorEx right;
 
     /**
+     * Creates an enum for lift positions
+     */
+    public enum LiftState {
+        HIGH, MEDIUM, LOW, INTAKE, STORING
+    }
+    /**
+     * The current position of the lift
+     */
+    private LiftState liftState = LiftState.STORING;
+
+    /**
      * Adds motors to the left and right variables
      * @param l imported left motor
      * @param r imported right motor
-     * @param top imported top limit switch
-     * @param bottom imported bottom limit switch
+     //* @param top imported top limit switch
+     //* @param bottom imported bottom limit switch
      * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r, DigitalChannel top, DigitalChannel bottom, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel top, DigitalChannel bottom*/, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -60,13 +71,13 @@ public class Lift extends Mechanism {
         //Sets the height starting position
         height = 0;
 
-        //Declares limit switches
+        /*//Declares limit switches
         topLimitSwitch = top;
         bottomLimitSwitch = bottom;
         sensors.add(topLimitSwitch);
         sensors.add(bottomLimitSwitch);
         topLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
-        bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);*/
     }
 
     /**
@@ -87,18 +98,18 @@ public class Lift extends Mechanism {
 //            height = 0;
 //        }
 
-        if (gp2.left_stick_y <= -0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
+        if (gp2.left_stick_y <= -0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
             height = -1500;
-        } else if (gp2.left_stick_y >= 0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
+        } else if (gp2.left_stick_y >= 0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
             height = 0;
             trim = 0;
         }
 
-        if (gp2.right_stick_y >= 0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
-            trim = trim + 10;
+        if (gp2.right_stick_y >= 0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+            trim = trim + 20;
         }
-        if (gp2.right_stick_y <= -0.3 && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()) {
-            trim = trim - 10;
+        if (gp2.right_stick_y <= -0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+            trim = trim - 20;
         }
 
 //        //Moves the lift up when claw is closed so that cones can move over ground junctions
@@ -108,6 +119,47 @@ public class Lift extends Mechanism {
 //                height = -200;
 //            }
 //        }
+
+        //Allows for easier intake of cones in a stack
+        if(gp2.dpad_up) {
+            height += 10;
+        }
+        else if(gp2.dpad_down) {
+            height -= 10;
+        }
+
+    }
+    /**
+     * Sets the lift to a given height
+     * @param targetState the height to set the lift to
+     */
+    public void moveLift(LiftState targetState) {
+        //Moves the lift to the desired height
+        if (targetState == LiftState.INTAKE) {
+            height = -1500;
+            liftState = LiftState.INTAKE;
+        }
+        else if (targetState == LiftState.STORING) {
+            height = -1000;
+            liftState = LiftState.STORING;
+        }
+        else if (targetState == LiftState.LOW) {
+            height = -500;
+            liftState = LiftState.LOW;
+        }
+        else if (targetState == LiftState.MEDIUM) {
+            height = -250;
+            liftState = LiftState.MEDIUM;
+        }
+        else if (targetState == LiftState.HIGH) {
+            height = 0;
+            liftState = LiftState.HIGH;
+        }
+
+        left.setTargetPosition(height + trim);
+        right.setTargetPosition(height + trim);
+        left.setVelocity(1000);
+        right.setVelocity(1000);
     }
 
     /**
