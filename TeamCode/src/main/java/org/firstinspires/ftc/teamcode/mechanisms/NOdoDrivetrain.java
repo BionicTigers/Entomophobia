@@ -74,7 +74,7 @@ public class NOdoDrivetrain extends Mechanism {
 
         for (int motNum : motorNumbers) {
             motorPlaceholder = robot.motors.get(motNum);
-            motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             motors.add(motorPlaceholder);
         }
         motorPowers = new double[]{0, 0, 0, 0};
@@ -244,21 +244,23 @@ public class NOdoDrivetrain extends Mechanism {
 //        stopDrivetrain();
 //    }
 //
-//    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, int maxTime, double mod) {
-//        integralValues = new double[3];
-//        error = findErrorMod(goalPos, mod);
-//        double startTime = robot.getTimeMS();
-//        while ((robot.getTimeMS() - startTime < maxTime) &&robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
-//            error = findErrorMod(goalPos, mod);
-//            write();
-//            robot.odometry.updatePosition();
-////            dashboardTelemetry.addData("x-error",error.getLocation(0) );
-////            dashboardTelemetry.addData("y-error",error.getLocation(1) );
-////            dashboardTelemetry.addData("r-error",error.getLocation(2) );
-////             dashboardTelemetry.update();
-//        }
-//        stopDrivetrain();
-//    }
+    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, double mod, int maxTime) {
+        integralValues = new double[3];
+        error = findErrorMod(goalPos, mod);
+        double startTime = robot.getTimeMS();
+        while ((robot.getTimeMS() - startTime < maxTime) &&robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+            robot.odometry.updateLocalPosition();
+            robot.odometry.updateGlobalPosition();
+            error = findErrorMod(goalPos, mod);
+            write();
+            robot.odometry.write();
+            dashboardTelemetry.addData("x-error",error.getLocation(0) );
+            dashboardTelemetry.addData("y-error",error.getLocation(1) );
+            dashboardTelemetry.addData("r-error",error.getLocation(2) );
+            dashboardTelemetry.update();
+        }
+        stopDrivetrain();
+    }
 //
 //    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, double mod) {
 //        integralValues = new double[3];
@@ -286,8 +288,8 @@ public class NOdoDrivetrain extends Mechanism {
         robotheading = robot.odometry.getPosition().getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
         robotheading = Math.atan2(error.getLocation(0),error.getLocation(1));
 
-        double forwardError = (Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude);
-        double strafeError = (Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude);
+        double forwardError = (Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude);
+        double strafeError = (Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude);
 
         if(Math.abs(Variables.kfP*forwardError + Variables.kfI*integralValues[0] + Variables.kfD * (forwardError- lastForwardError))<1)
             integralValues[0]= integralValues[0]+forwardError;
@@ -308,65 +310,65 @@ public class NOdoDrivetrain extends Mechanism {
         return error;
     }
 
-//    public  NOdoLocation findErrorMod( NOdoLocation goalPos, double mod) {
-//         NOdoLocation error = new NOdoLocation(
-//                goalPos.getLocation(0)-robot.odometry.realMaybe.getLocation(0),
-//                goalPos.getLocation(1) - robot.odometry.realMaybe.getLocation(1),
-//                rotationError(goalPos.getLocation(2), robot.odometry.realMaybe.getLocation(2)));
-//        //this is to change the global xy error into robot specific error
-//        magnitude = Math.hypot(-error.getLocation(0),error.getLocation(1));
-//        robotheading = robot.odometry.getPosition().getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
-//        robotheading = Math.atan2(error.getLocation(0),error.getLocation(1));
-//
-//        double forwardError = Math.cos(robotheading-Math.toRadians(robot.odometry.realMaybe.getLocation(2)))*magnitude;
-//        double strafeError = Math.sin(robotheading-Math.toRadians(robot.odometry.realMaybe.getLocation(2)))*magnitude;
-//
-//        if(Math.abs(Variables.kfP*forwardError + Variables.kfI*integralValues[0] + Variables.kfD * (forwardError- lastForwardError))<1)
-//            integralValues[0]= integralValues[0]+forwardError;
-//        if(Math.abs(Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError))<1)
-//            integralValues[1]= integralValues[1]+strafeError;
-//        if(Math.abs(Variables.krP*error.getLocation(2) + Variables.krI*integralValues[2] + Variables.krD * (error.getLocation(2) - lastRotationError))<1)
-//            integralValues[2]= integralValues[2]+error.getLocation(2);
-//
-//        double forwardPow = mod*((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
-//        double sidePow = mod*((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
-//        double rotPow = -(Variables.krP *error.getLocation(2) + Variables.krI*integralValues[2] +Variables.krD * ( error.getLocation(2) - lastRotationError));
-//
-//        lastForwardError = forwardPow;
-//        lastSidewaysError = sidePow;
-//        lastRotationError = rotPow;
-//
-//        determineMotorPowers(sidePow,forwardPow,rotPow);
-//        return error;
-//    }
-//
-//    /*
-//     * Determines powers for each motor
-//     */
-//    public void fieldRelDetermineMotorPowers(double x, double y, double rot) {
-//        //P is the power
-//        //robotAngle is the angle to which you want to go
-//        //rightX is the value of the x-axis from the right joystick
-//
-//        double P = Math.hypot(-x, y);
-//        double robotAngle = Math.atan2(y, -x);
-//        double rightX = rot;
-//
-//        double sinRAngle = Math.sin(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(2)));
-//        double cosRAngle = 1.2*Math.cos(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(2)));
-////        telemetry.addData("robot angle",robotAngle);
-////        telemetry.addData("sin angle",sinRAngle);
-////        telemetry.addData("cos angle",cosRAngle);
-//
-//        final double frPower = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontRight
-//        final double flPower = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontLeft
-//        final double brPower = (P * sinRAngle) + (P * cosRAngle) + rightX;  //backRight
-//        final double blPower = (P * sinRAngle) - (P * cosRAngle) - rightX;  //backLeft
-//
-//
-//        motorPowers[0] = frPower; motorPowers[1] = flPower; motorPowers[2] = brPower; motorPowers[3] = blPower;
-//
-//    }
+    public  NOdoLocation findErrorMod( NOdoLocation goalPos, double mod) {
+         NOdoLocation error = new NOdoLocation(
+                goalPos.getLocation(0)-robot.odometry.position.getLocation(0),
+                goalPos.getLocation(1) - robot.odometry.position.getLocation(1),
+                rotationError(goalPos.getLocation(2), robot.odometry.position.getLocation(2)));
+        //this is to change the global xy error into robot specific error
+        magnitude = Math.hypot(-error.getLocation(0),error.getLocation(1));
+        robotheading = robot.odometry.getPosition().getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
+        robotheading = Math.atan2(error.getLocation(0),error.getLocation(1));
+
+        double forwardError = Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
+        double strafeError = Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
+
+        if(Math.abs(Variables.kfP*forwardError + Variables.kfI*integralValues[0] + Variables.kfD * (forwardError- lastForwardError))<1)
+            integralValues[0]= integralValues[0]+forwardError;
+        if(Math.abs(Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError))<1)
+            integralValues[1]= integralValues[1]+strafeError;
+        if(Math.abs(Variables.krP*error.getLocation(2) + Variables.krI*integralValues[2] + Variables.krD * (error.getLocation(2) - lastRotationError))<1)
+            integralValues[2]= integralValues[2]+error.getLocation(2);
+
+        double forwardPow = mod*((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
+        double sidePow = mod*((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
+        double rotPow = -(Variables.krP *error.getLocation(2) + Variables.krI*integralValues[2] +Variables.krD * ( error.getLocation(2) - lastRotationError));
+
+        lastForwardError = forwardPow;
+        lastSidewaysError = sidePow;
+        lastRotationError = rotPow;
+
+        determineMotorPowers(sidePow,forwardPow,rotPow);
+        return error;
+    }
+
+    /*
+     * Determines powers for each motor
+     */
+    public void fieldRelDetermineMotorPowers(double x, double y, double rot) {
+        //P is the power
+        //robotAngle is the angle to which you want to go
+        //rightX is the value of the x-axis from the right joystick
+
+        double P = Math.hypot(-x, y);
+        double robotAngle = Math.atan2(y, -x);
+        double rightX = rot;
+
+        double sinRAngle = Math.sin(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(2)));
+        double cosRAngle = 1.2*Math.cos(robotAngle-Math.toRadians(robot.odometry.getPosition().getLocation(2)));
+//        telemetry.addData("robot angle",robotAngle);
+//        telemetry.addData("sin angle",sinRAngle);
+//        telemetry.addData("cos angle",cosRAngle);
+
+        final double frPower = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontRight
+        final double flPower = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontLeft
+        final double brPower = (P * sinRAngle) + (P * cosRAngle) + rightX;  //backRight
+        final double blPower = (P * sinRAngle) - (P * cosRAngle) - rightX;  //backLeft
+
+
+        motorPowers[0] = frPower; motorPowers[1] = flPower; motorPowers[2] = brPower; motorPowers[3] = blPower;
+
+    }
 
     /*
      * Calculates the error for the rotation
@@ -397,14 +399,14 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoUp () {
-        servos.get(0).setPosition(0);
-        servos.get(1).setPosition(1);
-        servos.get(2).setPosition(0.6);
+        servos.get(0).setPosition(1);
+        servos.get(1).setPosition(0.6);
+        servos.get(2).setPosition(1);
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0.85);//L
-        servos.get(1).setPosition(0.35);//M
+        servos.get(0).setPosition(0);//L
+        servos.get(1).setPosition(0.4);//M
         servos.get(2).setPosition(0);//R
     }
 }
