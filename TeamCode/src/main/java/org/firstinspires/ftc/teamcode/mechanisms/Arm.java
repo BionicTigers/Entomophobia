@@ -11,20 +11,20 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
 public class Arm extends Mechanism {
     public Telemetry telemetry;
     public double position;
-    private DigitalChannel limit1;
-    private DigitalChannel limit2;
+//    private DigitalChannel limit1;
+//    private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel CBFront, DigitalChannel CBBack) {
+    public Arm (CRServo l, CRServo r, Telemetry T/*, DigitalChannel CBFront, DigitalChannel CBBack*/) {
         super();
         crServos.add(l);
         crServos.add(r);
         crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
-        limit1 = CBFront;
-        limit2 = CBBack;
-        sensors.add(limit1);
-        sensors.add(limit2);
-        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
-        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
+//        limit1 = CBFront;
+//        limit2 = CBBack;
+//        sensors.add(limit1);
+//        sensors.add(limit2);
+//        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
+//        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
 
 
         telemetry = T;
@@ -32,9 +32,9 @@ public class Arm extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        if (gp2.right_bumper && sensors.get(0).getState()) {
+        if (gp2.right_bumper/* && sensors.get(0).getState()*/) {
             forward();
-        } else if (gp2.left_bumper && sensors.get(1).getState()) {
+        } else if (gp2.left_bumper/* && sensors.get(1).getState()*/) {
             backward();
         } else {
             crServos.get(0).setPower(0);

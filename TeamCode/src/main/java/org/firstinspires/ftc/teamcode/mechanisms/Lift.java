@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 
-/**
+/*
  * The lift class has 2 motors that lift a double reverse four bar lift.
  * @author Jack Gerber
  */
 public class Lift extends Mechanism {
     //Declares fields
-    private  DigitalChannel limitSwitch;
+    //private DigitalChannel limitSwitch;
 
     public Telemetry telemetry;
 
@@ -25,7 +25,7 @@ public class Lift extends Mechanism {
     public DcMotorEx right;
 
     public boolean currentlyPressed = false;
-    /**
+    /*
      * Creates an enum for lift positions
      */
     public enum LiftState {
@@ -36,7 +36,7 @@ public class Lift extends Mechanism {
      */
     private LiftState liftState = LiftState.STORING;
 
-    /**
+    /*
      * Adds motors to the left and right variables
      * @param l imported left motor
      * @param r imported right motor
@@ -44,7 +44,7 @@ public class Lift extends Mechanism {
      //* @param bottom imported bottom limit switch
      * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r, DigitalChannel lift, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel lift*/, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -72,12 +72,12 @@ public class Lift extends Mechanism {
         height = 0;
 
         //Declares limit switches
-        limitSwitch = lift;
-        sensors.add(limitSwitch);
-        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+//        limitSwitch = lift;
+//        sensors.add(limitSwitch);
+//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
-    /**
+    /*
      * Takes inputs from controllers and converts them into robot movement
      * @param gp1 the drivetrain gamepad
      * @param gp2 the lift gamepad
@@ -126,7 +126,7 @@ public class Lift extends Mechanism {
         }
 
     }
-    /**
+    /*
      * Sets the lift to a given height
      * @param targetState the height to set the lift to
      */
@@ -135,20 +135,16 @@ public class Lift extends Mechanism {
         if (targetState == LiftState.INTAKE) {
             height = -1500;
             liftState = LiftState.INTAKE;
-        }
-        else if (targetState == LiftState.STORING) {
+        } else if (targetState == LiftState.STORING) {
             height = -1000;
             liftState = LiftState.STORING;
-        }
-        else if (targetState == LiftState.LOW) {
+        } else if (targetState == LiftState.LOW) {
             height = -500;
             liftState = LiftState.LOW;
-        }
-        else if (targetState == LiftState.MEDIUM) {
+        } else if (targetState == LiftState.MEDIUM) {
             height = -250;
             liftState = LiftState.MEDIUM;
-        }
-        else if (targetState == LiftState.HIGH) {
+        } else if (targetState == LiftState.HIGH) {
             height = 0;
             liftState = LiftState.HIGH;
         }
@@ -159,7 +155,7 @@ public class Lift extends Mechanism {
         right.setVelocity(1000);
     }
 
-    /**
+    /*
      * Writes the motor powers to the motors
      */
     @Override
@@ -174,10 +170,15 @@ public class Lift extends Mechanism {
         left.setVelocity(1000);
 
         //Uses a limit switch to prevent the motor from trying to go too far
-        if(!sensors.get(0).getState() && !currentlyPressed){
-            trim = 0;
-            sensors.get(0).setMode();
-        }
+//        if(!sensors.get(0).getState() && !currentlyPressed){
+//            trim = 0;
+//            motors.get(0).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            motors.get(1).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            motors.get(0).setTargetPosition(0);
+//            motors.get(1).setTargetPosition(0);
+//            motors.get(0).setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            motors.get(1).setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
 
         //Provides telemetry for the motor's current position and the trim value
         telemetry.addData("Right Current position: ", right.getCurrentPosition());
