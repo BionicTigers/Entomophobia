@@ -24,6 +24,7 @@ public class Lift extends Mechanism {
     public DcMotorEx left;
     public DcMotorEx right;
 
+    public boolean currentlyPressed = false;
     /**
      * Creates an enum for lift positions
      */
@@ -171,6 +172,12 @@ public class Lift extends Mechanism {
         //Makes the lift motor move
         right.setVelocity(1000);
         left.setVelocity(1000);
+
+        //Uses a limit switch to prevent the motor from trying to go too far
+        if(!sensors.get(0).getState() && !currentlyPressed){
+            trim = 0;
+            sensors.get(0).setMode();
+        }
 
         //Provides telemetry for the motor's current position and the trim value
         telemetry.addData("Right Current position: ", right.getCurrentPosition());
