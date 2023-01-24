@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class TensorFlow {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/helpmeben.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/wookiewookie.tflite";
 
     private static final String[] LABELS = {
             "Apple",
