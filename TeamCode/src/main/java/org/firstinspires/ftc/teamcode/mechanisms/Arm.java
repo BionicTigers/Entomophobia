@@ -14,15 +14,15 @@ public class Arm extends Mechanism {
     private DigitalChannel limit1;
     private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T/*, DigitalChannel limit1, DigitalChannel limit2*/) {
+    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel limit1, DigitalChannel limit2) {
         super();
         crServos.add(l);
         crServos.add(r);
         crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
-//        sensors.add(limit1);
-//        sensors.add(limit2);
-//        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
-//        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
+        sensors.add(limit1);
+        sensors.add(limit2);
+        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
+        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
 
 
         telemetry = T;
@@ -30,9 +30,9 @@ public class Arm extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        if (gp2.right_bumper) {
+        if (gp2.right_bumper && sensors.get(0).getState()) {
             forward();
-        } else if (gp2.left_bumper) {
+        } else if (gp2.left_bumper && sensors.get(1).getState()) {
             backward();
         } else {
             crServos.get(0).setPower(0);
@@ -43,13 +43,6 @@ public class Arm extends Mechanism {
     @Override
     public void write() {
         telemetry.addData("Position", position);
-        if(!sensors.get(0).getState() && position <= 0){
-            crServos.get(0).setPower(0);
-            crServos.get(1).setPower(0);
-        } else if(!sensors.get(1).getState() && position >= 1){
-            crServos.get(0).setPower(0);
-            crServos.get(1).setPower(0);
-        }
     }
 
     public void forward() {

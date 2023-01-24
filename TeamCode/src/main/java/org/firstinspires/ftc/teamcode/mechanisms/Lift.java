@@ -14,8 +14,7 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
  */
 public class Lift extends Mechanism {
     //Declares fields
-    /*private  DigitalChannel topLimitSwitch;
-    private  DigitalChannel bottomLimitSwitch;*/
+    private  DigitalChannel limitSwitch;
 
     public Telemetry telemetry;
 
@@ -44,7 +43,7 @@ public class Lift extends Mechanism {
      //* @param bottom imported bottom limit switch
      * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel top, DigitalChannel bottom*/, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel lift*/, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -71,13 +70,10 @@ public class Lift extends Mechanism {
         //Sets the height starting position
         height = 0;
 
-        /*//Declares limit switches
-        topLimitSwitch = top;
-        bottomLimitSwitch = bottom;
-        sensors.add(topLimitSwitch);
-        sensors.add(bottomLimitSwitch);
-        topLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
-        bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);*/
+        //Declares limit switches
+//        limitSwitch = lift;
+//        sensors.add(limitSwitch);
+//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     /**
@@ -98,17 +94,17 @@ public class Lift extends Mechanism {
 //            height = 0;
 //        }
 
-        if (gp2.left_stick_y <= -0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+        if (gp2.left_stick_y <= -0.3) {
             height = -1500;
-        } else if (gp2.left_stick_y >= 0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+        } else if (gp2.left_stick_y >= 0.3) {
             height = 0;
             trim = 0;
         }
 
-        if (gp2.right_stick_y >= 0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+        if (gp2.right_stick_y >= 0.3) {
             trim = trim + 20;
         }
-        if (gp2.right_stick_y <= -0.3/* && !bottomLimitSwitch.getState() && !topLimitSwitch.getState()*/) {
+        if (gp2.right_stick_y <= -0.3) {
             trim = trim - 20;
         }
 

@@ -20,7 +20,8 @@ public class OdometryTesting extends LinearOpMode {
     public void runOpMode() {
 
         robot = new NOdoRobot(this);
-        drive = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "RightOdo"), hardwareMap.get(Servo.class, "BackOdo"));//        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+        drive = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
+//        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftMotor"), telemetry);
 //        deposit = new Deposit(hardwareMap.get(Servo.class, "deposit"));
 //        claw = new Claw(hardwareMap.get(Servo.class, "clawl"), hardwareMap.get(Servo.class, "clawr"));

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.EldritchPods;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
@@ -133,9 +134,9 @@ public class NOdoDrivetrain extends Mechanism {
 
     //Updates data for Telemetry, motor powers, and servo movements
     public void update (Gamepad gp1, Gamepad gp2) {
-        if (gp1.y) {
+        if (gp1.back) {
             odoUp();
-        } else if (gp1.b) {
+        } else if (gp1.start) {
             odoDown();
         }
 
@@ -399,14 +400,14 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoUp () {
-        servos.get(0).setPosition(1);
-        servos.get(1).setPosition(0.6);
-        servos.get(2).setPosition(1);
+        servos.get(0).setPosition(EldritchPods.LEFT_UP);//L
+        servos.get(1).setPosition(EldritchPods.MIDDLE_UP);//M
+        servos.get(2).setPosition(EldritchPods.RIGHT_UP);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0);//L
-        servos.get(1).setPosition(0.4);//M
-        servos.get(2).setPosition(0);//R
+        servos.get(0).setPosition(EldritchPods.LEFT_DOWN);//L
+        servos.get(1).setPosition(EldritchPods.MIDDLE_DOWN);//M
+        servos.get(2).setPosition(EldritchPods.RIGHT_DOWN);//R
     }
 }

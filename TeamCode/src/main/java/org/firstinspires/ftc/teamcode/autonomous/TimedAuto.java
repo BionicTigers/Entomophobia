@@ -24,7 +24,9 @@ public class TimedAuto extends LinearOpMode {
 
     private List<Recognition> detected;
     private byte randomization = 2;
-    //public TensorFlowWebcam tensorFlow = new TensorFlowWebcam();
+    //public TensorFlowWebcam tensorFlow = ne
+    //
+    // w TensorFlowWebcam();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,29 +39,23 @@ public class TimedAuto extends LinearOpMode {
 
         do {
             detected = tensorflow.getDetected();
-            System.out.println(this.detected);
-            if (detected != null && detected.size() != 0) {
-                telemetry.addData("Start", detected.get(0).getLabel());
-                System.out.println("Detection");
-                telemetry.update();
-                break;
-            }
         } while (!isStarted());
-//               Started: True or detected: False or size: true
-        System.out.println("Passed");
-
 
         if (detected != null) {
             if (detected.size() != 0) {
                 if (detected.get(0).getLabel() == "Apple") {
                     randomization = 1;
-                } else if (detected.get(0).getLabel() == "Banana") {
+                } else if (detected.get(0).getLabel() == "Orange") {
                     randomization = 3;
                 }
+                telemetry.addData("Start", detected.get(0).getLabel());
+                telemetry.update();
             }
         }
 
-        waitForStart();
+        telemetry.addData("Start", "Default");
+        telemetry.update();
+
         //On start
 
         //Scans signal sleeve
