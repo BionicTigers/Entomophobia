@@ -14,11 +14,13 @@ public class Arm extends Mechanism {
     private DigitalChannel limit1;
     private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel limit1, DigitalChannel limit2) {
+    public Arm (CRServo l, CRServo r, Telemetry T, DigitalChannel CBFront, DigitalChannel CBBack) {
         super();
         crServos.add(l);
         crServos.add(r);
         crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
+        limit1 = CBFront;
+        limit2 = CBBack;
         sensors.add(limit1);
         sensors.add(limit2);
         sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
@@ -43,6 +45,8 @@ public class Arm extends Mechanism {
     @Override
     public void write() {
         telemetry.addData("Position", position);
+        telemetry.addData("Bottom Switch", !sensors.get(0).getState());
+        telemetry.addData("Top Switch", !sensors.get(1).getState());
     }
 
     public void forward() {

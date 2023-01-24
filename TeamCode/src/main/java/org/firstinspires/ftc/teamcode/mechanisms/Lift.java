@@ -43,7 +43,7 @@ public class Lift extends Mechanism {
      //* @param bottom imported bottom limit switch
      * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel lift*/, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r, DigitalChannel lift, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -71,9 +71,9 @@ public class Lift extends Mechanism {
         height = 0;
 
         //Declares limit switches
-//        limitSwitch = lift;
-//        sensors.add(limitSwitch);
-//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        limitSwitch = lift;
+        sensors.add(limitSwitch);
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     /**
