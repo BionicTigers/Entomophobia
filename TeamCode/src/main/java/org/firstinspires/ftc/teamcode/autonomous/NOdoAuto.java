@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.NOdoDrivetrain;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
+import org.firstinspires.ftc.teamcode.util.AutoPositions;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
 
@@ -27,16 +28,6 @@ public class NOdoAuto extends LinearOpMode {
     public Lift lift;
     public TensorFlow detector;
 
-
-    public NOdoLocation smallForward = new NOdoLocation(100, 0, 0);
-    public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(750, 75, 0);
-    public NOdoLocation leftZone = new NOdoLocation(900, -400, 0);
-    public NOdoLocation rightZone = new NOdoLocation(850, 950,0);
-
-    public NOdoLocation coneZone = new NOdoLocation(100, -175, 0);
-    public NOdoLocation coneDrop = new NOdoLocation(200, -175, 0);
-
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new NOdoRobot(this);
@@ -52,20 +43,20 @@ public class NOdoAuto extends LinearOpMode {
         waitForStart();
         List<Recognition> detection = detector.getDetected();
 
-        drivetrain.moveToPositionMod(smallForward, 5, 5, 1, .3, 2000);
-        drivetrain.moveToPositionMod(coneZone, 5, 5, 1, .6, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.smallForward, 5, 5, 1, .3, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.coneZone, 5, 5, 1, .6, 2000);
         lift.height = -2750;
         lift.write();
         sleep(5000);
-        drivetrain.moveToPositionMod(coneDrop, 5, 5, 1, 0.3, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.coneDrop, 5, 5, 1, 0.3, 2000);
         claw.open();
-        drivetrain.moveToPositionMod(coneZone, 5, 5, 1, .5, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.coneZone, 5, 5, 1, .5, 2000);
         lift.height = 0;
         lift.write();
         sleep(1000);
-        drivetrain.moveToPositionMod(reset, 5, 5, 1, .5, 2000);
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 2000);
-        drivetrain.moveToPositionMod(leftZone, 5, 5, 1, 0.3, 4000);
+        drivetrain.moveToPositionMod(AutoPositions.reset, 5, 5, 1, .5, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.middleZone, 5, 5, 1, 0.3, 2000);
+        drivetrain.moveToPositionMod(AutoPositions.leftZone, 5, 5, 1, 0.3, 4000);
 //I have not tested the switch statement, zones work but the switch statement might not, it won't work 100% of the time bc of no rotation but a good 97%
 //        if (detection != null && detection.size() > 0) {
 //            switch (detection.get(0).getLabel()) {
