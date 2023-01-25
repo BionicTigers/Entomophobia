@@ -10,25 +10,26 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.mechanisms.Robot;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
-import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
+import org.firstinspires.ftc.teamcode.mechanisms.NOdoDrivetrain;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 
 @TeleOp(name = "TeleOpMain")
 public class TeleOpMain extends LinearOpMode {
-    public Robot robot;
-    public Drivetrain drive;
+    public NOdoRobot robot;
+    public NOdoDrivetrain drive;
     public int[] motorNumbers = {0, 1, 2, 3};
     public Lift lift;
     public Claw claw;
     public Arm arm;
 
     public void runOpMode() {
-        robot = new Robot(this);
-        drive = new Drivetrain(robot, motorNumbers, telemetry);
+        robot = new NOdoRobot(this);
+        drive = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
         lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR")/*, hardwareMap.get(DigitalChannel.class, "Lift")*/, telemetry);
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
@@ -37,6 +38,7 @@ public class TeleOpMain extends LinearOpMode {
 
         waitForStart();
         claw.init();
+        drive.odoUp();
         while(opModeIsActive()) {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array
                 mech.update(gamepad1, gamepad2); //Run their respective update methods

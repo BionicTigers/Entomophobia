@@ -98,10 +98,10 @@ public class NewOdo extends Mechanism {
 
 
     //The rotation of the robot relative to it's starting rotation
-    private double globalRotation = 0;
+    public double globalRotation = 0;
     //The global x and y position of the robot relative to it's starting location
-    private double globalX = 0;
-    private double globalY = 0;
+    public double globalX = 0;
+    public double globalY = 0;
 
     //Our robot's global rotation in degrees
     public double rotationInDegrees = 0;

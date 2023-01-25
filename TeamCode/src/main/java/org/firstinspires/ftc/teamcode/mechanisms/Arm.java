@@ -45,8 +45,8 @@ public class Arm extends Mechanism {
     @Override
     public void write() {
         telemetry.addData("Position", position);
-        telemetry.addData("Bottom Switch", !sensors.get(0).getState());
-        telemetry.addData("Top Switch", !sensors.get(1).getState());
+//        telemetry.addData("Bottom Switch", !sensors.get(0).getState());
+//        telemetry.addData("Top Switch", !sensors.get(1).getState());
     }
 
     public void forward() {

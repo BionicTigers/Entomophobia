@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+/*package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.util.TensorFlow;
 
 import java.util.List;
 
-@Autonomous (name="NOdoAuto", group="autonomous")
-public class NOdoAuto extends LinearOpMode {
+@Autonomous (name="NOdoAutoLeft", group="autonomous")
+public class NOdoAutoLeft extends LinearOpMode {
 
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
 
@@ -28,14 +28,13 @@ public class NOdoAuto extends LinearOpMode {
     public TensorFlow detector;
 
 
-    public NOdoLocation smallForward = new NOdoLocation(100, 0, 0);
-    public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(750, 75, 0);
-    public NOdoLocation leftZone = new NOdoLocation(900, -400, 0);
-    public NOdoLocation rightZone = new NOdoLocation(850, 950,0);
+    public NOdoLocation smallForward = new NOdoLocation(-100, 0, 0);
+    public NOdoLocation middleZone = new NOdoLocation(-700, 200, 0);
+    public NOdoLocation leftZone = new NOdoLocation(-700, -400, 0);
+    public NOdoLocation rightZone = new NOdoLocation(-700, 800,0);
 
-    public NOdoLocation coneZone = new NOdoLocation(100, -175, 0);
-    public NOdoLocation coneDrop = new NOdoLocation(200, -175, 0);
+    public NOdoLocation coneZone = new NOdoLocation(-100, -175, 0);
+    public NOdoLocation coneDrop = new NOdoLocation(-200, -175, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,10 +62,11 @@ public class NOdoAuto extends LinearOpMode {
         lift.height = 0;
         lift.write();
         sleep(1000);
-        drivetrain.moveToPositionMod(reset, 5, 5, 1, .5, 2000);
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 2000);
-        drivetrain.moveToPositionMod(leftZone, 5, 5, 1, 0.3, 4000);
-//I have not tested the switch statement, zones work but the switch statement might not, it won't work 100% of the time bc of no rotation but a good 97%
+        drivetrain.moveToPositionMod(smallForward, 5, 5, 1, .6, 2000);
+
+//        drivetrain.moveToPositionMod(smallForward, 5, 5, 1, .3, 2000);
+//        drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 4000);
+
 //        if (detection != null && detection.size() > 0) {
 //            switch (detection.get(0).getLabel()) {
 //                case "Apple":
@@ -85,3 +85,4 @@ public class NOdoAuto extends LinearOpMode {
         sleep(1000);
     }
 }
+*/

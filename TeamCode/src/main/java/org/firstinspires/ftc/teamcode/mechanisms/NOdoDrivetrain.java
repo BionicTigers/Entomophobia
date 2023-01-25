@@ -34,9 +34,9 @@ public class NOdoDrivetrain extends Mechanism {
     private double robotheading;
     private double magnitude;
 
-//    private double DMPX = 0;
-//    private double DMPY = 0;
-//    private double DMPROT = 0;
+    private double DMPX = 0;
+    private double DMPY = 0;
+    private double DMPROT = 0;
 
     //Spin PID variables
     public double spinError;
@@ -136,36 +136,35 @@ public class NOdoDrivetrain extends Mechanism {
     public void update (Gamepad gp1, Gamepad gp2) {
         if (gp1.back) {
             odoUp();
-        } else if (gp1.start) {
-            odoDown();
+        } else if (gp1.right_stick_button) {
+//            odoDown();
         }
 
-        /*
-        if (gp1.right_bumper && gp1.dpad_up) {
-            altMode = true;
-        }
-
-        if (gp1.right_bumper && gp1.dpad_down) {
-            altMode = false;
-        }
+//        if (gp1.right_bumper && gp1.dpad_up) {
+//            altMode = true;
+//        }
+//
+//        if (gp1.right_bumper && gp1.dpad_down) {
+//            altMode = false;
+//        }
 
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPY = DMPY + 0.45;
+            DMPX = DMPX + 0.45;
         }
         if(gp1.dpad_down){ //precision movement backward, very slow
-            DMPY = DMPY - 0.45;
+            DMPX = DMPX - 0.45;
         }
         if(gp1.dpad_left) {
-            DMPROT = DMPROT - 0.4;
+            DMPY = DMPY - 0.4;
         }
         if(gp1.dpad_right) {
-            DMPROT = DMPROT + 0.4;
+            DMPY = DMPY + 0.4;
         }
         if(gp1.right_bumper){
-            DMPX= DMPX + 0.55;
+            DMPROT= DMPROT + 0.55;
         }
         if(gp1.left_bumper){
-            DMPX= DMPX - 0.55;
+            DMPROT= DMPROT - 0.55;
         }
 
         if (DMPX != 0 || DMPY != 0 || DMPROT != 0) {
@@ -173,10 +172,11 @@ public class NOdoDrivetrain extends Mechanism {
             DMPX = 0;
             DMPY = 0;
             DMPROT = 0;
+        } else {
+            determineMotorPowers(gp1);
         }
-*/
-        determineMotorPowers(gp1);
     }
+
 
 
     //Sets the motor powers based on the determineMotorPowers() method that was run in the update() method
@@ -400,14 +400,14 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoUp () {
-        servos.get(0).setPosition(EldritchPods.LEFT_UP);//L
-        servos.get(1).setPosition(EldritchPods.MIDDLE_UP);//M
-        servos.get(2).setPosition(EldritchPods.RIGHT_UP);//R
+        servos.get(0).setPosition(0);//L
+        servos.get(1).setPosition(0.8);//M
+        servos.get(2).setPosition(0.35);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(EldritchPods.LEFT_DOWN);//L
-        servos.get(1).setPosition(EldritchPods.MIDDLE_DOWN);//M
-        servos.get(2).setPosition(EldritchPods.RIGHT_DOWN);//R
+        servos.get(0).setPosition(0.55);//L
+        servos.get(1).setPosition(0.2);//M
+        servos.get(2).setPosition(0.73);//R
     }
 }
