@@ -96,7 +96,7 @@ public class Lift extends Mechanism {
 //        }
 
         if (gp2.left_stick_y <= -0.3) {
-            height = -1500;
+            height = -2800;
         } else if (gp2.left_stick_y >= 0.3) {
             height = 0;
             trim = 0;

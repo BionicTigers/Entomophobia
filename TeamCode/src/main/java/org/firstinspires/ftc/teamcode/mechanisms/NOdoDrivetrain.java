@@ -75,7 +75,7 @@ public class NOdoDrivetrain extends Mechanism {
 
         for (int motNum : motorNumbers) {
             motorPlaceholder = robot.motors.get(motNum);
-            motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motors.add(motorPlaceholder);
         }
         motorPowers = new double[]{0, 0, 0, 0};
@@ -149,16 +149,16 @@ public class NOdoDrivetrain extends Mechanism {
 //        }
 
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPX = DMPX + 0.45;
+            DMPY = DMPY + 0.45;
         }
         if(gp1.dpad_down){ //precision movement backward, very slow
-            DMPX = DMPX - 0.45;
+            DMPY = DMPY - 0.45;
         }
         if(gp1.dpad_left) {
-            DMPY = DMPY - 0.4;
+            DMPX = DMPX - 0.4;
         }
         if(gp1.dpad_right) {
-            DMPY = DMPY + 0.4;
+            DMPX = DMPX + 0.4;
         }
         if(gp1.right_bumper){
             DMPROT= DMPROT + 0.55;
