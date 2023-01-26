@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.hardware.lynx.LynxController;
 import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,6 +18,10 @@ public class ControlHub {
 
         this.hub = hub;
         bulkDataCache = this.internalRefreshBulkData();
+    }
+
+    public void ChangeMotorEncoder() {
+
     }
 
     private int[] internalRefreshBulkData() {
