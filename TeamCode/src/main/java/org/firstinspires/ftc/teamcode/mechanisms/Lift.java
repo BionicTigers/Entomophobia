@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 
 /*
@@ -96,7 +97,7 @@ public class Lift extends Mechanism {
 //        }
 
         if (gp2.left_stick_y <= -0.3) {
-            height = -2800;
+            height = -1250;
         } else if (gp2.left_stick_y >= 0.3) {
             height = 0;
             trim = 0;
@@ -162,6 +163,9 @@ public class Lift extends Mechanism {
     public void write() {
         right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        if (left.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || right.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
+            height = -1100;
+        }
         //Sets the height of the lift to height + trim
         right.setTargetPosition(height + trim);
         left.setTargetPosition(height + trim);

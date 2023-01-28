@@ -35,9 +35,10 @@ public class TeleOpMain extends LinearOpMode {
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
+        claw.init();
 
         waitForStart();
-        claw.init();
+
         drive.odoUp();
         while(opModeIsActive()) {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array

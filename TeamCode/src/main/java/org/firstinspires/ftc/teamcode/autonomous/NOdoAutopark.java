@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.TensorFlow;
 
 import java.util.List;
 
-@Autonomous (name="JustPark`", group="autonomous")
+@Autonomous (name="JustPark", group="autonomous")
 public class NOdoAutopark extends LinearOpMode {
 
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
@@ -27,15 +27,10 @@ public class NOdoAutopark extends LinearOpMode {
     public Lift lift;
     public TensorFlow detector;
 
+    public NOdoLocation middleZone = new NOdoLocation(800, 0, 0);
+    public NOdoLocation leftZone = new NOdoLocation(825, -600, 0);
+    public NOdoLocation rightZone = new NOdoLocation(825, 600,0);
 
-    public NOdoLocation smallForward = new NOdoLocation(100, 0, 0);
-    public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(800, 75, 0);
-    public NOdoLocation leftZone = new NOdoLocation(900, -400, 0);
-    public NOdoLocation rightZone = new NOdoLocation(850, 950,0);
-
-    public NOdoLocation coneZone = new NOdoLocation(100, -175, 0);
-    public NOdoLocation coneDrop = new NOdoLocation(200, -175, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -59,12 +54,12 @@ public class NOdoAutopark extends LinearOpMode {
         if (detection != null && detection.size() > 0) {
             switch (detection.get(0).getLabel()) {
                 case "Apple":
-                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 3000);
+                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 2000);
                     break;
-                case "Lime":
+               case "Lime":
                     break;
-               case "Orange":
-                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 4000);
+                case "Orange":
+                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
                     break;
                 default:
                     break;

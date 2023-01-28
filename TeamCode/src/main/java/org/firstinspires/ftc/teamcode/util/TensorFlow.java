@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSes
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -57,13 +58,17 @@ public class TensorFlow {
         initTfod();
 
         // Control the exposure, Values controlled on FTC Dashboard/VisionConstants.java
-        ExposureControl expControl = vuforia.getCamera().getControl(ExposureControl.class);
-        //expControl.setMode(ExposureControl.Mode.Manual);
-        //expControl.setExposure(VisionConstants.EXPOSURE, TimeUnit.MILLISECONDS);
+//        ExposureControl expControl = vuforia.getCamera().getControl(ExposureControl.class);
+//        expControl.setMode(ExposureControl.Mode.Manual);
+//        expControl.setExposure(VisionConstants.EXPOSURE, TimeUnit.MILLISECONDS);
 
         // Control the gain
-        GainControl gainControl = vuforia.getCamera().getControl(GainControl.class);
-        gainControl.setGain(VisionConstants.GAIN);
+//        GainControl gainControl = vuforia.getCamera().getControl(GainControl.class);
+//        gainControl.setGain(VisionConstants.GAIN);
+//
+//        WhiteBalanceControl whiteBalanceControl = vuforia.getCamera().getControl(WhiteBalanceControl.class);
+//        whiteBalanceControl.setMode(WhiteBalanceControl.Mode.MANUAL);
+//        whiteBalanceControl.setWhiteBalanceTemperature(2000);
 
         if (tfod != null) {
             tfod.activate();

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.EldritchPods;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
@@ -172,8 +173,12 @@ public class NOdoDrivetrain extends Mechanism {
             DMPX = 0;
             DMPY = 0;
             DMPROT = 0;
-        } else {
+        } else if (gp1.left_stick_y > 0.3 || gp1.left_stick_y < -0.3
+                || gp1.left_stick_x > 0.3 || gp1.left_stick_x < -0.3
+                || gp1.right_stick_x > 0.3 || gp1.right_stick_x < -0.3){
             determineMotorPowers(gp1);
+        } else {
+            determineMotorPowers(0, 0, 0);
         }
     }
 
@@ -204,6 +209,12 @@ public class NOdoDrivetrain extends Mechanism {
         telemetry.addData("Front Left Power", motorPowers[1]);
         telemetry.addData("Back Left Power", motorPowers[2]);
         telemetry.addData("Back Right Power", motorPowers[3]);
+
+        System.out.println("Front Right Power: " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Front Left Power: " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Back Left Power: " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Back Right Power: " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
+
 //        dashboardTelemetry.addData("ErrorX", + error.getLocation(0));
 //        dashboardTelemetry.addData("ErrorY", + error.getLocation(2));
 //        dashboardTelemetry.addData("ErrorRotation", + error.getLocation(2));
@@ -407,7 +418,7 @@ public class NOdoDrivetrain extends Mechanism {
 
     public void odoDown () {
         servos.get(0).setPosition(0.55);//L
-        servos.get(1).setPosition(0.2);//M
+        servos.get(1).setPosition(0.15);//M
         servos.get(2).setPosition(0.73);//R
     }
 }
