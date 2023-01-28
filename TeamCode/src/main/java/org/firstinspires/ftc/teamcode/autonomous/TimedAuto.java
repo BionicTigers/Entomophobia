@@ -90,6 +90,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(2).setPower(0);
                 drivetrain.robot.motors.get(3).setPower(0);
                 break;
+
             //Moves forward 1 tile
             case 2:
                 drivetrain.robot.motors.get(0).setPower(0.85);
@@ -102,7 +103,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(2).setPower(0);
                 drivetrain.robot.motors.get(3).setPower(0);
                 break;
-            //Strafes to the right 1 tile
+          //  Strafes to the right 1 tile
             case 3://drivetrain.timedMove(3000, 0.25, 0.75);
                 //Moves forward 1 tile
                 drivetrain.robot.motors.get(0).setPower(0.8);
@@ -125,6 +126,7 @@ public class TimedAuto extends LinearOpMode {
                 drivetrain.robot.motors.get(2).setPower(0);
                 drivetrain.robot.motors.get(3).setPower(0);
                 break;
+
         }
     }
 }
