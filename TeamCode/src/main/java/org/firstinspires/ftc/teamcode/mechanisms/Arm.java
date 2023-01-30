@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Arm extends Mechanism {
     public Telemetry telemetry;
-    public double position;
+    public boolean slowMode;
 //    private DigitalChannel limit1;
 //    private DigitalChannel limit2;
 
@@ -43,11 +43,16 @@ public class Arm extends Mechanism {
             crServos.get(0).setPower(0);
             crServos.get(1).setPower(0);
         }
+
+        if (gp2.right_trigger > 0.3) {
+            slowMode = true;
+        } else {
+            slowMode = false;
+        }
     }
 
     @Override
     public void write() {
-        telemetry.addData("Position", position);
 //        telemetry.addData("Bottom Switch", !sensors.get(0).getState());
 //        telemetry.addData("Top Switch", !sensors.get(1).getState());
     }
@@ -55,12 +60,10 @@ public class Arm extends Mechanism {
     public void forward() {
         crServos.get(0).setPower(1);
         crServos.get(1).setPower(1);
-        position = position + 1;
     }
 
     public void backward() {
         crServos.get(0).setPower(-1);
         crServos.get(1).setPower(-1);
-        position = position - 1;
     }
 }

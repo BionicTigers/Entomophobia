@@ -135,10 +135,10 @@ public class NOdoDrivetrain extends Mechanism {
 
     //Updates data for Telemetry, motor powers, and servo movements
     public void update (Gamepad gp1, Gamepad gp2) {
-        if (gp1.back) {
+        if (gp1.left_stick_button) {
             odoUp();
         } else if (gp1.right_stick_button) {
-//            odoDown();
+            odoDown();
         }
 
 //        if (gp1.right_bumper && gp1.dpad_up) {
@@ -199,6 +199,7 @@ public class NOdoDrivetrain extends Mechanism {
 //        motors.get(0).setPower(1);
 //        motors.get(1).setPower(1);
 //        motors.get(2).setPower(1);
+
 //        motors.get(3).setPower(1);
         //////////
 //        robot.odometry.updatePosition();
@@ -210,10 +211,10 @@ public class NOdoDrivetrain extends Mechanism {
         telemetry.addData("Back Left Power", motorPowers[2]);
         telemetry.addData("Back Right Power", motorPowers[3]);
 
-        System.out.println("Front Right Power: " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Front Left Power: " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Back Left Power: " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Back Right Power: " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Front Right Power: " + motorPowers[0] + " | " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Front Left Power: " + motorPowers[1] + " | " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Back Left Power: " + motorPowers[2] + " | " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
+        System.out.println("Back Right Power: " + motorPowers[3] + " | " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
 
 //        dashboardTelemetry.addData("ErrorX", + error.getLocation(0));
 //        dashboardTelemetry.addData("ErrorY", + error.getLocation(2));
@@ -322,7 +323,8 @@ public class NOdoDrivetrain extends Mechanism {
         return error;
     }
 
-    public  NOdoLocation findErrorMod( NOdoLocation goalPos, double mod) {
+    public  NOdoLocation
+    findErrorMod( NOdoLocation goalPos, double mod) {
          NOdoLocation error = new NOdoLocation(
                 goalPos.getLocation(0)-robot.odometry.position.getLocation(0),
                 goalPos.getLocation(1) - robot.odometry.position.getLocation(1),
@@ -417,8 +419,8 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0.55);//L
-        servos.get(1).setPosition(0.15);//M
+        servos.get(0).setPosition(0.625);//L
+        servos.get(1).setPosition(0.2);//M
         servos.get(2).setPosition(0.73);//R
     }
 }

@@ -133,7 +133,7 @@ public class NewOdo extends Mechanism {
         addPublicTelemetry("",""+deltaBackMM);
 
         //Calculates the change in local angle of the robot after the movement
-//        deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
+        //deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         //If statement ensures that if deltaLeftMM - deltaRightMM equals 0, our rT won't return as null
         if (deltaRightMM != deltaLeftMM && deltaLocalRotation != 0) {

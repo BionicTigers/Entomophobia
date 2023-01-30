@@ -84,7 +84,6 @@ public class NewDrivetrain extends Mechanism {
     public void determineMotorPowers(double x, double y, double rot) {
         double power = Math.hypot(-x, y);
         double robotAngle = Math.atan2(y, -x);
-        double stickAngle = rot;
 
         double angleSin = Math.sin(robotAngle);
         double angleCos = Math.cos(robotAngle);
@@ -92,10 +91,10 @@ public class NewDrivetrain extends Mechanism {
         double frontMultiplier = 1;
         double backMultiplier = -1;
 
-        motorPowers[0] = ((power * angleSin) + (power * angleCos) - stickAngle) * frontMultiplier;  //frontRight
-        motorPowers[1] = ((power * angleSin) - (power * angleCos) + stickAngle) * frontMultiplier;  //frontLeft
-        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - stickAngle) * backMultiplier; //backLeft
-        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + stickAngle) * backMultiplier; //backRight
+        motorPowers[0] = ((power * angleSin) + (power * angleCos) - rot) * frontMultiplier;  //frontRight
+        motorPowers[1] = ((power * angleSin) - (power * angleCos) + rot) * frontMultiplier;  //frontLeft
+        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - rot) * backMultiplier; //backLeft
+        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + rot) * backMultiplier; //backRight
     }
 
     /** Strafe in a given rotation for a set amount of time
@@ -107,7 +106,6 @@ public class NewDrivetrain extends Mechanism {
 
         double power = Math.hypot(-scaled, scaled);
         double robotAngle = Math.atan2(scaled, -scaled);
-        double stickAngle = rot;
 
         double angleSin = Math.sin(robotAngle);
         double angleCos = Math.cos(robotAngle);
@@ -115,10 +113,10 @@ public class NewDrivetrain extends Mechanism {
         double frontMultiplier = 1;
         double backMultiplier = -1;
 
-        motorPowers[0] = ((power * angleSin) + (power * angleCos) - stickAngle) * frontMultiplier;  //frontRight
-        motorPowers[1] = ((power * angleSin) - (power * angleCos) + stickAngle) * frontMultiplier;  //frontLeft
-        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - stickAngle) * backMultiplier; //backLeft
-        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + stickAngle) * backMultiplier; //backRight
+        motorPowers[0] = ((power * angleSin) + (power * angleCos) - rot) * frontMultiplier;  //frontRight
+        motorPowers[1] = ((power * angleSin) - (power * angleCos) + rot) * frontMultiplier;  //frontLeft
+        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - rot) * backMultiplier; //backLeft
+        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + rot) * backMultiplier; //backRight
     }
 
     /** Strafe in a given rotation for a set amount of time
@@ -131,7 +129,6 @@ public class NewDrivetrain extends Mechanism {
 
         double power = Math.hypot(-scaled, scaled);
         double robotAngle = Math.atan2(scaled, -scaled);
-        double stickAngle = rot;
 
         double angleSin = Math.sin(robotAngle);
         double angleCos = Math.cos(robotAngle);
@@ -141,10 +138,10 @@ public class NewDrivetrain extends Mechanism {
 
         double startTime = robot.getTimeMS();
 
-        motorPowers[0] = ((power * angleSin) + (power * angleCos) - stickAngle) * frontMultiplier;  //frontRight
-        motorPowers[1] = ((power * angleSin) - (power * angleCos) + stickAngle) * frontMultiplier;  //frontLeft
-        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - stickAngle) * backMultiplier; //backLeft
-        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + stickAngle) * backMultiplier; //backRight
+        motorPowers[0] = ((power * angleSin) + (power * angleCos) - rot) * frontMultiplier;  //frontRight
+        motorPowers[1] = ((power * angleSin) - (power * angleCos) + rot) * frontMultiplier;  //frontLeft
+        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - rot) * backMultiplier; //backLeft
+        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + rot) * backMultiplier; //backRight
 
         while (robot.getTimeMS() - startTime < time) {}
 
@@ -162,18 +159,16 @@ public class NewDrivetrain extends Mechanism {
 
         double power = Math.hypot(-scaled, scaled);
         double robotAngle = Math.atan2(scaled, -scaled);
-        double stickAngle = rot;
 
         double angleSin = Math.sin(robotAngle);
         double angleCos = Math.cos(robotAngle);
 
-        double frontMultiplier = speed;
-        double backMultiplier = -speed;
+        double inverseSpeed = -speed;
 
-        motorPowers[0] = ((power * angleSin) + (power * angleCos) - stickAngle) * frontMultiplier;  //frontRight
-        motorPowers[1] = ((power * angleSin) - (power * angleCos) + stickAngle) * frontMultiplier;  //frontLeft
-        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - stickAngle) * backMultiplier; //backLeft
-        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + stickAngle) * backMultiplier; //backRight
+        motorPowers[0] = ((power * angleSin) + (power * angleCos) - rot) * speed;  //frontRight
+        motorPowers[1] = ((power * angleSin) - (power * angleCos) + rot) * speed;  //frontLeft
+        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - rot) * inverseSpeed; //backLeft
+        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + rot) * inverseSpeed; //backRight
     }
 
     /** Strafe in a given rotation for a set amount of time

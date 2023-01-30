@@ -28,8 +28,8 @@ public class NOdoAutopark extends LinearOpMode {
     public TensorFlow detector;
 
     public NOdoLocation middleZone = new NOdoLocation(800, 0, 0);
-    public NOdoLocation leftZone = new NOdoLocation(825, -600, 0);
-    public NOdoLocation rightZone = new NOdoLocation(825, 600,0);
+    public NOdoLocation leftZone = new NOdoLocation(800, -600, 0);
+    public NOdoLocation rightZone = new NOdoLocation(800, 600,0);
 
 
     @Override
@@ -47,25 +47,24 @@ public class NOdoAutopark extends LinearOpMode {
         waitForStart();
         List<Recognition> detection = detector.getDetected();
 
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 2000);
-
+        drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.2, 4000);
 
 
         if (detection != null && detection.size() > 0) {
             switch (detection.get(0).getLabel()) {
                 case "Apple":
-                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 2000);
+                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .2, 4000);
                     break;
                case "Lime":
                     break;
                 case "Orange":
-                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
+                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .2, 4000);
                     break;
                 default:
                     break;
             }
         }
         drivetrain.odoUp();
-        sleep(1000);
+        sleep(10000);
     }
 }
