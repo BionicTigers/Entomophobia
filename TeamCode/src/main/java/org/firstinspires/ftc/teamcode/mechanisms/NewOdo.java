@@ -127,13 +127,13 @@ public class NewOdo extends Mechanism {
         deltaRightMM = -wheel_circumference * ((postResetRightTicks - previousRightTicks) / encoder_ticks);
         deltaBackMM = -wheel_circumference * ((postResetBackTicks - previousBackTicks) / encoder_ticks);
 
-        //Displays telemetry for the change in MM from last cycle for each wheel
-        addPublicTelemetry("",""+deltaLeftMM);
-        addPublicTelemetry("",""+deltaRightMM);
-        addPublicTelemetry("",""+deltaBackMM);
+        telemetry.addData("DeltaMM","--------------");
+        telemetry.addData("Left", deltaLeftMM);
+        telemetry.addData("Right", deltaRightMM);
+        telemetry.addData("Back", deltaBackMM);
 
         //Calculates the change in local angle of the robot after the movement
-        //deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
+        deltaLocalRotation = (deltaLeftMM-deltaRightMM) / (left_offset + right_offset);
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         //If statement ensures that if deltaLeftMM - deltaRightMM equals 0, our rT won't return as null
         if (deltaRightMM != deltaLeftMM && deltaLocalRotation != 0) {
@@ -156,14 +156,27 @@ public class NewOdo extends Mechanism {
             rS = (deltaBackMM / deltaLocalRotation) - back_offset;
             //Determine the local x and y coordinates for a strafing arc
             deltaXStrafe = rS * Math.sin(deltaLocalRotation);
-            deltaYStrafe = rS * (1 - Math.cos(deltaLocalRotation));
+            deltaYStrafe = -rS * (1 - Math.cos(deltaLocalRotation));
         } else {
             deltaXStrafe = 0;
             deltaYStrafe = deltaBackMM;
         }
+
+        telemetry.addData("Local Arc","--------------");
+        telemetry.addData("XArcLocal", deltaLocalX);
+        telemetry.addData("YArcLocal", deltaLocalY);
+
+        telemetry.addData("Local Strafe","--------------");
+        telemetry.addData("XStrafeLocal", deltaXStrafe);
+        telemetry.addData("YStrafeLocal", deltaYStrafe);
+
         //Calculates the total local x and y changes since last cycle
         deltaXFinal = deltaLocalX + deltaXStrafe;
         deltaYFinal = deltaLocalY - deltaYStrafe;
+
+        telemetry.addData("Local Finals","--------------");
+        telemetry.addData("XLocal", deltaXFinal);
+        telemetry.addData("YLocal", deltaYFinal);
 
         //Sets the previous move tick amounts to whatever the ticks were at the end of+3.0 this last cycle
         previousLeftTicks = postResetLeftTicks;
@@ -182,8 +195,8 @@ public class NewOdo extends Mechanism {
 //        globalY = globalY + deltaGlobalY;
 
         //Testing stuff.. Yipeee!!
-        globalX += (deltaXFinal * Math.cos(globalRotation)) + (deltaYFinal * Math.cos(globalRotation - (Math.PI / 2)));
-        globalY += (deltaXFinal * Math.sin(globalRotation)) + (deltaYFinal * Math.sin(globalRotation - (Math.PI / 2)));
+        globalX += (deltaXFinal * Math.cos(globalRotation)) + (deltaYFinal * Math.cos(globalRotation - ( Math.PI/2 )));
+        globalY += (-deltaXFinal * Math.sin(globalRotation)) + (deltaYFinal * Math.sin(globalRotation - ( Math.PI/2 )));
 
         //Updates the global rotation of the robot compared to the starting angle
         globalRotation += deltaLocalRotation;

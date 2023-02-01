@@ -36,9 +36,17 @@ public class Arm extends Mechanism {
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
         if (gp2.right_bumper/* && sensors.get(0).getState()*/) {
-            forward();
+            if (slowMode) {
+                slowForward();
+            } else {
+                forward();
+            }
         } else if (gp2.left_bumper/* && sensors.get(1).getState()*/) {
-            backward();
+            if (slowMode) {
+                slowBackward();
+            } else {
+                backward();
+            }
         } else {
             crServos.get(0).setPower(0);
             crServos.get(1).setPower(0);
@@ -65,5 +73,15 @@ public class Arm extends Mechanism {
     public void backward() {
         crServos.get(0).setPower(-1);
         crServos.get(1).setPower(-1);
+    }
+
+    public void slowForward () {
+        crServos.get(0).setPower(0.2);
+        crServos.get(1).setPower(0.2);
+    }
+
+    public void slowBackward() {
+        crServos.get(0).setPower(-0.2);
+        crServos.get(1).setPower(-0.2);
     }
 }

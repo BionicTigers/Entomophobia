@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
  */
 public class Lift extends Mechanism {
     //Declares fields
-    //private DigitalChannel limitSwitch;
+    private DigitalChannel limitSwitch;
 
     public Telemetry telemetry;
 
@@ -32,7 +32,7 @@ public class Lift extends Mechanism {
     public enum LiftState {
         HIGH, MEDIUM, LOW, INTAKE, STORING
     }
-    /**
+    /*
      * The current position of the lift
      */
     private LiftState liftState = LiftState.STORING;
@@ -45,7 +45,7 @@ public class Lift extends Mechanism {
      //* @param bottom imported bottom limit switch
      * @param T imported telemetry
      */
-    public Lift (DcMotorEx l, DcMotorEx r/*, DigitalChannel lift*/, Telemetry T) {
+    public Lift (DcMotorEx l, DcMotorEx r, DigitalChannel lift, Telemetry T) {
         super();
 
         //Sets the fields to parameter values
@@ -72,10 +72,10 @@ public class Lift extends Mechanism {
         //Sets the height starting position
         height = 0;
 
-        //Declares limit switches
-//        limitSwitch = lift;
-//        sensors.add(limitSwitch);
-//        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        //Declares limit switch
+        limitSwitch = lift;
+        sensors.add(limitSwitch);
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
     }
 
     /*
@@ -163,9 +163,9 @@ public class Lift extends Mechanism {
     public void write() {
         right.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         left.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        if (left.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || right.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
-            height = -1100;
-        }
+//        if (left.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || right.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
+//            height = -1100;
+//        }
         //Sets the height of the lift to height + trim
         right.setTargetPosition(height + trim);
         left.setTargetPosition(height + trim);
@@ -174,15 +174,20 @@ public class Lift extends Mechanism {
         left.setVelocity(1000);
 
         //Uses a limit switch to prevent the motor from trying to go too far
-//        if(!sensors.get(0).getState() && !currentlyPressed){
-//            trim = 0;
-//            motors.get(0).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            motors.get(1).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            motors.get(0).setTargetPosition(0);
-//            motors.get(1).setTargetPosition(0);
-//            motors.get(0).setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            motors.get(1).setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        }
+        if(!sensors.get(0).getState() && !currentlyPressed){
+            trim = 0;
+            motors.get(0).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motors.get(1).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motors.get(0).setTargetPosition(0);
+            motors.get(1).setTargetPosition(0);
+            motors.get(0).setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motors.get(1).setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            currentlyPressed = true;
+        }
+
+        if (sensors.get(0).getState() && currentlyPressed) {
+            currentlyPressed = false;
+        }
 
         //Provides telemetry for the motor's current position and the trim value
         telemetry.addData("Right Current position: ", right.getCurrentPosition());

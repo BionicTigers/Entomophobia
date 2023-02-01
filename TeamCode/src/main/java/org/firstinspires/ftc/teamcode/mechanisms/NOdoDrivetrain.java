@@ -162,10 +162,10 @@ public class NOdoDrivetrain extends Mechanism {
             DMPX = DMPX + 0.4;
         }
         if(gp1.right_bumper){
-            DMPROT= DMPROT + 0.55;
+            DMPROT= DMPROT + 0.3;
         }
         if(gp1.left_bumper){
-            DMPROT= DMPROT - 0.55;
+            DMPROT= DMPROT - 0.3;
         }
 
         if (DMPX != 0 || DMPY != 0 || DMPROT != 0) {
@@ -419,8 +419,8 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0.625);//L
+        servos.get(0).setPosition(.7);//L
         servos.get(1).setPosition(0.2);//M
-        servos.get(2).setPosition(0.73);//R
+        servos.get(2).setPosition(0.9);//R
     }
 }
