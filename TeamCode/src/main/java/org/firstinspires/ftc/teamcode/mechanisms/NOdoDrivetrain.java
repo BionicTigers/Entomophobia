@@ -27,7 +27,6 @@ public class NOdoDrivetrain extends Mechanism {
     public int[] motorIndices; //declares a new array of motor indices
     public Telemetry telemetry; //declares a new instance of Telemetry
     public MultipleTelemetry dashboardTelemetry;
-    public PIDloops loops;
     private FtcDashboard dashboard;
     public NOdoLocation location;
     public NewOdo odo;
