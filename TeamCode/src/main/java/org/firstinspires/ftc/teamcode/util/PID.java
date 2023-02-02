@@ -33,6 +33,7 @@ public class PID {
         previousTime = 0;
     }
 
+    //SetPoint is the goal, processValue is the current value/input
     public double calculate(double setPoint, double processValue) {
         //Reset the stored variables to default
         if (doReset) {
@@ -51,7 +52,7 @@ public class PID {
         if (deltaTime >= sampleRate) {
             //Calculate the error
             double error = setPoint - processValue;
-            errorSum += error * kI;
+            errorSum += error * kI; //Allows for real-time tuning
 
             //We calculate the change in processValue rather than in error
             //This removes the spike in output when changing setPoint

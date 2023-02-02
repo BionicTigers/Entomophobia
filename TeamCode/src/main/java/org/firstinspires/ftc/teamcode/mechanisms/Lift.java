@@ -13,6 +13,9 @@ import org.firstinspires.ftc.teamcode.util.Mechanism;
  * The lift class has 2 motors that lift a double reverse four bar lift.
  * @author Jack Gerber
  */
+
+//TODO: When implementing encoder, make sure to use a PIDF (PID + feedforward) - Talk to Alex if you need help
+
 public class Lift extends Mechanism {
     //Declares fields
     private DigitalChannel limitSwitch;
@@ -26,6 +29,7 @@ public class Lift extends Mechanism {
     public DcMotorEx right;
 
     public boolean currentlyPressed = false;
+    public boolean slowMode;
     /*
      * Creates an enum for lift positions
      */
@@ -104,28 +108,25 @@ public class Lift extends Mechanism {
         }
 
         if (gp2.right_stick_y >= 0.3) {
-            trim = trim + 20;
+            if (slowMode) {
+                trim = trim + 20;
+            } else {
+                trim = trim + 40;
+            }
         }
         if (gp2.right_stick_y <= -0.3) {
-            trim = trim - 20;
+            if (slowMode) {
+                trim = trim - 20;
+            } else {
+                trim = trim - 40;
+            }
         }
 
-//        //Moves the lift up when claw is closed so that cones can move over ground junctions
-//        if(gp2.left_trigger > 0.3) {
-//            Deadline hold = new Deadline(300, TimeUnit.MILLISECONDS);
-//            if(hold.hasExpired()) {
-//                height = -200;
-//            }
-//        }
-
-        //Allows for easier intake of cones in a stack
-        if(gp2.dpad_up) {
-            height += 10;
+        if (gp2.right_trigger > 0.3) {
+            slowMode = true;
+        } else {
+            slowMode = false;
         }
-        else if(gp2.dpad_down) {
-            height -= 10;
-        }
-
     }
     /*
      * Sets the lift to a given height
@@ -170,11 +171,16 @@ public class Lift extends Mechanism {
         right.setTargetPosition(height + trim);
         left.setTargetPosition(height + trim);
         //Makes the lift motor move
-        right.setVelocity(1000);
-        left.setVelocity(1000);
+        if (!sensors.get(0).getState() && right.getTargetPosition() == 0) {
+            right.setVelocity(0);
+            left.setVelocity(0);
+        } else {
+            right.setVelocity(1000);
+            left.setVelocity(1000);
+        }
 
         //Uses a limit switch to prevent the motor from trying to go too far
-        if(!sensors.get(0).getState() && !currentlyPressed){
+        if (!sensors.get(0).getState() && !currentlyPressed){
             trim = 0;
             motors.get(0).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motors.get(1).setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

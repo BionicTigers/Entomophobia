@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.EldritchPods;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
+import org.firstinspires.ftc.teamcode.util.PID;
 import org.firstinspires.ftc.teamcode.util.Variables;
 
 /*
@@ -30,6 +31,8 @@ public class NOdoDrivetrain extends Mechanism {
     private FtcDashboard dashboard;
     public NOdoLocation location;
     public NewOdo odo;
+
+    public PID pid;
 
     private double robotheading;
     private double magnitude;
@@ -61,6 +64,8 @@ public class NOdoDrivetrain extends Mechanism {
         robot = bot;
         motorIndices = motorNumbers;
         telemetry = T;
+
+        pid = new PID(1, 0, .1);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
@@ -191,6 +196,7 @@ public class NOdoDrivetrain extends Mechanism {
             motor.setPower(motorPowers[i]);
             i++;
         }
+        telemetry.addData("pid power", pid.calculate(0, motors.get(0).getPower()));
 //        motors.get(0).setPower(motorPowers[0]);
 //        motors.get(1).setPower(motorPowers[1]);
 //        motors.get(2).setPower(motorPowers[2]);
@@ -412,14 +418,14 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoUp () {
-        servos.get(0).setPosition(0);//L
+        servos.get(0).setPosition(0.7);//L
         servos.get(1).setPosition(0.8);//M
-        servos.get(2).setPosition(0.35);//R
+        servos.get(2).setPosition(0.9);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(.7);//L
-        servos.get(1).setPosition(0.2);//M
-        servos.get(2).setPosition(0.9);//R
+        servos.get(0).setPosition(0);//L
+        servos.get(1).setPosition(0.15);//M
+        servos.get(2).setPosition(0);//R
     }
 }

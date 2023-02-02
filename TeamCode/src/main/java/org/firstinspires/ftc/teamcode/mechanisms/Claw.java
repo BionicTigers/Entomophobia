@@ -35,15 +35,15 @@ public class Claw extends Mechanism {
     }
 
     public void open() {
-        servos.get(0).setPosition(0.3);
+        servos.get(0).setPosition(0.4);
     }
 
     public void close() {
-        servos.get(0).setPosition(0);
+        servos.get(0).setPosition(0.1);
     }
 
     public void init() {
-        servos.get(0).setPosition(0.3);
+        servos.get(0).setPosition(0.4);
     }
 
     public void quickDrop() {

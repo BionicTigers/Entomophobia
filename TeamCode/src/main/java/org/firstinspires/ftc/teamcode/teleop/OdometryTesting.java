@@ -28,6 +28,7 @@ public class OdometryTesting extends LinearOpMode {
         Mechanism[] mechanisms = {drive, robot.odometry/*, lift/*, claw*/};
 
         waitForStart();
+        robot.odometry.reset();
 //        claw.initopen();
         while(opModeIsActive()) {
             for (Mechanism mech : mechanisms) { //For each mechanism in the mechanism array

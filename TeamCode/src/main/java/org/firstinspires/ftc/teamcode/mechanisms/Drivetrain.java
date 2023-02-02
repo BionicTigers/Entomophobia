@@ -21,7 +21,6 @@ public class Drivetrain extends Mechanism {
     public int[] motorIndices; //declares a new array of motor indices
     public Telemetry telemetry; //declares a new instance of Telemetry
     public Telemetry dashboardtelemetry;
-    public PIDloops loops;
     private FtcDashboard dashboard;
     public Location location;
     public Odometry odo;
