@@ -30,7 +30,10 @@ public class TeleOpMain extends LinearOpMode {
     public void runOpMode() {
         robot = new NOdoRobot(this);
         drive = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
-        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR"), hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
+        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
+                hardwareMap.get(DcMotorEx.class, "liftM"),
+                hardwareMap.get(DcMotorEx.class, "liftB"),
+                hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
         Mechanism[] mechanisms = {drive, lift, claw, arm};

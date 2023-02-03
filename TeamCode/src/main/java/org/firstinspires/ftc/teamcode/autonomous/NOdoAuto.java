@@ -45,7 +45,10 @@ public class NOdoAuto extends LinearOpMode {
         detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftL"), hardwareMap.get(DcMotorEx.class, "liftR"), hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
+        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
+                hardwareMap.get(DcMotorEx.class, "liftM"),
+                hardwareMap.get(DcMotorEx.class, "liftB"),
+                hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
 
         drivetrain.odoDown();
         claw.close();
