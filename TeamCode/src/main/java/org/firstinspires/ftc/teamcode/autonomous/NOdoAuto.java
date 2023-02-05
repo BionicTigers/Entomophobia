@@ -55,9 +55,9 @@ public class NOdoAuto extends LinearOpMode {
         waitForStart();
 //        List<Recognition> detection = detector.getDetected();
 
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, .2, 5000);
+        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, .3, 5000);
         sleep(1000);
-        drivetrain.moveToPositionMod(rightZone, 5, 5, 2, .2, 5000);
+        drivetrain.moveToPositionMod(rightZone, 5, 5, 2, .3, 5000);
         drivetrain.odoUp();
         sleep(500);
         //These lines are for testing

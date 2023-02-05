@@ -333,25 +333,25 @@ public class NOdoDrivetrain extends Mechanism {
          NOdoLocation error = new NOdoLocation(
                 goalPos.getLocation(0) - robot.odometry.position.getLocation(0),
                 goalPos.getLocation(1) - robot.odometry.position.getLocation(1),
-                goalPos.getLocation(2) - robot.odometry.position.getLocation(2));
+                goalPos.getLocation(2) - Math.toDegrees(robot.odometry.position.getLocation(2)));
         //this is to change the global xy error into robot specific error
         magnitude = Math.hypot(-error.getLocation(0),error.getLocation(1));
-        robotheading = robot.odometry.getPosition().getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
+        robotheading = robot.odometry.position.getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
         robotheading = Math.atan2(error.getLocation(0),error.getLocation(1));
 
-        double forwardError = Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
-        double strafeError = Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
+        double forwardError = Math.cos(robotheading-robot.odometry.position.getLocation(2))*magnitude;
+        double strafeError = Math.sin(robotheading-robot.odometry.position.getLocation(2))*magnitude;
 
         if(Math.abs(Variables.kfP*forwardError + Variables.kfI*integralValues[0] + Variables.kfD * (forwardError- lastForwardError))<1)
             integralValues[0] += forwardError;
         if(Math.abs(Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError))<1)
             integralValues[1] += strafeError;
-        if(Math.abs(Variables.krP*error.getLocation(2) + Variables.krI*integralValues[2] + Variables.krD * (error.getLocation(2) - lastRotationError))<1)
-            integralValues[2] += error.getLocation(2);
+        if(Math.abs(Variables.krP * Math.toRadians(error.getLocation(2)) + Variables.krI*integralValues[2] + Variables.krD * (Math.toRadians(error.getLocation(2)) - lastRotationError))<1)
+            integralValues[2] += Math.toRadians(error.getLocation(2));
 
         double forwardPow = mod*((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
         double sidePow = mod*((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
-        double rotPow = -(Variables.krP *error.getLocation(2) + Variables.krI*integralValues[2] +Variables.krD * ( error.getLocation(2) - lastRotationError));
+        double rotPow = -(Variables.krP * Math.toRadians(error.getLocation(2)) + Variables.krI*integralValues[2] +Variables.krD * (Math.toRadians(error.getLocation(2)) - lastRotationError));
 
         lastForwardError = forwardPow;
         lastSidewaysError = sidePow;
