@@ -153,9 +153,9 @@ public class Lift extends Mechanism {
             middle.setPower(0);
             bottom.setPower(0);
         } else if (middle.getTargetPosition() == 0) {
-            top.setPower(0.3);
-            middle.setPower(0.3);
-            bottom.setPower(0.3);
+            top.setPower(0.1);
+            middle.setPower(0.1);
+            bottom.setPower(0.1);
         } else {
             top.setPower(1);
             middle.setPower(1);
