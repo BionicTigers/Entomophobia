@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Arm extends Mechanism {
     public Telemetry telemetry;
-    public boolean slowMode;
 //    private DigitalChannel limit1;
 //    private DigitalChannel limit2;
 
@@ -35,27 +34,27 @@ public class Arm extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        if (gp2.right_bumper/* && sensors.get(0).getState()*/) {
-            if (slowMode) {
-                slowForward();
-            } else {
-                forward();
-            }
-        } else if (gp2.left_bumper/* && sensors.get(1).getState()*/) {
-            if (slowMode) {
-                slowBackward();
-            } else {
-                backward();
-            }
-        } else {
-            crServos.get(0).setPower(0);
-            crServos.get(1).setPower(0);
+        crServos.get(0).setPower(0);
+        crServos.get(1).setPower(0);
+
+        if (gp2.right_bumper) {
+            slowForward();
+        }
+        if (gp2.left_bumper) {
+            slowBackward();
         }
 
-        if (gp2.right_trigger > 0.3) {
-            slowMode = true;
-        } else {
-            slowMode = false;
+        if (gp2.dpad_up) {
+            forward();
+        }
+        if (gp2.dpad_left) {
+            forward();
+        }
+        if (gp2.dpad_down) {
+            forward();
+        }
+        if (gp2.dpad_right) {
+            backward();
         }
     }
 
@@ -76,12 +75,12 @@ public class Arm extends Mechanism {
     }
 
     public void slowForward () {
-        crServos.get(0).setPower(0.2);
-        crServos.get(1).setPower(0.2);
+        crServos.get(0).setPower(0.4);
+        crServos.get(1).setPower(0.4);
     }
 
     public void slowBackward() {
-        crServos.get(0).setPower(-0.2);
-        crServos.get(1).setPower(-0.2);
+        crServos.get(0).setPower(-0.4);
+        crServos.get(1).setPower(-0.4);
     }
 }

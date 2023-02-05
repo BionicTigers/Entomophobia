@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 
 public class Lift extends Mechanism {
@@ -16,6 +17,9 @@ public class Lift extends Mechanism {
 
     public int height = 0;
     public int trim = 0;
+
+    public boolean trimmedUp = false;
+    public boolean trimmedDown = false;
 
     public DcMotorEx top;
     public DcMotorEx middle;
@@ -52,10 +56,10 @@ public class Lift extends Mechanism {
         middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         //Prepares the bottom motor
-        middle.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        middle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        middle.setTargetPosition(0);
-        middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bottom.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        bottom.setTargetPosition(0);
+        bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         //Sets the height starting position
         height = 0;
@@ -68,25 +72,18 @@ public class Lift extends Mechanism {
 
     public void update(Gamepad gp1, Gamepad gp2) {
 
-        if (gp2.left_stick_y <= -0.3) {
-            height = -1400;
-        } else if (gp2.left_stick_y >= 0.3) {
-            height = 0;
-            trim = 0;
-        }
-
         if (gp2.right_stick_y >= 0.3) {
             if (slowMode) {
-                trim = trim + 20;
+                trim = trim + 5;
             } else {
-                trim = trim + 40;
+                trim = trim + 10;
             }
         }
         if (gp2.right_stick_y <= -0.3) {
             if (slowMode) {
-                trim = trim - 20;
+                trim = trim - 5;
             } else {
-                trim = trim - 40;
+                trim = trim - 10;
             }
         }
 
@@ -95,7 +92,39 @@ public class Lift extends Mechanism {
         } else {
             slowMode = false;
         }
+
+        if (gp2.left_stick_button && !trimmedUp) {
+            trim += 60;
+            trimmedUp = true;
+        }
+        if (!gp2.left_stick_button && trimmedUp) {
+            trimmedUp = false;
+        }
+
+        if (gp2.right_stick_button && !trimmedDown) {
+            trim -= 60;
+            trimmedDown = true;
+        }
+        if (!gp2.right_stick_button && trimmedDown) {
+            trimmedDown = false;
+        }
+
+        if (gp2.dpad_up) {
+            height = -1400;
+        }
+        if (gp2.dpad_left) {
+            height = -1000;
+        }
+        if (gp2.dpad_down) {
+            height = -600;
+        }
+        if (gp2.dpad_right) {
+            height = 0;
+            trim = 0;
+        }
     }
+
+    private boolean over = false;
 
     /*
      * Writes the motor powers to the motors
@@ -105,22 +134,32 @@ public class Lift extends Mechanism {
         top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//        if (left.getCurrent(CurrentUnit.MILLIAMPS) > 3000 || right.getCurrent(CurrentUnit.MILLIAMPS) > 3000) {
-//            height = -1100;
-//        }
+
+        if (top.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || middle.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || bottom.getCurrent(CurrentUnit.MILLIAMPS) > 7500 && !over) {
+            trim += 10;
+            over = true;
+        } else if (over && top.getCurrent(CurrentUnit.MILLIAMPS) < 7500 && middle.getCurrent(CurrentUnit.MILLIAMPS) < 7500 && bottom.getCurrent(CurrentUnit.MILLIAMPS) < 7500) {
+            over = false;
+        }
+
+
         //Sets the height of the lift to height + trim
         top.setTargetPosition(height + trim);
         middle.setTargetPosition(-(height + trim));
         bottom.setTargetPosition(height + trim);
         //Makes the lift motor move
         if (!sensors.get(0).getState() && middle.getTargetPosition() == 0) {
-            top.setVelocity(0);
-            middle.setVelocity(0);
-            bottom.setVelocity(0);
+            top.setPower(0);
+            middle.setPower(0);
+            bottom.setPower(0);
+        } else if (middle.getTargetPosition() == 0) {
+            top.setPower(0.3);
+            middle.setPower(0.3);
+            bottom.setPower(0.3);
         } else {
-            top.setVelocity(1000);
-            middle.setVelocity(1000);
-            bottom.setVelocity(1000);
+            top.setPower(1);
+            middle.setPower(1);
+            bottom.setPower(1);
         }
 
         //Uses a limit switch to prevent the motor from trying to go too far

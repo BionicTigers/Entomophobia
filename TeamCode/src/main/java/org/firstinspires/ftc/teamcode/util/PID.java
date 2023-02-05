@@ -10,6 +10,9 @@ public class PID {
     //Derivative: corrects based on future trend from current rate of change
     private double kD;
 
+    private double min;
+    private double max;
+
     //Time between samples in MS
     //Allows us to simplify the math and give a more accurate reading
     private final int sampleRate = 100;
@@ -25,10 +28,13 @@ public class PID {
 
     private boolean doReset;
 
-    public PID(double kP, double kI, double kD) {
+    public PID(double kP, double kI, double kD, double min, double max) {
         this.kP = kP;
         this.kI = kI * sampleRate;
         this.kD = kD / sampleRate;
+
+        this.min = min;
+        this.max = max;
 
         previousTime = 0;
     }
@@ -52,14 +58,14 @@ public class PID {
         if (deltaTime >= sampleRate) {
             //Calculate the error
             double error = setPoint - processValue;
-            errorSum += error * kI; //Allows for real-time tuning
+            errorSum = Math.max(min, Math.min(max, errorSum + error * kI)); //Allows for real-time tuning
 
             //We calculate the change in processValue rather than in error
             //This removes the spike in output when changing setPoint
             double deltaProcessValue = processValue - previousProcessValue;
 
             //Calculate the output
-            output = kP * error + errorSum - kD * deltaProcessValue;
+            output = Math.max(min, Math.min(max, kP * error + errorSum - kD * deltaProcessValue));
 
             previousProcessValue = processValue;
             previousTime = currentTime;
@@ -68,10 +74,13 @@ public class PID {
         return output;
     }
 
-    public void tune(double kP, double kI, double kD) {
+    public void tune(double kP, double kI, double kD, double min, double max) {
         this.kP = kP;
         this.kI = kI * sampleRate;
         this.kD = kD / sampleRate;
+
+        this.min = min;
+        this.max = max;
     }
 
     public void reset() {

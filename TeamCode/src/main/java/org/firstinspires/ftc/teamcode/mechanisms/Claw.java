@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 public class Claw extends Mechanism {
     public Servo servo;
 
+    public boolean hijack = false;
+    public boolean comboPressed = false;
+
     public Deadline fastDrop = new Deadline (1, TimeUnit.SECONDS);
 
     public Claw (Servo grab) {
@@ -21,11 +24,20 @@ public class Claw extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        if (gp2.left_trigger > 0.3) {
-            //Opens the claw
-            open();
+
+        if (gp2.back && gp2.a) {
+            hijack = true;
+        }
+
+        if (hijack) {
+            littleClose();
         } else {
             close();
+        }
+
+        if (gp2.left_trigger >= 0.3) {
+            open();
+            hijack = false;
         }
     }
 
@@ -35,10 +47,14 @@ public class Claw extends Mechanism {
     }
 
     public void open() {
-        servos.get(0).setPosition(0.4);
+        servos.get(0).setPosition(0.3);
     }
 
     public void close() {
+        servos.get(0).setPosition(0);
+    }
+
+    public void littleClose() {
         servos.get(0).setPosition(0.1);
     }
 

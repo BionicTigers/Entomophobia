@@ -118,8 +118,8 @@ public class NewOdo extends Mechanism {
         controlHub.refreshBulkData();
 
         //Calculates the amount of ticks spun since reset by subtracting the junk from before rest from total rotated
-        postResetLeftTicks = controlHub.getEncoderTicks(1) - junkLeftTicks;
-        postResetRightTicks = controlHub.getEncoderTicks(0) - junkRightTicks;
+        postResetLeftTicks = controlHub.getEncoderTicks(0) - junkLeftTicks;
+        postResetRightTicks = controlHub.getEncoderTicks(1) - junkRightTicks;
         postResetBackTicks = controlHub.getEncoderTicks(2) - junkBackTicks;
 
         //Converts change in ticks from last cycle into change in MM from last cycle for each wheel, and 1 & 2 are inversed
@@ -132,13 +132,13 @@ public class NewOdo extends Mechanism {
         //Calculates the radius of the arc of the robot's travel for forward/backward arcs
         //If statement ensures that if deltaLeftMM - deltaRightMM equals 0, our rT won't return as null
         if (deltaRightMM != deltaLeftMM && deltaLocalRotation != 0) {
-            rT = (deltaLeftMM + deltaRightMM) / (deltaLeftMM - deltaRightMM);
+            rT = (deltaLeftMM * right_offset + deltaRightMM * left_offset) / (deltaLeftMM - deltaRightMM);
             //Determine the local x and y coordinates for a forward/backward arc
             deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
             deltaLocalY = rT * Math.sin(deltaLocalRotation);
         } else {
-            deltaLocalX = 0;
-            deltaLocalY = deltaLeftMM;
+            deltaLocalX = deltaLeftMM;
+            deltaLocalY = 0;
         }
 
         //Calculates the straight-line distance between the starting and ending points of the robot's local travel
@@ -149,13 +149,12 @@ public class NewOdo extends Mechanism {
         //If statement ensures that if deltaLocalRotation is 0, our rS won't return as null
         if (deltaLocalRotation != 0) {
             rS = (deltaBackMM / deltaLocalRotation) - back_offset;
-            rS = 0;
             //Determine the local x and y coordinates for a strafing arc
             deltaXStrafe = rS * Math.sin(deltaLocalRotation);
             deltaYStrafe = -rS * (1 - Math.cos(deltaLocalRotation));
         } else {
-            deltaXStrafe = deltaBackMM;
-            deltaYStrafe = 0;
+            deltaXStrafe = 0;
+            deltaYStrafe = deltaBackMM;
         }
 
         //Calculates the total local x and y changes since last cycle
@@ -203,8 +202,8 @@ public class NewOdo extends Mechanism {
         position.setLocation(0, 0, 0);
 
         //Sets the leftover junk ticks to the current motor rotations
-        junkRightTicks = controlHub.getEncoderTicks(0);
-        junkLeftTicks = controlHub.getEncoderTicks(1);
+        junkLeftTicks = controlHub.getEncoderTicks(0);
+        junkRightTicks = controlHub.getEncoderTicks(1);
         junkBackTicks = controlHub.getEncoderTicks(2);
     }
 
@@ -212,13 +211,8 @@ public class NewOdo extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        if (!yes && gp1.b || true) {
-            updateLocalPosition();
-            updateGlobalPosition();
-            yes = true;
-        } else if (yes && !gp1.b) {
-            yes = false;
-        }
+        updateLocalPosition();
+        updateGlobalPosition();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class NOdoDrivetrain extends Mechanism {
         motorIndices = motorNumbers;
         telemetry = T;
 
-        pid = new PID(1, 0, .1);
+        pid = new PID(1, 0, .1, 0, 1);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
@@ -216,10 +216,10 @@ public class NOdoDrivetrain extends Mechanism {
         telemetry.addData("Back Left Power", motorPowers[2]);
         telemetry.addData("Back Right Power", motorPowers[3]);
 
-        System.out.println("Front Right Power: " + motorPowers[0] + " | " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Front Left Power: " + motorPowers[1] + " | " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Back Left Power: " + motorPowers[2] + " | " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
-        System.out.println("Back Right Power: " + motorPowers[3] + " | " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
+//        System.out.println("Front Right Power: " + motorPowers[0] + " | " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
+//        System.out.println("Front Left Power: " + motorPowers[1] + " | " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
+//        System.out.println("Back Left Power: " + motorPowers[2] + " | " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
+//        System.out.println("Back Right Power: " + motorPowers[3] + " | " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
 
 //        dashboardTelemetry.addData("ErrorX", + error.getLocation(0));
 //        dashboardTelemetry.addData("ErrorY", + error.getLocation(2));
@@ -266,7 +266,7 @@ public class NOdoDrivetrain extends Mechanism {
         integralValues = new double[3];
         error = findErrorMod(goalPos, mod);
         double startTime = robot.getTimeMS();
-        while ((robot.getTimeMS() - startTime < maxTime) &&robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
+        while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             robot.odometry.updateLocalPosition();
             robot.odometry.updateGlobalPosition();
             error = findErrorMod(goalPos, mod);
@@ -331,23 +331,23 @@ public class NOdoDrivetrain extends Mechanism {
     public  NOdoLocation
     findErrorMod( NOdoLocation goalPos, double mod) {
          NOdoLocation error = new NOdoLocation(
-                goalPos.getLocation(0)-robot.odometry.position.getLocation(0),
+                goalPos.getLocation(0) - robot.odometry.position.getLocation(0),
                 goalPos.getLocation(1) - robot.odometry.position.getLocation(1),
-                rotationError(goalPos.getLocation(2), robot.odometry.position.getLocation(2)));
+                goalPos.getLocation(2) - robot.odometry.position.getLocation(2));
         //this is to change the global xy error into robot specific error
         magnitude = Math.hypot(-error.getLocation(0),error.getLocation(1));
         robotheading = robot.odometry.getPosition().getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
         robotheading = Math.atan2(error.getLocation(0),error.getLocation(1));
 
-        double forwardError = Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
-        double strafeError = Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
+        double forwardError = Math.cos(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
+        double strafeError = Math.sin(robotheading-Math.toRadians(robot.odometry.position.getLocation(2)))*magnitude;
 
         if(Math.abs(Variables.kfP*forwardError + Variables.kfI*integralValues[0] + Variables.kfD * (forwardError- lastForwardError))<1)
-            integralValues[0]= integralValues[0]+forwardError;
+            integralValues[0] += forwardError;
         if(Math.abs(Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError))<1)
-            integralValues[1]= integralValues[1]+strafeError;
+            integralValues[1] += strafeError;
         if(Math.abs(Variables.krP*error.getLocation(2) + Variables.krI*integralValues[2] + Variables.krD * (error.getLocation(2) - lastRotationError))<1)
-            integralValues[2]= integralValues[2]+error.getLocation(2);
+            integralValues[2] += error.getLocation(2);
 
         double forwardPow = mod*((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
         double sidePow = mod*((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
@@ -417,15 +417,43 @@ public class NOdoDrivetrain extends Mechanism {
         this.write();
     }
 
+//    public void odoUp () {
+//        servos.get(0).setPosition(0.7);//L
+//        servos.get(1).setPosition(0.8);//M
+//        servos.get(2).setPosition(0.9);//R
+//    }
+//
+//    public void odoDown () {
+//        servos.get(0).setPosition(0);//L
+//        servos.get(1).setPosition(0.15);//M
+//        servos.get(2).setPosition(0);//R
+//    }
+
+    //REAL BOT ODO POSITIONS
+
+//    public void odoUp () {
+//        servos.get(0).setPosition(0);//L
+//        servos.get(1).setPosition(0.8);//M
+//        servos.get(2).setPosition(0.35);//R
+//    }
+//
+//    public void odoDown () {
+//        servos.get(0).setPosition(.7);//L
+//        servos.get(1).setPosition(0.2);//M
+//        servos.get(2).setPosition(0.9);//R
+//    }
+
+    //TEST BOT ODO POSITIONS
+
     public void odoUp () {
-        servos.get(0).setPosition(0.7);//L
-        servos.get(1).setPosition(0.8);//M
-        servos.get(2).setPosition(0.9);//R
+        servos.get(0).setPosition(1);//L
+        servos.get(1).setPosition(0.5);//M
+        servos.get(2).setPosition(1);//R
     }
 
     public void odoDown () {
         servos.get(0).setPosition(0);//L
-        servos.get(1).setPosition(0.15);//M
+        servos.get(1).setPosition(0);//M
         servos.get(2).setPosition(0);//R
     }
 }

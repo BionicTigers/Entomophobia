@@ -29,11 +29,10 @@ public class NOdoAuto extends LinearOpMode {
     public TensorFlow detector;
 
 
-    public NOdoLocation smallForward = new NOdoLocation(100, 0, 0);
     public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(800, 75, 0);
-    public NOdoLocation leftZone = new NOdoLocation(900, -400, 0);
-    public NOdoLocation rightZone = new NOdoLocation(850, 950,0);
+    public NOdoLocation middleZone = new NOdoLocation(0, 625, 0);
+    public NOdoLocation leftZone = new NOdoLocation(-700, 600, 0);
+    public NOdoLocation rightZone = new NOdoLocation(500, 600,0);
 
     public NOdoLocation coneZone = new NOdoLocation(100, -175, 0);
     public NOdoLocation coneDrop = new NOdoLocation(200, -175, 0);
@@ -42,32 +41,25 @@ public class NOdoAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new NOdoRobot(this);
         drivetrain = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
-        detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
-                hardwareMap.get(DcMotorEx.class, "liftM"),
-                hardwareMap.get(DcMotorEx.class, "liftB"),
-                hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
+//        detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
+//                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
+//        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+//        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
+//                hardwareMap.get(DcMotorEx.class, "liftM"),
+//                hardwareMap.get(DcMotorEx.class, "liftB"),
+//                hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
 
         drivetrain.odoDown();
-        claw.close();
+        //claw.close();
 
         waitForStart();
-        List<Recognition> detection = detector.getDetected();
+//        List<Recognition> detection = detector.getDetected();
 
-        drivetrain.moveToPositionMod(smallForward, 5, 5, 1, .3, 3000);
-        drivetrain.moveToPositionMod(coneZone, 5, 5, 1, .6, 3000);
-        lift.height = -2750;
-        lift.write();
-        sleep(5000);
-        drivetrain.moveToPositionMod(coneDrop, 5, 5, 1, 0.3, 3000);
-        claw.open();
-        drivetrain.moveToPositionMod(coneZone, 5, 5, 1, .5, 3000);
-        lift.height = 0;
-        lift.write();
+        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, .2, 5000);
         sleep(1000);
-        drivetrain.moveToPositionMod(reset, 5, 5, 1, .5, 3000);
+        drivetrain.moveToPositionMod(rightZone, 5, 5, 2, .2, 5000);
+        drivetrain.odoUp();
+        sleep(500);
         //These lines are for testing
         //drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 2000);
         //drivetrain.moveToPositionMod(rightZone, 5, 5, 1, 0.3, 4000);

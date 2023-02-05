@@ -24,7 +24,6 @@ public class PortTestOp extends LinearOpMode {
     private boolean speedChanged = false;
     public int index = 0;
     public float speed = 0;
-    public Telemetry telemetry;
     private ArrayList<Object> objects = new ArrayList<>();
 
     private HashMap<Integer, Double> POWERS = new HashMap<>();
@@ -33,11 +32,9 @@ public class PortTestOp extends LinearOpMode {
         //Detect for index changes
         if (gp1.left_bumper && !indexChanged) {
             index = Math.max(0, index-1);
-            telemetry.addData("Index: ", index);
             indexChanged = true;
         } else if (gp1.right_bumper && !indexChanged) {
             index = Math.min(objects.size()-1, index+1);
-            telemetry.addData("Index: ", index);
             indexChanged = true;
         }
 
@@ -49,11 +46,9 @@ public class PortTestOp extends LinearOpMode {
         //Detect for speed changes
         if (gp1.dpad_left && !speedChanged) {
             speed = Math.max(0f, speed - 0.1f);
-            telemetry.addData("Speed: ", speed);
             speedChanged = true;
         } else if (gp1.dpad_right && !speedChanged) {
             speed = Math.min(1.0f, speed + 0.1f);
-            telemetry.addData("Speed: ", speed);
 
             speedChanged = true;
         }
@@ -65,12 +60,13 @@ public class PortTestOp extends LinearOpMode {
 
         //Don't hold down x and change the index.
         activate = gp1.x;
-        telemetry.update();
+
+        telemetry.addData("Index: ", index);
+        telemetry.addData("Speed: ", speed);
     }
 
     public void write() {
         Object thingToActivate = objects.get(index);
-        telemetry.addLine("Help: " + thingToActivate.toString());
 
         if (activate) {
             if (thingToActivate instanceof DcMotorSimple) {
@@ -100,6 +96,7 @@ public class PortTestOp extends LinearOpMode {
         while (opModeIsActive()) {
             update(gamepad1, gamepad2);
             write();
+            telemetry.update();
         }
     }
 }
