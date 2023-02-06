@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.NOdoLocation;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 
+@Config
 public class NewOdo extends Mechanism {
 
     public Telemetry telemetry;
@@ -34,20 +36,20 @@ public class NewOdo extends Mechanism {
     //Measurements are all in millimeters
 
     //Diameter of the odometry wheels
-    private static final double odo_diameter = 35;
+    private static double odo_diameter = 35;
     //Gear ratio of the odometry wheels
-    private static final double gear_ratio = 2.5;
+    private static double gear_ratio = 2.5;
     //Number of ticks on the encoders
-    private static final double encoder_ticks = 8192;
+    private static double encoder_ticks = 8192;
     //Distance between left odometry module and the center of the robot
-    private static final double left_offset = 164;
+    public static double left_offset = 162;
     //Distance between right odometry module and the center of the robot
-    private static final double right_offset = 164;
+    public static double right_offset = 162;
     //Distance between back odometry module and the center of the robot
-    private static final double back_offset = 80;
+    public static double back_offset = 80;
 
     //Calculates the effective diameter of the odometry wheels based on the gear ratio
-    private static final double effective_diameter = odo_diameter * gear_ratio;
+    private static double effective_diameter = odo_diameter * gear_ratio;
     //Calculates the circumference of the odometry wheel
     public double wheel_circumference = effective_diameter * Math.PI;
 
@@ -221,21 +223,21 @@ public class NewOdo extends Mechanism {
         telemetry.addData("Left", deltaLeftMM);
         telemetry.addData("Right", deltaRightMM);
         telemetry.addData("Back", deltaBackMM);
-        telemetry.addData("RT", rT);
-        telemetry.addData("",")");
-        telemetry.addData("Left Tick Rotation", postResetLeftTicks);
-        telemetry.addData("Right Tick Rotation", postResetRightTicks);
-        telemetry.addData("Back Tick Rotation", postResetBackTicks);
-        telemetry.addData("Local Arc","--------------");
-        telemetry.addData("XArcLocal", deltaLocalX);
-        telemetry.addData("YArcLocal", deltaLocalY);
-        telemetry.addData("Local Finals","--------------");
-        telemetry.addData("XLocal", deltaXFinal);
-        telemetry.addData("YLocal", deltaYFinal);
-
-        telemetry.addData("Local Strafe","--------------");
-        telemetry.addData("XStrafeLocal", deltaXStrafe);
-        telemetry.addData("YStrafeLocal", deltaYStrafe);
+//        telemetry.addData("RT", rT);
+//        telemetry.addData("",")");
+//        telemetry.addData("Left Tick Rotation", postResetLeftTicks);
+//        telemetry.addData("Right Tick Rotation", postResetRightTicks);
+//        telemetry.addData("Back Tick Rotation", postResetBackTicks);
+//        telemetry.addData("Local Arc","--------------");
+//        telemetry.addData("XArcLocal", deltaLocalX);
+//        telemetry.addData("YArcLocal", deltaLocalY);
+//        telemetry.addData("Local Finals","--------------");
+//        telemetry.addData("XLocal", deltaXFinal);
+//        telemetry.addData("YLocal", deltaYFinal);
+//
+//        telemetry.addData("Local Strafe","--------------");
+//        telemetry.addData("XStrafeLocal", deltaXStrafe);
+//        telemetry.addData("YStrafeLocal", deltaYStrafe);
 
 //        telemetry.addData("Back Tick Delta", deltaBackMM);
         telemetry.addData("Position", "");

@@ -32,7 +32,9 @@ public class NOdoDrivetrain extends Mechanism {
     public NOdoLocation location;
     public NewOdo odo;
 
-    public PID pid;
+    public PID xPid;
+    public PID yPid;
+    public PID rPid;
 
     private double robotheading;
     private double magnitude;
@@ -65,7 +67,9 @@ public class NOdoDrivetrain extends Mechanism {
         motorIndices = motorNumbers;
         telemetry = T;
 
-        pid = new PID(1, 0, .1, 0, 1);
+        xPid = new PID(1, 0.1, 0, -100, 10000);
+        yPid = new PID(1, 0.1, 0, -100, 10000);
+        rPid = new PID(1, 0.1, 0, -10000, 10000);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
@@ -134,16 +138,40 @@ public class NOdoDrivetrain extends Mechanism {
         final double v3 = (-P * sinRAngle) - (P * cosRAngle) - rightX; //backLeft
         final double v4 = (-P * sinRAngle) + (P * cosRAngle) + rightX; //backRight
 
+
+
         motorPowers[0] = v1; motorPowers[1] = v2; motorPowers[2] = -v3; motorPowers[3] = -v4;
+    }
+
+    public void determineMotorPowers(double x, double y, double rot, double mod) {
+        //Power
+        double P = Math.hypot(-x, y);
+        //The angle that the robot is in right now
+        double robotAngle = Math.atan2(y, -x);
+        //The value that figures out the rotation that you want to go to
+        double rightX = rot;
+
+        double sinRAngle = Math.sin(robotAngle);
+        double cosRAngle = Math.cos(robotAngle);
+        cosrang = cosRAngle;
+        sinrang = sinRAngle;
+        pow = P;
+
+        final double v1 = (P * sinRAngle) + (P * cosRAngle) - rightX;  //frontRight
+        final double v2 = (P * sinRAngle) - (P * cosRAngle) + rightX;  //frontLeft
+        final double v3 = (-P * sinRAngle) - (P * cosRAngle) - rightX; //backLeft
+        final double v4 = (-P * sinRAngle) + (P * cosRAngle) + rightX; //backRight
+
+        motorPowers[0] = v1 * mod; motorPowers[1] = v2 * mod; motorPowers[2] = -v3 * mod; motorPowers[3] = -v4 * mod;
     }
 
     //Updates data for Telemetry, motor powers, and servo movements
     public void update (Gamepad gp1, Gamepad gp2) {
         if (gp1.left_stick_button) {
             odoUp();
-        } else if (gp1.right_stick_button) {
-            odoDown();
-        }
+        } //else if (gp1.right_stick_button) {
+//            odoDown();
+//        }
 
 //        if (gp1.right_bumper && gp1.dpad_up) {
 //            altMode = true;
@@ -191,12 +219,20 @@ public class NOdoDrivetrain extends Mechanism {
     //Sets the motor powers based on the determineMotorPowers() method that was run in the update() method
     @Override
     public void write () {
+        double highest = 0;
+        for (double power : motorPowers) {
+            highest = Math.max(power, highest);
+        }
+
         int i = 0;
         for (DcMotorEx motor : motors) {
+            if (highest > 1) {
+                motorPowers[i] *= 1 / highest;
+                telemetry.addData("Ratio", 1 / highest);
+            }
             motor.setPower(motorPowers[i]);
             i++;
         }
-        telemetry.addData("pid power", pid.calculate(0, motors.get(0).getPower()));
 //        motors.get(0).setPower(motorPowers[0]);
 //        motors.get(1).setPower(motorPowers[1]);
 //        motors.get(2).setPower(motorPowers[2]);
@@ -269,12 +305,17 @@ public class NOdoDrivetrain extends Mechanism {
         while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
             robot.odometry.updateLocalPosition();
             robot.odometry.updateGlobalPosition();
+
+//            dashboardTelemetry.addData("x-output", xPid.calculate(goalPos.getLocation(0), robot.odometry.position.getLocation(0)));
+//            dashboardTelemetry.addData("y-output", yPid.calculate(goalPos.getLocation(1), robot.odometry.position.getLocation(1)));
+//            dashboardTelemetry.addData("r-output", rPid.calculate(goalPos.getLocation(2), robot.odometry.position.getLocation(2)));
+            dashboardTelemetry.addData("x-error", error.getLocation(0));
+            dashboardTelemetry.addData("y-error", error.getLocation(1));
+            dashboardTelemetry.addData("r-error", error.getLocation(2));
+
             error = findErrorMod(goalPos, mod);
             write();
             robot.odometry.write();
-            dashboardTelemetry.addData("x-error",error.getLocation(0) );
-            dashboardTelemetry.addData("y-error",error.getLocation(1) );
-            dashboardTelemetry.addData("r-error",error.getLocation(2) );
             dashboardTelemetry.update();
         }
         stopDrivetrain();
@@ -328,12 +369,11 @@ public class NOdoDrivetrain extends Mechanism {
         return error;
     }
 
-    public  NOdoLocation
-    findErrorMod( NOdoLocation goalPos, double mod) {
+    public NOdoLocation findErrorMod(NOdoLocation goalPos, double mod) {
          NOdoLocation error = new NOdoLocation(
                 goalPos.getLocation(0) - robot.odometry.position.getLocation(0),
                 goalPos.getLocation(1) - robot.odometry.position.getLocation(1),
-                goalPos.getLocation(2) - Math.toDegrees(robot.odometry.position.getLocation(2)));
+                Math.toRadians(goalPos.getLocation(2)) - robot.odometry.position.getLocation(2));
         //this is to change the global xy error into robot specific error
         magnitude = Math.hypot(-error.getLocation(0),error.getLocation(1));
         robotheading = robot.odometry.position.getLocation(2)- Math.atan2(error.getLocation(1),-error.getLocation(0));
@@ -346,18 +386,18 @@ public class NOdoDrivetrain extends Mechanism {
             integralValues[0] += forwardError;
         if(Math.abs(Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError))<1)
             integralValues[1] += strafeError;
-        if(Math.abs(Variables.krP * Math.toRadians(error.getLocation(2)) + Variables.krI*integralValues[2] + Variables.krD * (Math.toRadians(error.getLocation(2)) - lastRotationError))<1)
-            integralValues[2] += Math.toRadians(error.getLocation(2));
+        if(Math.abs(Variables.krP * error.getLocation(2) + Variables.krI*integralValues[2] + Variables.krD * (error.getLocation(2) - lastRotationError))<1)
+            integralValues[2] += error.getLocation(2);
 
-        double forwardPow = mod*((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
-        double sidePow = mod*((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
-        double rotPow = -(Variables.krP * Math.toRadians(error.getLocation(2)) + Variables.krI*integralValues[2] +Variables.krD * (Math.toRadians(error.getLocation(2)) - lastRotationError));
+        double forwardPow = ((Variables.kfP*forwardError+ Variables.kfI*integralValues[0] + Variables.kfD * (forwardError - lastForwardError)));
+        double sidePow = ((Variables.ksP*strafeError + Variables.ksI*integralValues[1] + Variables.ksD * (strafeError - lastSidewaysError)));
+        double rotPow = (Variables.krP * (error.getLocation(2)) + Variables.krI*integralValues[2] +Variables.krD * ((error.getLocation(2)) - lastRotationError));
 
         lastForwardError = forwardPow;
         lastSidewaysError = sidePow;
         lastRotationError = rotPow;
 
-        determineMotorPowers(sidePow,forwardPow,rotPow);
+        determineMotorPowers(sidePow,forwardPow,rotPow * 40, mod);
         return error;
     }
 
@@ -417,18 +457,6 @@ public class NOdoDrivetrain extends Mechanism {
         this.write();
     }
 
-//    public void odoUp () {
-//        servos.get(0).setPosition(0.7);//L
-//        servos.get(1).setPosition(0.8);//M
-//        servos.get(2).setPosition(0.9);//R
-//    }
-//
-//    public void odoDown () {
-//        servos.get(0).setPosition(0);//L
-//        servos.get(1).setPosition(0.15);//M
-//        servos.get(2).setPosition(0);//R
-//    }
-
     //REAL BOT ODO POSITIONS
 
 //    public void odoUp () {
@@ -452,8 +480,8 @@ public class NOdoDrivetrain extends Mechanism {
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0);//L
-        servos.get(1).setPosition(0);//M
-        servos.get(2).setPosition(0);//R
+        servos.get(0).setPosition(0.3);//L
+        servos.get(1).setPosition(0.1);//M
+        servos.get(2).setPosition(0.05);//R
     }
 }

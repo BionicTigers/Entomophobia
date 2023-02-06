@@ -30,8 +30,8 @@ public class PID {
 
     public PID(double kP, double kI, double kD, double min, double max) {
         this.kP = kP;
-        this.kI = kI * sampleRate;
-        this.kD = kD / sampleRate;
+        this.kI = kI * ((float) sampleRate/1000);
+        this.kD = kD / ((float) sampleRate/1000);
 
         this.min = min;
         this.max = max;
@@ -76,8 +76,8 @@ public class PID {
 
     public void tune(double kP, double kI, double kD, double min, double max) {
         this.kP = kP;
-        this.kI = kI * sampleRate;
-        this.kD = kD / sampleRate;
+        this.kI = kI * ((float) sampleRate/1000);
+        this.kD = kD / ((float) sampleRate/1000);
 
         this.min = min;
         this.max = max;
