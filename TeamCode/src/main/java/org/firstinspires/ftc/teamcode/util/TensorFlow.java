@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TensorFlow {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "tflitemodels/AOL.tflite";
+    private static final String TFOD_MODEL_ASSET = "HehoohooLUUUKE.tflite";
 
     private static final String[] LABELS = {
             "Apple",

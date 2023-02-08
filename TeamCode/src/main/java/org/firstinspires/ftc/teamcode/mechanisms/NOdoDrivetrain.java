@@ -460,15 +460,15 @@ public class NOdoDrivetrain extends Mechanism {
     //REAL BOT ODO POSITIONS
 
     public void odoUp () {
-        servos.get(0).setPosition(0);//L
-        servos.get(1).setPosition(0.8);//M
-        servos.get(2).setPosition(0.35);//R
+        servos.get(0).setPosition(EldritchPods.LEFT_UP);//L
+        servos.get(1).setPosition(EldritchPods.MIDDLE_UP);//M
+        servos.get(2).setPosition(EldritchPods.RIGHT_UP);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(.7);//L
-        servos.get(1).setPosition(0.2);//M
-        servos.get(2).setPosition(0.9);//R
+        servos.get(0).setPosition(EldritchPods.LEFT_DOWN);//L
+        servos.get(1).setPosition(EldritchPods.MIDDLE_DOWN);//M
+        servos.get(2).setPosition(EldritchPods.RIGHT_DOWN);//R
     }
 
     //TEST BOT ODO POSITIONS
