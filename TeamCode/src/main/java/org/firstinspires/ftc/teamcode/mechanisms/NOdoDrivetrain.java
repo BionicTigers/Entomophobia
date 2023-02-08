@@ -169,9 +169,9 @@ public class NOdoDrivetrain extends Mechanism {
     public void update (Gamepad gp1, Gamepad gp2) {
         if (gp1.left_stick_button) {
             odoUp();
-        } //else if (gp1.right_stick_button) {
-//            odoDown();
-//        }
+        } else if (gp1.right_stick_button) {
+            odoDown();
+        }
 
 //        if (gp1.right_bumper && gp1.dpad_up) {
 //            altMode = true;
@@ -459,29 +459,29 @@ public class NOdoDrivetrain extends Mechanism {
 
     //REAL BOT ODO POSITIONS
 
-//    public void odoUp () {
-//        servos.get(0).setPosition(0);//L
-//        servos.get(1).setPosition(0.8);//M
-//        servos.get(2).setPosition(0.35);//R
-//    }
-//
-//    public void odoDown () {
-//        servos.get(0).setPosition(.7);//L
-//        servos.get(1).setPosition(0.2);//M
-//        servos.get(2).setPosition(0.9);//R
-//    }
-
-    //TEST BOT ODO POSITIONS
-
     public void odoUp () {
-        servos.get(0).setPosition(1);//L
-        servos.get(1).setPosition(0.5);//M
-        servos.get(2).setPosition(1);//R
+        servos.get(0).setPosition(0);//L
+        servos.get(1).setPosition(0.8);//M
+        servos.get(2).setPosition(0.35);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(0.3);//L
-        servos.get(1).setPosition(0.1);//M
-        servos.get(2).setPosition(0.05);//R
+        servos.get(0).setPosition(.7);//L
+        servos.get(1).setPosition(0.2);//M
+        servos.get(2).setPosition(0.9);//R
     }
+
+    //TEST BOT ODO POSITIONS
+
+//    public void odoUp () {
+//        servos.get(0).setPosition(1);//L
+//        servos.get(1).setPosition(0.5);//M
+//        servos.get(2).setPosition(1);//R
+//    }
+//
+//    public void odoDown () {
+//        servos.get(0).setPosition(0.3);//L
+//        servos.get(1).setPosition(0.1);//M
+//        servos.get(2).setPosition(0.05);//R
+//    }
 }
