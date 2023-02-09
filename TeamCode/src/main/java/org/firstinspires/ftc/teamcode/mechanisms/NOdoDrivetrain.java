@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.util.EldritchPods;
+import org.firstinspires.ftc.teamcode.util.DashboardOdoPods;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
@@ -460,15 +459,15 @@ public class NOdoDrivetrain extends Mechanism {
     //REAL BOT ODO POSITIONS
 
     public void odoUp () {
-        servos.get(0).setPosition(EldritchPods.LEFT_UP);//L
-        servos.get(1).setPosition(EldritchPods.MIDDLE_UP);//M
-        servos.get(2).setPosition(EldritchPods.RIGHT_UP);//R
+        servos.get(0).setPosition(DashboardOdoPods.LEFT_UP);//L
+        servos.get(1).setPosition(DashboardOdoPods.MIDDLE_UP);//M
+        servos.get(2).setPosition(DashboardOdoPods.RIGHT_UP);//R
     }
 
     public void odoDown () {
-        servos.get(0).setPosition(EldritchPods.LEFT_DOWN);//L
-        servos.get(1).setPosition(EldritchPods.MIDDLE_DOWN);//M
-        servos.get(2).setPosition(EldritchPods.RIGHT_DOWN);//R
+        servos.get(0).setPosition(DashboardOdoPods.LEFT_DOWN);//L
+        servos.get(1).setPosition(DashboardOdoPods.MIDDLE_DOWN);//M
+        servos.get(2).setPosition(DashboardOdoPods.RIGHT_DOWN);//R
     }
 
     //TEST BOT ODO POSITIONS
