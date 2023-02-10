@@ -225,9 +225,9 @@ public class NewOdo extends Mechanism {
         telemetry.addData("Back", deltaBackMM);
 //        telemetry.addData("RT", rT);
 //        telemetry.addData("",")");
-//        telemetry.addData("Left Tick Rotation", postResetLeftTicks);
-//        telemetry.addData("Right Tick Rotation", postResetRightTicks);
-//        telemetry.addData("Back Tick Rotation", postResetBackTicks);
+        telemetry.addData("Left Tick Rotation", postResetLeftTicks);
+        telemetry.addData("Right Tick Rotation", postResetRightTicks);
+        telemetry.addData("Back Tick Rotation", postResetBackTicks);
 //        telemetry.addData("Local Arc","--------------");
 //        telemetry.addData("XArcLocal", deltaLocalX);
 //        telemetry.addData("YArcLocal", deltaLocalY);

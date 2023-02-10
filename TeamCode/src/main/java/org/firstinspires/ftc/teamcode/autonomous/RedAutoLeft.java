@@ -4,12 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.NOdoDrivetrain;
 import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
 import org.firstinspires.ftc.teamcode.util.NOdoLocation;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
+
+import java.util.List;
 
 @Autonomous (name="Red Auto Left", group="autonomous")
 public class RedAutoLeft extends LinearOpMode {
@@ -50,14 +53,33 @@ public class RedAutoLeft extends LinearOpMode {
         waitForStart();
 //        List<Recognition> detection = detector.getDetected();
 
+        List<Recognition> detection = detector.getDetected();
+
+        if (detection != null && detection.size() > 0)
+            telemetry.addData("", detection.get(0).getLabel());
+
         drivetrain.moveToPositionMod(terminal, 5, 5, 2, 0.2, 3000);
-        sleep(1000);
+        sleep(250);
         drivetrain.moveToPositionMod(origin, 5, 5, 2, 0.3, 3000);
-        sleep(500);
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, 0.3, 8000);
-        sleep(1000);
-        drivetrain.moveToPositionMod(rightZone, 5, 5, 2, 0.3, 8000);
-        drivetrain.odoUp();
+        sleep(250);
+        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, 0.3, 4000);
+        sleep(250);
+
+        if (detection != null && detection.size() > 0) {
+            telemetry.addData("", detection.get(0).getLabel());
+            switch (detection.get(0).getLabel()) {
+                case "Apple":
+                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 3000);
+                    break;
+                case "Lime":
+                    break;
+                case "Orange":
+                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 3000);
+                    break;
+                default:
+                    break;
+            }
+        }
         sleep(5000);
         //These lines are for testing
         //drivetrain.moveToPositionMod(middleZone, 5, 5, 1, 0.3, 2000);

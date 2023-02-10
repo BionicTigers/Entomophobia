@@ -11,9 +11,9 @@ public class Variables {
     public static double ksP = 0.006;
     public static double ksI = 0.00007;
     public static double ksD = 0;
-    public static double krP = 0.05;
-    public static double krI = 0.0002;
-    public static double krD = 0.03;
+    public static double krP = 0.15;
+    public static double krI = 0.0003;
+    public static double krD = 0.3;
 
     public static double setPointRotation = 0;
 

@@ -182,22 +182,22 @@ public class NOdoDrivetrain extends Mechanism {
 //        }
 
         if(gp1.dpad_up){ //precision movement forward, very slow
-            DMPY = DMPY + 0.45;
+            DMPY = DMPY + 0.55;
         }
         if(gp1.dpad_down){ //precision movement backward, very slow
-            DMPY = DMPY - 0.45;
+            DMPY = DMPY - 0.55;
         }
         if(gp1.dpad_left) {
-            DMPX = DMPX - 0.4;
+            DMPX = DMPX - 0.45;
         }
         if(gp1.dpad_right) {
-            DMPX = DMPX + 0.4;
+            DMPX = DMPX + 0.45;
         }
         if(gp1.right_bumper){
-            DMPROT= DMPROT + 0.3;
+            DMPROT= DMPROT + 0.4;
         }
         if(gp1.left_bumper){
-            DMPROT= DMPROT - 0.3;
+            DMPROT= DMPROT - 0.4;
         }
 
         if (DMPX != 0 || DMPY != 0 || DMPROT != 0) {
@@ -397,7 +397,7 @@ public class NOdoDrivetrain extends Mechanism {
         lastSidewaysError = sidePow;
         lastRotationError = rotPow;
 
-        determineMotorPowers(sidePow,forwardPow,rotPow * 40, mod);
+        determineMotorPowers(sidePow,forwardPow,rotPow * 30, mod);
         return error;
     }
 

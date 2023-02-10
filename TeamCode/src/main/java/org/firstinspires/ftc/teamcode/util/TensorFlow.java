@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TensorFlow {
     //Path for the file you made
-    private static final String TFOD_MODEL_ASSET = "HehoohooLUUUKE.tflite";
+    private static final String TFOD_MODEL_ASSET = "tflitemodels/wookiewookie.tflite";
 
     private static final String[] LABELS = {
             "Apple",
@@ -58,17 +58,17 @@ public class TensorFlow {
         initTfod();
 
         // Control the exposure, Values controlled on FTC Dashboard/VisionConstants.java
-//        ExposureControl expControl = vuforia.getCamera().getControl(ExposureControl.class);
-//        expControl.setMode(ExposureControl.Mode.Manual);
-//        expControl.setExposure(VisionConstants.EXPOSURE, TimeUnit.MILLISECONDS);
-
-        // Control the gain
-//        GainControl gainControl = vuforia.getCamera().getControl(GainControl.class);
-//        gainControl.setGain(VisionConstants.GAIN);
+        ExposureControl expControl = vuforia.getCamera().getControl(ExposureControl.class);
+        expControl.setMode(ExposureControl.Mode.Manual);
+        expControl.setExposure(VisionConstants.EXPOSURE, TimeUnit.MILLISECONDS);
 //
-//        WhiteBalanceControl whiteBalanceControl = vuforia.getCamera().getControl(WhiteBalanceControl.class);
-//        whiteBalanceControl.setMode(WhiteBalanceControl.Mode.MANUAL);
-//        whiteBalanceControl.setWhiteBalanceTemperature(2000);
+//        // Control the gain
+        GainControl gainControl = vuforia.getCamera().getControl(GainControl.class);
+        gainControl.setGain(VisionConstants.GAIN);
+//
+        WhiteBalanceControl whiteBalanceControl = vuforia.getCamera().getControl(WhiteBalanceControl.class);
+        whiteBalanceControl.setMode(WhiteBalanceControl.Mode.MANUAL);
+        whiteBalanceControl.setWhiteBalanceTemperature(VisionConstants.WHITE_BALANCE);
 
         if (tfod != null) {
             tfod.activate();
@@ -77,12 +77,6 @@ public class TensorFlow {
     }
 
     public List<Recognition> getDetected() {
-        try {
-            FtcDashboard.getInstance().sendImage(vuforia.convertFrameToBitmap(vuforia.getFrameQueue().take()));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         return tfod.getUpdatedRecognitions();
     }
 
@@ -99,7 +93,6 @@ public class TensorFlow {
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         //FtcDashboard.getInstance().startCameraStream(vuforia, 0);
-
     }
 
     /**
@@ -107,7 +100,7 @@ public class TensorFlow {
      */
     private void initTfod() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.70f;
+        tfodParameters.minResultConfidence = 0.50f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);

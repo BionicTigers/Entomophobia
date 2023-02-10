@@ -4,7 +4,15 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class VisionConstants {
-    public static int EXPOSURE = 20;
-    public static int GAIN = 0;
-    public static int WHITE_BALANCE = 3000;
+    //Robotics Room Light
+    public static int EXPOSURE = 10;
+    public static int GAIN = 20;
+    public static int WHITE_BALANCE = 2000;
+
+    //Low Light
+    /*
+    public static int EXPOSURE = 16;
+    public static int GAIN = 20;
+    public static int WHITE_BALANCE = 1000;
+     */
 }
