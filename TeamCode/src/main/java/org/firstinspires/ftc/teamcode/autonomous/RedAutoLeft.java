@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
@@ -27,8 +28,8 @@ public class RedAutoLeft extends LinearOpMode {
 
 
     public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(0, 650, 0);
-    public NOdoLocation leftZone = new NOdoLocation(-565, 650, 0);
+    public NOdoLocation middleZone = new NOdoLocation(0, 625, 0);
+    public NOdoLocation leftZone = new NOdoLocation(-585, 675, 0);
     public NOdoLocation rightZone = new NOdoLocation(600, 650,0);
 
     public NOdoLocation origin = new NOdoLocation(0, 0, 0);
@@ -39,9 +40,9 @@ public class RedAutoLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new NOdoRobot(this);
         drivetrain = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
-//        detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
-//                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-//        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+        detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
 //                hardwareMap.get(DcMotorEx.class, "liftM"),
 //                hardwareMap.get(DcMotorEx.class, "liftB"),
@@ -49,7 +50,8 @@ public class RedAutoLeft extends LinearOpMode {
 
         drivetrain.odoDown();
         robot.odometry.reset();
-        //claw.close();
+        claw.open();
+
         waitForStart();
 //        List<Recognition> detection = detector.getDetected();
 
@@ -72,6 +74,9 @@ public class RedAutoLeft extends LinearOpMode {
                     drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 3000);
                     break;
                 case "Lime":
+                    if (detection.get(0).getConfidence() < .85){
+                        drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
+                    }
                     break;
                 case "Orange":
                     drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 3000);

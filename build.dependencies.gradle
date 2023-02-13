@@ -23,7 +23,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'org.firstinspires.ftc:gameAssets-FreightFrenzy:1.0.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
-    implementation 'org.openftc:easyopencv:1.5.1'
+    implementation 'org.openftc:easyopencv:1.6.0'
     implementation 'org.openftc:rev-extensions-2:1.2'
 }
 

@@ -396,7 +396,7 @@ public class NOdoDrivetrain extends Mechanism {
         lastSidewaysError = sidePow;
         lastRotationError = rotPow;
 
-        determineMotorPowers(sidePow,forwardPow,rotPow * 30, mod);
+        determineMotorPowers(sidePow,forwardPow,rotPow * 40, mod);
         return error;
     }
 

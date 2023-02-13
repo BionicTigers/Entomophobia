@@ -77,7 +77,7 @@ public class TensorFlow {
     }
 
     public List<Recognition> getDetected() {
-        return tfod.getUpdatedRecognitions();
+        return tfod.getRecognitions();
     }
 
     /**
