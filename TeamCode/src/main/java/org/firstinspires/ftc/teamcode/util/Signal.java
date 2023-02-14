@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -27,7 +28,11 @@ public class Signal {
                 valueThreshold[1]);
     }
 
-    public void setMat(Mat input) {
-        image = input;
+    public boolean detect(Mat input) {
+        Mat mask = new Mat();
+
+        Core.inRange(input, lower, upper, mask);
+
+
     }
 }

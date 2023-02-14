@@ -46,7 +46,6 @@ class Pipeline extends OpenCvPipeline {
 
 public class OpenCv {
     OpenCvCamera camera;
-
     HashMap<String, Signal> signals;
 
     public OpenCv(WebcamName webcamName, HashMap<String, Signal> signals, int monitorId) {
@@ -68,11 +67,9 @@ public class OpenCv {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                System.out.println("Camera Opened");
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
                 camera.setPipeline(new Pipeline(signals));
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
-                System.out.println("Camera Started");
             }
 
             @Override
