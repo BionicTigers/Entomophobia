@@ -8,9 +8,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
-import org.firstinspires.ftc.teamcode.mechanisms.NOdoDrivetrain;
-import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
-import org.firstinspires.ftc.teamcode.util.NOdoLocation;
+import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
+import org.firstinspires.ftc.teamcode.teleop.Robot;
+import org.firstinspires.ftc.teamcode.util.Location;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class BlueAutoRight extends LinearOpMode {
 
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
 
-    public NOdoRobot robot;
-    public NOdoDrivetrain drivetrain;
+    public Robot robot;
+    public Drivetrain drivetrain;
     public Claw claw;
     public Lift lift;
     public TensorFlow detector;
@@ -29,19 +29,19 @@ public class BlueAutoRight extends LinearOpMode {
     public boolean a = false;
 
 
-    public NOdoLocation reset = new NOdoLocation(-15,-25,0);
-    public NOdoLocation middleZone = new NOdoLocation(0, 650, 0);
-    public NOdoLocation leftZone = new NOdoLocation(-480, 675, 0);
-    public NOdoLocation rightZone = new NOdoLocation(480, 675,0);
+    public Location reset = new Location(-15,-25,0);
+    public Location middleZone = new Location(0, 650, 0);
+    public Location leftZone = new Location(-480, 675, 0);
+    public Location rightZone = new Location(480, 675,0);
 
-    public NOdoLocation origin = new NOdoLocation(0, 0, 0);
+    public Location origin = new Location(0, 0, 0);
 
-    public NOdoLocation terminal = new NOdoLocation(300, 0, 0);
+    public Location terminal = new Location(300, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new NOdoRobot(this);
-        drivetrain = new NOdoDrivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
+        robot = new Robot(this);
+        drivetrain = new Drivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
         detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));

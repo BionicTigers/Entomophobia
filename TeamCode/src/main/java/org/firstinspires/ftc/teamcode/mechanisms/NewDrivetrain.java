@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
-import org.firstinspires.ftc.teamcode.teleop.NOdoRobot;
+import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.NewLocation;
 import org.firstinspires.ftc.teamcode.util.Variables;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class NewDrivetrain extends Mechanism {
     private Telemetry telemetry;
-    private NOdoRobot robot;
+    private Robot robot;
     private HashMap<String, Servo> odoServos;
     private ArrayList<DcMotorEx> driveMotors;
 
@@ -27,7 +27,7 @@ public class NewDrivetrain extends Mechanism {
 
     private double[] motorPowers;
 
-    public NewDrivetrain(NOdoRobot robot, Telemetry telemetry, HashMap<String, Servo> odoServos) {
+    public NewDrivetrain(Robot robot, Telemetry telemetry, HashMap<String, Servo> odoServos) {
         this.robot = robot;
         this.telemetry = telemetry;
         this.odoServos = odoServos;

@@ -6,15 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.mechanisms.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.OldRobot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @TeleOp(name = "PortTest")
 public class PortTestOp extends LinearOpMode {
-    public Robot robot;
+    public OldRobot robot;
 
     private ArrayList<DcMotorSimple> motors;
     private ArrayList<Servo> servos;

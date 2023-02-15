@@ -27,12 +27,19 @@ class Pipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         Mat hsvMat = new Mat();
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
+        double high = 0;
 
         for (Map.Entry<String, Signal> entry : signals.entrySet()) {
             String name = entry.getKey();
             Signal signal = entry.getValue();
 
-            signal.setMat(new Mat());
+            double area = signal.getArea(hsvMat);
+
+
+            if (signal.detect(area) && high < area) {
+                high = area;
+                detection = name;
+            }
         }
 
         hsvMat.release();
@@ -45,13 +52,15 @@ class Pipeline extends OpenCvPipeline {
 }
 
 public class OpenCv {
-    OpenCvCamera camera;
-    HashMap<String, Signal> signals;
+    private OpenCvCamera camera;
+    private HashMap<String, Signal> signals;
+    private Pipeline pipeline;
 
     public OpenCv(WebcamName webcamName, HashMap<String, Signal> signals, int monitorId) {
         this.camera = OpenCvCameraFactory.getInstance()
                 .createWebcam(webcamName, monitorId);
-        this.signals = signals;
+
+        pipeline = new Pipeline(signals);
 
         startCameraStream();
     }
@@ -60,7 +69,13 @@ public class OpenCv {
         this.camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         this.signals = signals;
 
+        pipeline = new Pipeline(signals);
+
         startCameraStream();
+    }
+
+    public String getDetection() {
+        return pipeline.getDetection();
     }
 
     private void startCameraStream() {
@@ -68,7 +83,7 @@ public class OpenCv {
             @Override
             public void onOpened() {
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(new Pipeline(signals));
+                camera.setPipeline(pipeline);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
             }
 

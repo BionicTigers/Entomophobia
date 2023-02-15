@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.mechanisms.OldDrivetrain;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
-import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.mechanisms.Robot;
+import org.firstinspires.ftc.teamcode.mechanisms.OldRobot;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class TimedAuto extends LinearOpMode {
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
 
     //Declares mechanisms
-    public Robot robot;
-    public Drivetrain drivetrain;
+    public OldRobot robot;
+    public OldDrivetrain drivetrain;
     public TensorFlow tensorflow;
 
     private List<Recognition> detected;
@@ -31,8 +31,8 @@ public class TimedAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //On initialization
-        robot = new Robot(this);
-        drivetrain = new Drivetrain(robot, motorNumbers, telemetry);
+        robot = new OldRobot(this);
+        drivetrain = new OldDrivetrain(robot, motorNumbers, telemetry);
         tensorflow = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         System.out.println("Init Tensorflow");
