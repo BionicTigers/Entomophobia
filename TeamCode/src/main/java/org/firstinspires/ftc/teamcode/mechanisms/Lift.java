@@ -38,6 +38,8 @@ public class Lift extends Mechanism {
 
     public boolean goingUp;
 
+    public boolean noEncoderTest = false;
+
 
     public Lift (DcMotorEx t, DcMotorEx m, DcMotorEx b, DigitalChannel lift, Telemetry T) {
         super();
@@ -137,6 +139,13 @@ public class Lift extends Mechanism {
             height = 0;
             trim = 0;
         }
+
+        if (gp2.a && gp2.b) {
+            noEncoderTest = true;
+        }
+        if (gp2.x && gp2.y) {
+            noEncoderTest = false;
+        }
     }
 
     private boolean over = false;
@@ -146,9 +155,15 @@ public class Lift extends Mechanism {
      */
     @Override
     public void write() {
-        top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        if (!noEncoderTest) {
+            top.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            bottom.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        } else {
+            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
         if (top.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || middle.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || bottom.getCurrent(CurrentUnit.MILLIAMPS) > 7500 && !over) {
             trim += 10;
@@ -172,9 +187,15 @@ public class Lift extends Mechanism {
             middle.setPower(0.15);
             bottom.setPower(0.15);
         } else {
-            top.setPower(1);
-            middle.setPower(1);
-            bottom.setPower(1);
+            if (!noEncoderTest) {
+                top.setPower(1);
+                middle.setPower(1);
+                bottom.setPower(1);
+            } else {
+                top.setPower(1);
+                middle.setPower(-1);
+                bottom.setPower(1);
+            }
         }
 
         //PID set powers

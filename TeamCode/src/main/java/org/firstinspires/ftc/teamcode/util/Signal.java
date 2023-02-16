@@ -81,3 +81,12 @@ public class Signal {
         return area > minArea && area < maxArea;
     }
 }
+//Purple Signal
+//
+//
+//
+//Green Signal
+//
+//
+//
+//Orange Signal
