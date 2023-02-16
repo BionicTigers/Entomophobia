@@ -18,28 +18,41 @@ public class Signal {
     public double minArea;
     public double maxArea;
 
-    public Mat image;
-
-    /*
-        thresholds: [lowerBound, upperBound]
-     */
-    public Signal(Scalar lower,
-                  Scalar upper,
-                  int minArea,
-                  int maxArea) {
+    //Create a new signal with the upper and lower bounds and a minimum area with no maximum
+    //The Scalar for lower and upper goes (H, S, V)
+    public Signal(Scalar lower, Scalar upper, int minArea) {
+        //Set the lower and upper bounds for HSV Values
         this.lower = lower;
         this.upper = upper;
 
+        //Set the minimum area
+        //Sets the maximum area to infinity
+        this.minArea = minArea;
+        this.maxArea = Integer.MAX_VALUE;
+    }
+
+    //Create a new signal with the upper and lower bounds and a minimum and maximum area
+    //The Scalar for lower and upper goes (H, S, V)
+    public Signal(Scalar lower, Scalar upper, int minArea, int maxArea) {
+        //Set the lower and upper bounds for HSV Values
+        this.lower = lower;
+        this.upper = upper;
+
+        //Set the minimum area and maximum area
         this.minArea = minArea;
         this.maxArea = maxArea;
     }
 
     public double getArea(Mat input) {
+        //Create starting variables
         Mat mask = new Mat();
         Mat temp = new Mat();
         double area = 0;
 
+        //Create a color mask
         Core.inRange(input, lower, upper, mask);
+
+        //Create a new ArrayList of contours and then find said contours to map
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(mask,
                 contours,
@@ -47,20 +60,23 @@ public class Signal {
                 Imgproc.RETR_TREE,
                 Imgproc.CHAIN_APPROX_SIMPLE);
 
+        //Draw contours on top of the image for easier debugging
+        //This is a work in progress.
         Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),20);
 
+        //Sum the area of every contour
         for (MatOfPoint contour : contours) {
             area += Imgproc.contourArea(contour);
         }
 
-        System.out.println(area);
-
+        //Free the mat's from memory to prevent a memory leak
         mask.release();
         temp.release();
 
         return area;
     }
 
+    //Used to check if the area falls inside of maxArea
     public boolean detect(double area) {
         return area > minArea && area < maxArea;
     }

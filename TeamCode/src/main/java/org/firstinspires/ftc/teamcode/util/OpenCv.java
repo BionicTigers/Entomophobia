@@ -14,6 +14,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.HashMap;
 import java.util.Map;
 
+//This is the pipeline we use for Vision
+//It is ran on every new frame
 class Pipeline extends OpenCvPipeline {
     public HashMap<String, Signal> signals;
 
@@ -23,10 +25,15 @@ class Pipeline extends OpenCvPipeline {
         this.signals = signals;
     }
 
+    //This is essentially the Main method for the pipeline
+    //On every new frame from the camera, this is ran
     @Override
     public Mat processFrame(Mat input) {
         Mat hsvMat = new Mat();
+        //Convert the input image into HSV
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
+
+        //Highest Area found during every signal process
         double high = 0;
 
         for (Map.Entry<String, Signal> entry : signals.entrySet()) {
@@ -35,13 +42,15 @@ class Pipeline extends OpenCvPipeline {
 
             double area = signal.getArea(hsvMat);
 
-
+            //Check if the detection is in the minimum radius
+            //Also check if its higher than the previous highest area
             if (signal.detect(area) && high < area) {
                 high = area;
                 detection = name;
             }
         }
 
+        //Release so we don't get any memory leaks
         hsvMat.release();
         return input;
     }
@@ -56,6 +65,8 @@ public class OpenCv {
     private HashMap<String, Signal> signals;
     private Pipeline pipeline;
 
+    //Create a new OpenCV Wrapper WITH a live monitor view
+    //Useful for debugging but slows down cpu cycles
     public OpenCv(WebcamName webcamName, HashMap<String, Signal> signals, int monitorId) {
         this.camera = OpenCvCameraFactory.getInstance()
                 .createWebcam(webcamName, monitorId);
@@ -65,6 +76,7 @@ public class OpenCv {
         startCameraStream();
     }
 
+    //Create a new OpenCV Wrapper WITHOUT a live monitor view
     public OpenCv(WebcamName webcamName, HashMap<String, Signal> signals) {
         this.camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         this.signals = signals;
@@ -74,16 +86,23 @@ public class OpenCv {
         startCameraStream();
     }
 
+    //Return the current detection from the pipeline, NONE if there isn't a detection
     public String getDetection() {
         return pipeline.getDetection();
     }
 
     private void startCameraStream() {
+        //Start the camera asynchronously to prevent yielding
+        //This creates a new thread but it won't cause any issues with hardware ownership
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
+                //Start streaming at 1280x720, in the upright orientation
+                //Start the detection pipeline
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
                 camera.setPipeline(pipeline);
+
+                //Used to give realtime camera feed to FTC Dashboard
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
             }
 
