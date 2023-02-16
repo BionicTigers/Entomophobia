@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
+import org.firstinspires.ftc.teamcode.util.PID;
 
 public class Lift extends Mechanism {
     //Declares fields
@@ -15,12 +16,19 @@ public class Lift extends Mechanism {
 
     public Telemetry telemetry;
 
+    public PID pid;
+
+    //The height that we set the encoders to, negative is up for some reason, positive is also up because it loops around
     public int height = 0;
+    //The amount to trim the height up and down by to make finer movements
     public int trim = 0;
 
-    public boolean trimmedUp = false;
-    public boolean trimmedDown = false;
+    //Booleans used to make switch buttons, ones that track once per press instead of constantly
+    public boolean bumpedUp = false;
+    public boolean bumpedDown = false;
 
+
+    //Declares the three motors (Bonus fact: The actual physical motors are called top, weast, and down respectively)
     public DcMotorEx top;
     public DcMotorEx middle;
     public DcMotorEx bottom;
@@ -40,24 +48,24 @@ public class Lift extends Mechanism {
         bottom = b;
         telemetry = T;
 
-        //Adds to motors ArrayList
+        //Adds the motors to the motors ArrayList
         motors.add(top);
         motors.add(middle);
         motors.add(bottom);
 
-        //Prepares the top motor
+        //Sets up the top motor with encoders
         top.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         top.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         top.setTargetPosition(0);
         top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-        //Prepares the middle motor
+        //Sets up the middle motor with encoders
         middle.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         middle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         middle.setTargetPosition(0);
         middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-        //Prepares the bottom motor
+        //Sets up the bottom motor with encoders
         bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bottom.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         bottom.setTargetPosition(0);
@@ -70,6 +78,9 @@ public class Lift extends Mechanism {
         limitSwitch = lift;
         sensors.add(limitSwitch);
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
+        //Experimental PID stuff
+        pid = new PID(2, 0, 1, -1500, 1500);
     }
 
     public void update(Gamepad gp1, Gamepad gp2) {
@@ -95,20 +106,22 @@ public class Lift extends Mechanism {
             slowMode = false;
         }
 
-        if (gp2.left_stick_button && !trimmedUp) {
+        //A quick bump up to allow for easier grabbing of the cone stack
+        if (gp2.left_stick_button && !bumpedUp) {
             trim += 60;
-            trimmedUp = true;
+            bumpedUp = true;
         }
-        if (!gp2.left_stick_button && trimmedUp) {
-            trimmedUp = false;
+        if (!gp2.left_stick_button && bumpedUp) {
+            bumpedUp = false;
         }
 
-        if (gp2.right_stick_button && !trimmedDown) {
+        //A quick bump down to allow for easier grabbing of the cone stack
+        if (gp2.right_stick_button && !bumpedDown) {
             trim -= 60;
-            trimmedDown = true;
+            bumpedDown = true;
         }
-        if (!gp2.right_stick_button && trimmedDown) {
-            trimmedDown = false;
+        if (!gp2.right_stick_button && bumpedDown) {
+            bumpedDown = false;
         }
 
         if (gp2.dpad_up) {
@@ -163,6 +176,11 @@ public class Lift extends Mechanism {
             middle.setPower(1);
             bottom.setPower(1);
         }
+
+        //PID set powers
+//        top.setPower(-pid.calculate(height + trim, middle.getCurrentPosition()));
+//        middle.setPower(pid.calculate(height + trim, middle.getCurrentPosition()));
+//        bottom.setPower(-pid.calculate(height + trim, middle.getCurrentPosition()));
 
 //        if (middle.getTargetPosition() > middle.getCurrentPosition()) {
 //            goingUp = true;
