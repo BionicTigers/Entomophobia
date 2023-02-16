@@ -44,14 +44,16 @@ public class Signal {
         Imgproc.findContours(mask,
                 contours,
                 temp,
-                Imgproc.RETR_LIST,
+                Imgproc.RETR_TREE,
                 Imgproc.CHAIN_APPROX_SIMPLE);
 
-        Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),1);
+        Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),20);
 
         for (MatOfPoint contour : contours) {
             area += Imgproc.contourArea(contour);
         }
+
+        System.out.println(area);
 
         mask.release();
         temp.release();

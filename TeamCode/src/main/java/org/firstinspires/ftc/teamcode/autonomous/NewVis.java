@@ -20,14 +20,19 @@ public class NewVis extends LinearOpMode {
         FtcDashboard.getInstance().getTelemetry().update();
 
         HashMap<String, Signal> signals = new HashMap<>();
-        signals.put("Orange", new Signal(new Scalar(0, 0, 0), new Scalar(255, 50, 50), 0, Integer.MAX_VALUE));
+        signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000, Integer.MAX_VALUE));
+        signals.put("Purple", new Signal(new Scalar(129, 53, 73), new Scalar(180, 255, 255), 1000, Integer.MAX_VALUE));
+        signals.put("Green", new Signal(new Scalar(39, 18, 108), new Scalar(91, 180, 227), 1000, Integer.MAX_VALUE));
 
         OpenCv detector = new OpenCv(
                 hardwareMap.get(WebcamName.class, "Webcam 1"),
-                signals
+                signals,
+                hardwareMap.appContext.getResources().getIdentifier(
+                        "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName())
         );
         while (opModeInInit()) {
             telemetry.addData("Reading", detector.getDetection());
+            telemetry.update();
             continue;
         }
     }
