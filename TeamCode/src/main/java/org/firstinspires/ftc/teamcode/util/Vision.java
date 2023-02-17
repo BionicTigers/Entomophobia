@@ -31,7 +31,7 @@ public class Vision extends OpenCvPipeline {
      * @param hue   - values
      *             -for hue
      * @param sat   - values for saturation
-     * @param lum   - values for luminance
+44     * @param lum   - values for luminance
      * @param out   - output matrix
      *              takes an input matrix and applies a filter into the output matrix
      *              filter uses values of hue, saturation, and luminance

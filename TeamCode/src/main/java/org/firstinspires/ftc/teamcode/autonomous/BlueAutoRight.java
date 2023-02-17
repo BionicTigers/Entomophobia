@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.OpenCv;
+import org.firstinspires.ftc.teamcode.util.Signal;
+import org.opencv.core.Scalar;
+import java.util.HashMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -11,8 +16,11 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
+import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
+import org.opencv.core.Scalar;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Autonomous (name="Blue Auto Right", group="autonomous")
@@ -24,7 +32,9 @@ public class BlueAutoRight extends LinearOpMode {
     public Drivetrain drivetrain;
     public Claw claw;
     public Lift lift;
-    public TensorFlow detector;
+    public OpenCv detector;
+    HashMap<String, Signal> signals = new HashMap<>();
+
 
     public boolean a = false;
 
@@ -42,9 +52,17 @@ public class BlueAutoRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new Robot(this);
         drivetrain = new Drivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
-        detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
+        detector = new OpenCv(
+                hardwareMap.get(WebcamName.class, "Webcam 1"),
+                signals,
+                hardwareMap.appContext.getResources().getIdentifier(
+                        "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName())
+        );
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+        signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000, Integer.MAX_VALUE));
+        signals.put("Purple", new Signal(new Scalar(129, 80, 73), new Scalar(163, 165, 255), 1000, Integer.MAX_VALUE));
+        signals.put("Green", new Signal(new Scalar(39, 34, 108), new Scalar(83, 180, 219), 1000, Integer.MAX_VALUE));
+
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
 //                hardwareMap.get(DcMotorEx.class, "liftM"),
 //                hardwareMap.get(DcMotorEx.class, "liftB"),
@@ -54,17 +72,10 @@ public class BlueAutoRight extends LinearOpMode {
         robot.odometry.reset();
         claw.open();
 
-        while (opModeInInit()) {
-            List<Recognition> detection = detector.getDetected();
 
-            if (detection != null && detection.size() > 0) {
-                telemetry.addData("Detection", detection.get(0).getLabel());
-                telemetry.update();
-            }
-        }
+
 
         waitForStart();
-        List<Recognition> detection = detector.getDetected();
         telemetry.update();
 
         sleep(3000);
@@ -76,23 +87,19 @@ public class BlueAutoRight extends LinearOpMode {
         drivetrain.moveToPositionMod(middleZone, 5, 5, 0, 0.3, 2000);
         sleep(250);
 
-        if (detection != null && detection.size() > 0) {
-            switch (detection.get(0).getLabel()) {
-                case "Apple":
+            switch (detector.getDetection()) {
+                case "Orange":
                     drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 2000);
                     break;
-                case "Lime":
-                    if (detection.get(0).getConfidence() < .85){
-                        drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
-                    }
+                case "Purple":
                     break;
-                case "Orange":
+                case "Green":
                     drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
                     break;
                 default:
                     break;
             }
-        }
+
         drivetrain.odoUp();
         sleep(5000);
         //These lines are for testing
