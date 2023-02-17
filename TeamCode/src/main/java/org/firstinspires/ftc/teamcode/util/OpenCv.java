@@ -4,13 +4,16 @@ import com.acmerobotics.dashboard.FtcDashboard;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
-
+//If you need help call me: 513-808-0241
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ class Pipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         Mat hsvMat = new Mat();
+        ArrayList<MatOfPoint> contours = new ArrayList<>();
         //Convert the input image into HSV
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
 
@@ -42,6 +46,10 @@ class Pipeline extends OpenCvPipeline {
 
             double area = signal.getArea(hsvMat);
 
+            System.out.println(name + ": " + area);
+
+            contours.addAll(signal.contours);
+
             //Check if the detection is in the minimum radius
             //Also check if its higher than the previous highest area
             if (signal.detect(area) && high < area) {
@@ -49,6 +57,10 @@ class Pipeline extends OpenCvPipeline {
                 detection = name;
             }
         }
+
+        //Draw contours on top of the image for easier debugging
+        //This is a work in progress.
+        Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),2);
 
         //Release so we don't get any memory leaks
         hsvMat.release();

@@ -33,7 +33,6 @@ public class NewVis extends LinearOpMode {
         while (opModeInInit()) {
             telemetry.addData("Reading", detector.getDetection());
             telemetry.update();
-            continue;
         }
     }
 }

@@ -11,8 +11,12 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
+import org.firstinspires.ftc.teamcode.util.OpenCv;
+import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
+import org.opencv.core.Scalar;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Autonomous (name="Non-Terminal Auto", group="autonomous")
@@ -24,13 +28,14 @@ public class NoTerminalAuto extends LinearOpMode {
     public Drivetrain drivetrain;
     public Claw claw;
     public Lift lift;
-    public TensorFlow detector;
 
+    public OpenCv detector;
+    public HashMap<String, Signal> signals = new HashMap<>();
 
-    public Location reset = new Location(-15,-25,0);
+    public Location reset = new Location(-15, -25, 0);
     public Location middleZone = new Location(0, 625, 0);
-    public Location leftZone = new Location(-585, 675, 0);
-    public Location rightZone = new Location(600, 675,0);
+    public Location leftZone = new Location(-530, 675, 0);
+    public Location rightZone = new Location(600, 675, 0);
 
     public Location coneZone = new Location(100, -175, 0);
     public Location coneDrop = new Location(200, -175, 0);
@@ -39,45 +44,44 @@ public class NoTerminalAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new Robot(this);
         drivetrain = new Drivetrain(robot, motorNumbers, telemetry, hardwareMap.get(Servo.class, "LeftOdo"), hardwareMap.get(Servo.class, "BackOdo"), hardwareMap.get(Servo.class, "RightOdo"));
-      detector = new TensorFlow(hardwareMap.get(WebcamName.class, "Webcam 1"), hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
+        detector = new OpenCv(
+                hardwareMap.get(WebcamName.class, "Webcam 1"),
+                signals,
+                hardwareMap.appContext.getResources().getIdentifier(
+                        "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-//        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"),
-//                hardwareMap.get(DcMotorEx.class, "liftM"),
-//                hardwareMap.get(DcMotorEx.class, "liftB"),
-//                hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
+        signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000));
+        signals.put("Purple", new Signal(new Scalar(129, 80, 73), new Scalar(163, 165, 255), 1000));
+        signals.put("Green", new Signal(new Scalar(39, 34, 108), new Scalar(83, 180, 219), 1000));
 
         drivetrain.odoDown();
         robot.odometry.reset();
         claw.open();
 
-        waitForStart();
-//        List<Recognition> detection = detector.getDetected();
-        List<Recognition> detection = detector.getDetected();
-
-        if (detection != null && detection.size() > 0)
-            telemetry.addData("", detection.get(0).getLabel());
-
-        drivetrain.moveToPositionMod(middleZone, 5, 5, 2, 0.3, 8000);
-        if (detection != null && detection.size() > 0) {
-            switch (detection.get(0).getLabel()) {
-                case "Apple":
-                    drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 3000);
-                    break;
-                case "Lime":
-                    if (detection.get(0).getConfidence() < .85){
-                        drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
-                    }
-                    break;
-                case "Orange":
-                    drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 3000);
-                    break;
-                default:
-                    break;
-            }
+        while (opModeInInit()) {
+            telemetry.addData("Reading", detector.getDetection());
+            telemetry.update();
         }
-        sleep(5000);
+
+        waitForStart();
+        String detection = detector.getDetection();
+        drivetrain.moveToPositionMod(middleZone, 5, 5, 0, 0.3, 2000);
+        sleep(250);
+
+        switch (detection) {
+            case "Orange":
+                drivetrain.moveToPositionMod(leftZone, 5, 5, 1, .3, 2000);
+                break;
+            case "Purple":
+                break;
+            case "Green":
+                drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
+                break;
+            default:
+                break;
+        }
+
         drivetrain.odoUp();
-        sleep(1000);
+        sleep(5000);
     }
 }

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-
+//If you need help call me: 513-808-0241
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.Map;
 public class Signal {
     public Scalar lower;
     public Scalar upper;
+
+    public ArrayList<MatOfPoint> contours;
 
     public double minArea;
     public double maxArea;
@@ -49,20 +53,27 @@ public class Signal {
         Mat temp = new Mat();
         double area = 0;
 
+        //Create a kernel for morphological operations
+        Mat kernel = new Mat(new Size(5, 5), CvType.CV_8UC1, new Scalar(255));
+
         //Create a color mask
         Core.inRange(input, lower, upper, mask);
 
+        //Preform morphological operation to remove noise
+        Imgproc.morphologyEx(mask, temp, Imgproc.MORPH_OPEN, kernel);
+
+        //Release mask to be about to use at the output then reassign it
+        mask.release();
+        mask = new Mat();
+        Imgproc.morphologyEx(temp, mask, Imgproc.MORPH_CLOSE, kernel);
+
         //Create a new ArrayList of contours and then find said contours to map
-        ArrayList<MatOfPoint> contours = new ArrayList<>();
+        contours = new ArrayList<>();
         Imgproc.findContours(mask,
                 contours,
                 temp,
                 Imgproc.RETR_TREE,
                 Imgproc.CHAIN_APPROX_SIMPLE);
-
-        //Draw contours on top of the image for easier debugging
-        //This is a work in progress.
-        Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),20);
 
         //Sum the area of every contour
         for (MatOfPoint contour : contours) {
@@ -70,6 +81,7 @@ public class Signal {
         }
 
         //Free the mat's from memory to prevent a memory leak
+        kernel.release();
         mask.release();
         temp.release();
 

@@ -11,5 +11,5 @@ public class DashboardOdoPods {
     public static double MIDDLE_DOWN = .24;
 
     public static double RIGHT_UP = .25;
-    public static double RIGHT_DOWN = .81;
+    public static double RIGHT_DOWN = .96;
 }
