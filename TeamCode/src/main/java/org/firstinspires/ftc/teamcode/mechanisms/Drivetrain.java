@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.DashboardOdoPods;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
-import org.firstinspires.ftc.teamcode.util.PID;
+import org.firstinspires.ftc.teamcode.util.IndependentPID;
 import org.firstinspires.ftc.teamcode.util.Variables;
 
 /*
@@ -31,9 +31,9 @@ public class Drivetrain extends Mechanism {
     public Location location;
     public Odometry odo;
 
-    public PID xPid;
-    public PID yPid;
-    public PID rPid;
+    public IndependentPID xIndependentPid;
+    public IndependentPID yIndependentPid;
+    public IndependentPID rIndependentPid;
 
     private double robotheading;
     private double magnitude;
@@ -66,9 +66,9 @@ public class Drivetrain extends Mechanism {
         motorIndices = motorNumbers;
         telemetry = T;
 
-        xPid = new PID(1, 0.1, 0, -100, 10000);
-        yPid = new PID(1, 0.1, 0, -100, 10000);
-        rPid = new PID(1, 0.1, 0, -10000, 10000);
+        xIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
+        yIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
+        rIndependentPid = new IndependentPID(1, 0.1, 0, -10000, 10000);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());

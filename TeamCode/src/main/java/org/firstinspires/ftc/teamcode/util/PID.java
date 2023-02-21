@@ -1,89 +1,72 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import java.util.concurrent.TimeUnit;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PID {
-    //Proportion: scales output with error
-    private double kP;
-    //Integral: corrects error over time
-    private double kI;
-    //Derivative: corrects based on future trend from current rate of change
-    private double kD;
+    double Kp;
+    double Ti; //In Minutes
+    double Td; //In Minutes
 
-    private double min;
-    private double max;
+    double min;
+    double max;
 
-    //Time between samples in MS
-    //Allows us to simplify the math and give a more accurate reading
-    private final int sampleRate = 100;
+    double sampleTime = 100; //ms
 
-    //Store the output to return if we sample faster than our sample rate.
-    private double output;
+    ElapsedTime previousCall;
 
-    //Sum of errors over time
-    private double errorSum;
+    double E1; //1st Previous Error
+    double E2; //2nd Previous Error
 
-    private long previousTime;
-    private double previousProcessValue;
+    double CV; //Current Value
 
-    private boolean doReset;
+    public PID(double Kp, double Ti, double Td, double min, double max) {
+        //Set Terms
+        this.Kp = Kp;
+        this.Ti = Ti;
+        this.Td = Td;
 
-    public PID(double kP, double kI, double kD, double min, double max) {
-        this.kP = kP;
-        this.kI = kI * ((float) sampleRate/1000);
-        this.kD = kD / ((float) sampleRate/1000);
-
+        //Set Limits
         this.min = min;
         this.max = max;
 
-        previousTime = 0;
+        //Set Defaults
+        E1 = 0;
+        E2 = 0;
+
+        CV = 0;
+
+        previousCall = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     }
 
-    //SetPoint is the goal, processValue is the current value/input
-    public double calculate(double setPoint, double processValue) {
-        //Reset the stored variables to default
-        if (doReset) {
-            errorSum = 0;
-            previousProcessValue = processValue;
-            previousTime = 0;
+    public double calculate(double SP, double PV) {
+        //Calculate the time between calls
+        double dt = previousCall.milliseconds() / 1000;
 
-            doReset = false;
+        if (dt > sampleTime / 1000) {
+            //Turn Error into a percentage
+            double E = (SP - PV) / (max - min);
+
+            double P = E;
+
+            double I;
+            if (Ti == 0) //Cannot divide by 0 so we set it to 0
+                I = 0;
+            else
+                I = Kp * (1 / (60 * Ti) * E * dt);
+
+            double D = 60 * Td * ((E2 * E1 + E) / dt);
+
+            //Clamp CV to the min and the max
+            CV = Math.max(min, Math.min(max, CV + Kp * (P + I + D)));
+
+            //Set Futures
+            E2 = E1;
+            E1 = E;
+
+            //Reset Elapsed Time
+            previousCall.reset();
         }
 
-        //Calculate how long it has been since the last call
-        long currentTime = System.currentTimeMillis();
-        double deltaTime = (double) currentTime - previousTime;
-
-        //Calculate only if the time between samples is less than the change in time
-        if (deltaTime >= sampleRate) {
-            //Calculate the error
-            double error = setPoint - processValue;
-            errorSum = Math.max(min, Math.min(max, errorSum + error * kI)); //Allows for real-time tuning
-
-            //We calculate the change in processValue rather than in error
-            //This removes the spike in output when changing setPoint
-            double deltaProcessValue = processValue - previousProcessValue;
-
-            //Calculate the output
-            output = Math.max(min, Math.min(max, kP * error + errorSum - kD * deltaProcessValue));
-
-            previousProcessValue = processValue;
-            previousTime = currentTime;
-        }
-
-        return output;
-    }
-
-    public void tune(double kP, double kI, double kD, double min, double max) {
-        this.kP = kP;
-        this.kI = kI * ((float) sampleRate/1000);
-        this.kD = kD / ((float) sampleRate/1000);
-
-        this.min = min;
-        this.max = max;
-    }
-
-    public void reset() {
-        doReset = true;
+        return CV;
     }
 }

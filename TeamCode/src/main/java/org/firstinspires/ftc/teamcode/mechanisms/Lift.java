@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
+import org.firstinspires.ftc.teamcode.util.IndependentPID;
 import org.firstinspires.ftc.teamcode.util.PID;
 
 public class Lift extends Mechanism {
@@ -38,7 +39,7 @@ public class Lift extends Mechanism {
 
     public boolean goingUp;
 
-    public enum position = {GROUND, LOW, MEDIUM, HIGH, STACK};
+    public enum position {GROUND, LOW, MEDIUM, HIGH, STACK}
 
 
     public Lift (DcMotorEx t, DcMotorEx m, DcMotorEx b, DigitalChannel lift, Telemetry T) {
@@ -55,23 +56,14 @@ public class Lift extends Mechanism {
         motors.add(middle);
         motors.add(bottom);
 
-        //Sets up the top motor with encoders
-        top.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        top.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        top.setTargetPosition(0);
-        top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        for (DcMotorEx motor : motors) {
+            motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
 
-        //Sets up the middle motor with encoders
-        middle.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        middle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        middle.setTargetPosition(0);
-        middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        //Sets up the bottom motor with encoders
-        bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        bottom.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        bottom.setTargetPosition(0);
-        bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        top.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bottom.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         //Sets the height starting position
         height = 0;
@@ -82,7 +74,7 @@ public class Lift extends Mechanism {
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         //Experimental PID stuff
-        pid = new PID(2, 0, 1, -1500, 1500);
+        pid = new PID(1, 0, 0, 0, -1400);
     }
 
     public void update(Gamepad gp1, Gamepad gp2) {
@@ -148,9 +140,9 @@ public class Lift extends Mechanism {
      */
     @Override
     public void write() {
-        top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        top.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        bottom.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         if (top.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || middle.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || bottom.getCurrent(CurrentUnit.MILLIAMPS) > 7500 && !over) {
             trim += 10;
@@ -159,24 +151,12 @@ public class Lift extends Mechanism {
             over = false;
         }
 
-        //Sets the height of the lift to height + trim
-        top.setTargetPosition(height + trim);
-        middle.setTargetPosition(-(height + trim));
-        bottom.setTargetPosition(height + trim);
+        //Sets the height of the lift to PIDed height + trim
+        double output = pid.calculate(height + trim, middle.getCurrentPosition());
 
         //Makes the lift motor move
-        if (!limitSwitch.getState() && middle.getTargetPosition() == 0) {
-            top.setPower(0);
-            middle.setPower(0);
-            bottom.setPower(0);
-        } else if (middle.getTargetPosition() == 0) {
-            top.setPower(0.15);
-            middle.setPower(0.15);
-            bottom.setPower(0.15);
-        } else {
-            top.setPower(1);
-            middle.setPower(1);
-            bottom.setPower(1);
+        for (DcMotorEx motor : motors) {
+            motor.setPower(output);
         }
 
         //PID set powers
@@ -200,14 +180,13 @@ public class Lift extends Mechanism {
 
 
         //Uses a limit switch to prevent the motor from trying to go too far
-        if (!limitSwitch.getState() && !currentlyPressed){
+        if (!limitSwitch.getState() && !currentlyPressed) {
             trim = 0;
             top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            top.setTargetPosition(0);
-            middle.setTargetPosition(0);
-            bottom.setTargetPosition(0);
+            height = 0;
+            trim = 0;
             top.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             middle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -231,9 +210,20 @@ public class Lift extends Mechanism {
 //        telemetry.addData("Down power", bottom.getPower());
     }
 
-    public void lift(int height) {
+    public void lift(position pos) {
         //Changes the height field
-        this.height = height;
+        switch(pos){
+            case HIGH:
+                height = -1400;
+                break;
+            case MEDIUM:
+                height = -380;
+                break;
+            case LOW:
+            case GROUND:
+                height = -120;
+                break;
+        }
 
         //Sets the target position
         top.setTargetPosition(height);
