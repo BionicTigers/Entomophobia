@@ -67,6 +67,8 @@ public class PortTestOp extends LinearOpMode {
     public void write() {
         Object thingToActivate = objects.get(index);
 
+        telemetry.addData("Class", thingToActivate.getClass().toString());
+
         if (activate) {
             if (thingToActivate instanceof DcMotorSimple) {
                 //Little Confusing - Explanation: If POWERS contains index then get the value, else return the set speed

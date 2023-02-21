@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.acmerobotics.dashboard.FtcDashboard;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -12,10 +13,12 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 //If you need help call me: 513-808-0241
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 //This is the pipeline we use for Vision
 //It is ran on every new frame
@@ -73,7 +76,7 @@ class Pipeline extends OpenCvPipeline {
 }
 
 public class OpenCv {
-    private OpenCvCamera camera;
+    private OpenCvWebcam camera;
     private HashMap<String, Signal> signals;
     private Pipeline pipeline;
 
@@ -109,6 +112,8 @@ public class OpenCv {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
+                camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
+                camera.getExposureControl().setExposure(50, TimeUnit.MILLISECONDS);
                 //Start streaming at 1280x720, in the upright orientation
                 //Start the detection pipeline
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);

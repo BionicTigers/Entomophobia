@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
+import org.firstinspires.ftc.teamcode.util.Signals;
 import org.opencv.core.Scalar;
 import java.util.HashMap;
 
@@ -56,10 +57,11 @@ public class BlueAutoRight extends LinearOpMode {
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000));
-        signals.put("Purple", new Signal(new Scalar(129, 80, 73), new Scalar(163, 165, 255), 1000));
-        signals.put("Green", new Signal(new Scalar(39, 34, 108), new Scalar(83, 180, 219), 1000));
+        signals.put("Orange", Signals.ORANGE);
+        signals.put("Purple", Signals.PURPLE);
+        signals.put("Green", Signals.GREEN);
 
+//comments are original, new ones are bc of messed up lighting
         drivetrain.odoDown();
         robot.odometry.reset();
         claw.open();

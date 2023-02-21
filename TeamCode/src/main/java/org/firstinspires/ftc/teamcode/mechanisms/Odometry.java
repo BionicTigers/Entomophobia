@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,7 +16,7 @@ import org.openftc.revextensions2.RevBulkData;
 @Config
 public class Odometry extends Mechanism {
 
-    public Telemetry telemetry;
+    public MultipleTelemetry telemetry;
     //Bulk data
     public RevBulkData bulkData;
     public ControlHub controlHub;
@@ -35,11 +37,11 @@ public class Odometry extends Mechanism {
     //Measurements are all in millimeters
 
     //Diameter of the odometry wheels
-    private static double odo_diameter = 35;
+    private static final double odo_diameter = 35;
     //Gear ratio of the odometry wheels
-    private static double gear_ratio = 2.5;
+    private static final double gear_ratio = 2.5;
     //Number of ticks on the encoders
-    private static double encoder_ticks = 8192;
+    private static final double encoder_ticks = 8192;
     //Distance between left odometry module and the center of the robot
     public static double left_offset = 162;
     //Distance between right odometry module and the center of the robot
@@ -48,7 +50,7 @@ public class Odometry extends Mechanism {
     public static double back_offset = 80;
 
     //Calculates the effective diameter of the odometry wheels based on the gear ratio
-    private static double effective_diameter = odo_diameter * gear_ratio;
+    private static final double effective_diameter = odo_diameter * gear_ratio;
     //Calculates the circumference of the odometry wheel
     public double wheel_circumference = effective_diameter * Math.PI;
 
@@ -99,7 +101,7 @@ public class Odometry extends Mechanism {
 
 
     //The rotation of the robot relative to it's starting rotation
-    public double globalRotation = 0;
+    public double globalRotation = 45;
     //The global x and y position of the robot relative to it's starting location
     public double globalX = 0;
     public double globalY = 0;
@@ -112,7 +114,7 @@ public class Odometry extends Mechanism {
         controlHub = new ControlHub(hardwareMap, hardwareMap.get(LynxDcMotorController.class, "Control Hub"));
         reset();
 
-        telemetry = T;
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), T);
     }
 
     public void updateLocalPosition() {
@@ -138,8 +140,8 @@ public class Odometry extends Mechanism {
             deltaLocalX = rT * (1 - Math.cos(deltaLocalRotation));
             deltaLocalY = rT * Math.sin(deltaLocalRotation);
         } else {
-            deltaLocalX = deltaLeftMM;
-            deltaLocalY = 0;
+            deltaLocalX = 0;
+            deltaLocalY = deltaRightMM;
         }
 
         //Calculates the straight-line distance between the starting and ending points of the robot's local travel
@@ -149,13 +151,13 @@ public class Odometry extends Mechanism {
         //Calculates the radius of a strafing arc
         //If statement ensures that if deltaLocalRotation is 0, our rS won't return as null
         if (deltaLocalRotation != 0) {
-            rS = (deltaBackMM / deltaLocalRotation) - back_offset;
+            rS = (deltaBackMM / deltaLocalRotation) + back_offset;
             //Determine the local x and y coordinates for a strafing arc
             deltaXStrafe = rS * Math.sin(deltaLocalRotation);
             deltaYStrafe = -rS * (1 - Math.cos(deltaLocalRotation));
         } else {
-            deltaXStrafe = 0;
-            deltaYStrafe = deltaBackMM;
+            deltaXStrafe = deltaBackMM;
+            deltaYStrafe = 0;
         }
 
         //Calculates the total local x and y changes since last cycle

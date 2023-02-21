@@ -38,7 +38,7 @@ public class Lift extends Mechanism {
 
     public boolean goingUp;
 
-    public boolean noEncoderTest = false;
+    public enum position = {GROUND, LOW, MEDIUM, HIGH, STACK};
 
 
     public Lift (DcMotorEx t, DcMotorEx m, DcMotorEx b, DigitalChannel lift, Telemetry T) {
@@ -130,21 +130,14 @@ public class Lift extends Mechanism {
             height = -1400;
         }
         if (gp2.dpad_left) {
-            height = -1000;
+            height = -380;
         }
         if (gp2.dpad_down) {
-            height = -600;
+            height = -120;
         }
         if (gp2.dpad_right) {
             height = 0;
             trim = 0;
-        }
-
-        if (gp2.a && gp2.b) {
-            noEncoderTest = true;
-        }
-        if (gp2.x && gp2.y) {
-            noEncoderTest = false;
         }
     }
 
@@ -155,15 +148,9 @@ public class Lift extends Mechanism {
      */
     @Override
     public void write() {
-        if (!noEncoderTest) {
-            top.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            bottom.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        } else {
-            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        top.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        middle.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        bottom.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         if (top.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || middle.getCurrent(CurrentUnit.MILLIAMPS) > 7500 || bottom.getCurrent(CurrentUnit.MILLIAMPS) > 7500 && !over) {
             trim += 10;
@@ -178,7 +165,7 @@ public class Lift extends Mechanism {
         bottom.setTargetPosition(height + trim);
 
         //Makes the lift motor move
-        if (!sensors.get(0).getState() && middle.getTargetPosition() == 0) {
+        if (!limitSwitch.getState() && middle.getTargetPosition() == 0) {
             top.setPower(0);
             middle.setPower(0);
             bottom.setPower(0);
@@ -187,15 +174,9 @@ public class Lift extends Mechanism {
             middle.setPower(0.15);
             bottom.setPower(0.15);
         } else {
-            if (!noEncoderTest) {
-                top.setPower(1);
-                middle.setPower(1);
-                bottom.setPower(1);
-            } else {
-                top.setPower(1);
-                middle.setPower(-1);
-                bottom.setPower(1);
-            }
+            top.setPower(1);
+            middle.setPower(1);
+            bottom.setPower(1);
         }
 
         //PID set powers
@@ -219,7 +200,7 @@ public class Lift extends Mechanism {
 
 
         //Uses a limit switch to prevent the motor from trying to go too far
-        if (!sensors.get(0).getState() && !currentlyPressed){
+        if (!limitSwitch.getState() && !currentlyPressed){
             trim = 0;
             top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -233,7 +214,7 @@ public class Lift extends Mechanism {
             currentlyPressed = true;
         }
 
-        if (sensors.get(0).getState() && currentlyPressed) {
+        if (limitSwitch.getState() && currentlyPressed) {
             currentlyPressed = false;
         }
 
@@ -248,5 +229,30 @@ public class Lift extends Mechanism {
 //        telemetry.addData("Top power", top.getPower());
 //        telemetry.addData("Weast power", middle.getPower());
 //        telemetry.addData("Down power", bottom.getPower());
+    }
+
+    public void lift(int height) {
+        //Changes the height field
+        this.height = height;
+
+        //Sets the target position
+        top.setTargetPosition(height);
+        middle.setTargetPosition(-(height));
+        bottom.setTargetPosition(height);
+
+        //Moves the motors
+        if (!limitSwitch.getState() && middle.getTargetPosition() == 0) {
+            top.setPower(0);
+            middle.setPower(0);
+            bottom.setPower(0);
+        } else if (middle.getTargetPosition() == 0) {
+            top.setPower(0.15);
+            middle.setPower(0.15);
+            bottom.setPower(0.15);
+        } else {
+            top.setPower(1);
+            middle.setPower(1);
+            bottom.setPower(1);
+        }
     }
 }

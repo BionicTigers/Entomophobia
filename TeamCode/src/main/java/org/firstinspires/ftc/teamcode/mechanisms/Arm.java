@@ -13,14 +13,21 @@ import java.util.concurrent.TimeUnit;
 
 public class Arm extends Mechanism {
     public Telemetry telemetry;
+
+    public CRServo left;
+    public CRServo right;
 //    private DigitalChannel limit1;
 //    private DigitalChannel limit2;
 
     public Arm (CRServo l, CRServo r, Telemetry T/*, DigitalChannel CBFront, DigitalChannel CBBack*/) {
         super();
         crServos.add(l);
+        left = l;
+
         crServos.add(r);
-        crServos.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
+        right = r;
+
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
 //        limit1 = CBFront;
 //        limit2 = CBBack;
 //        sensors.add(limit1);
@@ -34,27 +41,27 @@ public class Arm extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        crServos.get(0).setPower(0);
-        crServos.get(1).setPower(0);
+        left.setPower(0);
+        right.setPower(0);
 
         if (gp2.right_bumper) {
-            slowForward();
+            move(0.4);
         }
         if (gp2.left_bumper) {
-            slowBackward();
+            move(-0.4);
         }
 
         if (gp2.dpad_up) {
-            forward();
+            move(1);
         }
         if (gp2.dpad_left) {
-            forward();
+            move(1);
         }
         if (gp2.dpad_down) {
-            forward();
+            move(1);
         }
         if (gp2.dpad_right) {
-            backward();
+            move(-1);
         }
     }
 
@@ -64,23 +71,12 @@ public class Arm extends Mechanism {
 //        telemetry.addData("Top Switch", !sensors.get(1).getState());
     }
 
-    public void forward() {
-        crServos.get(0).setPower(1);
-        crServos.get(1).setPower(1);
-    }
-
-    public void backward() {
-        crServos.get(0).setPower(-1);
-        crServos.get(1).setPower(-1);
-    }
-
-    public void slowForward () {
-        crServos.get(0).setPower(0.4);
-        crServos.get(1).setPower(0.4);
-    }
-
-    public void slowBackward() {
-        crServos.get(0).setPower(-0.4);
-        crServos.get(1).setPower(-0.4);
+    /**
+     * Moves the lift forward
+     * @param mod number from -1 to 1 that sets the speed of the move
+     */
+    public void move(double mod) {
+        left.setPower(mod);
+        right.setPower(mod);
     }
 }
