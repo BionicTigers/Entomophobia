@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class DashboardOdoPods {
+public class OdoPods {
     public static double LEFT_UP = .0;
     public static double LEFT_DOWN = 0.94;
 

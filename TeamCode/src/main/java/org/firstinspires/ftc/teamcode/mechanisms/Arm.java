@@ -16,50 +16,38 @@ public class Arm extends Mechanism {
 
     public CRServo left;
     public CRServo right;
-//    private DigitalChannel limit1;
-//    private DigitalChannel limit2;
 
-    public Arm (CRServo l, CRServo r, Telemetry T/*, DigitalChannel CBFront, DigitalChannel CBBack*/) {
+    public Arm (CRServo l, CRServo r, Telemetry T) {
         super();
+        //Declares the left motor
         crServos.add(l);
         left = l;
-
+        //Declares the right motor
         crServos.add(r);
         right = r;
 
+        //Flips the right servo so it rotates the right way
         right.setDirection(DcMotorSimple.Direction.REVERSE);
-//        limit1 = CBFront;
-//        limit2 = CBBack;
-//        sensors.add(limit1);
-//        sensors.add(limit2);
-//        sensors.get(0).setMode(DigitalChannel.Mode.INPUT);
-//        sensors.get(1).setMode(DigitalChannel.Mode.INPUT);
 
-
+        //Declares telemetry
         telemetry = T;
     }
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-        left.setPower(0);
-        right.setPower(0);
-
+        //Moves the arm upward slowly
         if (gp2.right_bumper) {
             move(0.4);
         }
+        //Moves the arm downward slowly
         if (gp2.left_bumper) {
             move(-0.4);
         }
-
-        if (gp2.dpad_up) {
+        //Moves the arm upward quickly
+        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down) {
             move(1);
         }
-        if (gp2.dpad_left) {
-            move(1);
-        }
-        if (gp2.dpad_down) {
-            move(1);
-        }
+        //Moves the arm downward quickly
         if (gp2.dpad_right) {
             move(-1);
         }
@@ -67,15 +55,12 @@ public class Arm extends Mechanism {
 
     @Override
     public void write() {
-//        telemetry.addData("Bottom Switch", !sensors.get(0).getState());
-//        telemetry.addData("Top Switch", !sensors.get(1).getState());
+        //📝
     }
 
-    /**
-     * Moves the lift forward
-     * @param mod number from -1 to 1 that sets the speed of the move
-     */
+    //Moves the lift forward
     public void move(double mod) {
+        //Sets both servo powers to whatever the mod is
         left.setPower(mod);
         right.setPower(mod);
     }
