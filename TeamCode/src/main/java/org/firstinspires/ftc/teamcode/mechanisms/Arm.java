@@ -35,6 +35,8 @@ public class Arm extends Mechanism {
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
+        //Defaults to a 0 power move
+        move(0);
         //Moves the arm upward slowly
         if (gp2.right_bumper) {
             move(0.4);
