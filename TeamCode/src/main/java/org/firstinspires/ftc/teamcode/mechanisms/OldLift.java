@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.util.IndependentPID;
 import org.firstinspires.ftc.teamcode.util.Mechanism;
 import org.firstinspires.ftc.teamcode.util.PID;
 
@@ -16,7 +17,7 @@ public class OldLift extends Mechanism {
 
     public Telemetry telemetry;
 
-    public PID pid;
+    public IndependentPID pid;
 
     //The height that we set the encoders to, negative is up for some reason, positive is also up because it loops around
     public int height = 0;
@@ -73,7 +74,7 @@ public class OldLift extends Mechanism {
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         //Experimental PID stuff
-        pid = new PID(1, 0, 0, 0, -1400);
+        pid = new IndependentPID(1, 0, 0, 0, -1400);
     }
 
     public void update(Gamepad gp1, Gamepad gp2) {

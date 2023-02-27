@@ -53,12 +53,25 @@ public class Drivetrain extends Mechanism {
 
 
     //Declares a new instance of location to store x and y errors
-    public Location error = new Location();
+    public Location error;
 
     public double[] integralValues = new double[3];
     public double sinrang = 0;
     public double cosrang = 0;
     public double pow = 0;
+
+    public enum State {
+        IDLE,
+        MOVE_TO_POSITION
+    };
+
+    //Used for Move to Position
+    private double startTime;
+    private double maxTime;
+    private Location tolerance;
+    private Location goalPosition;
+    private double modifier = 0;
+    public State currentState;
 
     //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
     public Drivetrain(Robot bot, @NonNull int[] motorNumbers, Telemetry T, Servo LeftOdo, Servo RightOdo, Servo BackOdo) {
@@ -66,6 +79,8 @@ public class Drivetrain extends Mechanism {
         robot = bot;
         motorIndices = motorNumbers;
         telemetry = T;
+
+        currentState = State.IDLE;
 
         xIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
         yIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
@@ -201,6 +216,7 @@ public class Drivetrain extends Mechanism {
         }
 
         if (DMPX != 0 || DMPY != 0 || DMPROT != 0) {
+            currentState = State.IDLE;
             determineMotorPowers(DMPX,DMPY,DMPROT);
             DMPX = 0;
             DMPY = 0;
@@ -208,9 +224,10 @@ public class Drivetrain extends Mechanism {
         } else if (gp1.left_stick_y > 0.3 || gp1.left_stick_y < -0.3
                 || gp1.left_stick_x > 0.3 || gp1.left_stick_x < -0.3
                 || gp1.right_stick_x > 0.3 || gp1.right_stick_x < -0.3){
+            currentState = State.IDLE;
             determineMotorPowers(gp1);
-        } else {
-            determineMotorPowers(0, 0, 0);
+        } else if (currentState == State.IDLE) {
+            determineMotorPowers(0,0,0);
         }
     }
 
@@ -218,7 +235,29 @@ public class Drivetrain extends Mechanism {
 
     //Sets the motor powers based on the determineMotorPowers() method that was run in the update() method
     @Override
-    public void write () {
+    public void write() {
+        if (currentState == State.MOVE_TO_POSITION) {
+            telemetry.addData("funny if", (robot.getTimeMS() - startTime < maxTime));
+            error = findErrorMod(goalPosition, this.modifier);
+            if ((robot.getTimeMS() - startTime < maxTime)
+                    && (Math.abs(error.getLocation(0)) > tolerance.getLocation(0)
+                    || Math.abs(error.getLocation(1)) > tolerance.getLocation(1)
+                    || Math.abs(error.getLocation(2)) > tolerance.getLocation(2)))
+            {
+                error = findErrorMod(goalPosition, this.modifier);
+
+                robot.odometry.updateLocalPosition();
+                robot.odometry.updateGlobalPosition();
+
+                dashboardTelemetry.addData("x-error",error.getLocation(0));
+                dashboardTelemetry.addData("y-error",error.getLocation(1));
+                dashboardTelemetry.addData("r-error",error.getLocation(2));
+                dashboardTelemetry.update();
+            } else {
+                currentState = State.IDLE;
+            }
+        }
+
         double highest = 0;
         for (double power : motorPowers) {
             highest = Math.max(power, highest);
@@ -226,6 +265,7 @@ public class Drivetrain extends Mechanism {
 
         int i = 0;
         for (DcMotorEx motor : motors) {
+            //Balance the motor powers
             if (highest > 1) {
                 motorPowers[i] *= 1 / highest;
                 telemetry.addData("Ratio", 1 / highest);
@@ -233,54 +273,20 @@ public class Drivetrain extends Mechanism {
             motor.setPower(motorPowers[i]);
             i++;
         }
-//        motors.get(0).setPower(motorPowers[0]);
-//        motors.get(1).setPower(motorPowers[1]);
-//        motors.get(2).setPower(motorPowers[2]);
-//        motors.get(3).setPower(motorPowers[3]);
-//        motors.get(0).setPower(1);
-//        motors.get(1).setPower(1);
-//        motors.get(2).setPower(1);
-
-//        motors.get(3).setPower(1);
-        //////////
-//        robot.odometry.updatePosition();
-        //////////
-        //Sets all telemetry for the drivetrain
-        telemetry.addLine("Motor Powers");
-        telemetry.addData("Front Right Power", motorPowers[0]);
-        telemetry.addData("Front Left Power", motorPowers[1]);
-        telemetry.addData("Back Left Power", motorPowers[2]);
-        telemetry.addData("Back Right Power", motorPowers[3]);
-
-//        System.out.println("Front Right Power: " + motorPowers[0] + " | " + motors.get(0).getCurrent(CurrentUnit.MILLIAMPS));
-//        System.out.println("Front Left Power: " + motorPowers[1] + " | " + motors.get(1).getCurrent(CurrentUnit.MILLIAMPS));
-//        System.out.println("Back Left Power: " + motorPowers[2] + " | " + motors.get(2).getCurrent(CurrentUnit.MILLIAMPS));
-//        System.out.println("Back Right Power: " + motorPowers[3] + " | " + motors.get(3).getCurrent(CurrentUnit.MILLIAMPS));
-
-//        dashboardTelemetry.addData("ErrorX", + error.getLocation(0));
-//        dashboardTelemetry.addData("ErrorY", + error.getLocation(2));
-//        dashboardTelemetry.addData("ErrorRotation", + error.getLocation(2));
-//        telemetry.update();
-//        dashboardTelemetry.update();
     }
 
 
     //Moves to robot to the target position within a set amount of time
     public void moveToPosition(Location goalPos, double xTolerance, double yTolerance, double rotTolerance, int maxTime) {
+        this.goalPosition = goalPos;
+        this.tolerance = new Location(xTolerance, yTolerance, rotTolerance);
+        this.maxTime = maxTime;
+        this.startTime = robot.getTimeMS();
+        this.modifier = 1;
+
         integralValues = new double[3];
-        error = findError(goalPos);
-        double startTime = robot.getTimeMS();
-        while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive() && (Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
-            error = findError(goalPos);
-            write();
-            robot.odometry.updateLocalPosition();
-            robot.odometry.updateGlobalPosition();
-            dashboardTelemetry.addData("x-error",error.getLocation(0) );
-            dashboardTelemetry.addData("y-error",error.getLocation(1) );
-            dashboardTelemetry.addData("r-error",error.getLocation(2) );
-            dashboardTelemetry.update();
-        }
-        stopDrivetrain();
+
+        this.currentState = Drivetrain.State.MOVE_TO_POSITION;
     }
 
 //    public void moveToPosition(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance) {
@@ -299,26 +305,15 @@ public class Drivetrain extends Mechanism {
 //    }
 //
     public void moveToPositionMod(Location goalPos, double xTolerance, double yTolerance, double rotTolerance, double mod, int maxTime) {
+        this.goalPosition = goalPos;
+        this.tolerance = new Location(xTolerance, yTolerance, rotTolerance);
+        this.maxTime = maxTime;
+        this.startTime = robot.getTimeMS();
+        this.modifier = mod;
+
         integralValues = new double[3];
-        error = findErrorMod(goalPos, mod);
-        double startTime = robot.getTimeMS();
-        while ((robot.getTimeMS() - startTime < maxTime) && robot.linoop.opModeIsActive()&&(Math.abs(error.getLocation(0)) > xTolerance || Math.abs(error.getLocation(1)) > yTolerance || Math.abs(error.getLocation(2)) > rotTolerance)) {
-            robot.odometry.updateLocalPosition();
-            robot.odometry.updateGlobalPosition();
 
-//            dashboardTelemetry.addData("x-output", xPid.calculate(goalPos.getLocation(0), robot.odometry.position.getLocation(0)));
-//            dashboardTelemetry.addData("y-output", yPid.calculate(goalPos.getLocation(1), robot.odometry.position.getLocation(1)));
-//            dashboardTelemetry.addData("r-output", rPid.calculate(goalPos.getLocation(2), robot.odometry.position.getLocation(2)));
-            dashboardTelemetry.addData("x-error", error.getLocation(0));
-            dashboardTelemetry.addData("y-error", error.getLocation(1));
-            dashboardTelemetry.addData("r-error", error.getLocation(2));
-
-            error = findErrorMod(goalPos, mod);
-            write();
-            robot.odometry.write();
-            dashboardTelemetry.update();
-        }
-        stopDrivetrain();
+        this.currentState = Drivetrain.State.MOVE_TO_POSITION;
     }
 //
 //    public void moveToPositionMod(NOdoLocation goalPos, double xTolerance, double yTolerance, double rotTolerance, double mod) {

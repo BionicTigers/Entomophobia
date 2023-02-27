@@ -182,7 +182,6 @@ public class NewDrivetrain extends Mechanism {
 
         double power = Math.hypot(-scaled, scaled);
         double robotAngle = Math.atan2(scaled, -scaled);
-        double stickAngle = rot;
 
         double angleSin = Math.sin(robotAngle);
         double angleCos = Math.cos(robotAngle);
@@ -192,10 +191,10 @@ public class NewDrivetrain extends Mechanism {
 
         double startTime = robot.getTimeMS();
 
-        motorPowers[0] = ((power * angleSin) + (power * angleCos) - stickAngle) * frontMultiplier;  //frontRight
-        motorPowers[1] = ((power * angleSin) - (power * angleCos) + stickAngle) * frontMultiplier;  //frontLeft
-        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - stickAngle) * backMultiplier; //backLeft
-        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + stickAngle) * backMultiplier; //backRight
+        motorPowers[0] = ((power * angleSin) + (power * angleCos) - rot) * frontMultiplier;  //frontRight
+        motorPowers[1] = ((power * angleSin) - (power * angleCos) + rot) * frontMultiplier;  //frontLeft
+        motorPowers[2] = ((-power * angleSin) - (power * angleCos) - rot) * backMultiplier; //backLeft
+        motorPowers[3] = ((-power * angleSin) + (power * angleCos) + rot) * backMultiplier; //backRight
 
         while (robot.getTimeMS() - startTime < time) {}
 
