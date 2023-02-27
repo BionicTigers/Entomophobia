@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
@@ -14,11 +15,8 @@ import org.firstinspires.ftc.teamcode.util.Location;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.Signals;
-import org.firstinspires.ftc.teamcode.util.TensorFlow;
-import org.opencv.core.Scalar;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Autonomous (name="Red Auto Left", group="autonomous")
 public class RedAutoLeft extends LinearOpMode {
@@ -51,7 +49,7 @@ public class RedAutoLeft extends LinearOpMode {
                 signals,
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
         //signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000));
         signals.put("Orange", Signals.ORANGE);
         signals.put("Purple", Signals.PURPLE);

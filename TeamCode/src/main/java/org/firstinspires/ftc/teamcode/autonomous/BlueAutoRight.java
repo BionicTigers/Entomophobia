@@ -1,28 +1,23 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.Signals;
-import org.opencv.core.Scalar;
+
 import java.util.HashMap;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.mechanisms.Claw;
-import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
-import org.firstinspires.ftc.teamcode.util.Signal;
-import org.firstinspires.ftc.teamcode.util.TensorFlow;
-import org.opencv.core.Scalar;
-
-import java.util.HashMap;
-import java.util.List;
 
 @Autonomous (name="Blue Auto Right", group="autonomous")
 public class BlueAutoRight extends LinearOpMode {
@@ -32,7 +27,10 @@ public class BlueAutoRight extends LinearOpMode {
     public Robot robot;
     public Drivetrain drivetrain;
     public Claw claw;
-    public Lift lift;
+//    public Lift lift;
+
+    public Arm arm;
+
     public OpenCv detector;
     public HashMap<String, Signal> signals = new HashMap<>();
 
@@ -45,7 +43,13 @@ public class BlueAutoRight extends LinearOpMode {
 
     public Location origin = new Location(0, 0, 0);
 
-    public Location terminal = new Location(300, 0, 0);
+    public Location avoidPenalty = new Location(0, 150, 0); //Moves far enough from the wall that the arm won't hang over
+
+    public Location prescore = new Location(-270, 150, 0); //Aligns with the junction while still avoiding the penalty
+
+    public Location scoring = new Location(-270, 50, 0); //Moves back to be able to score
+
+    public Location postscore = new Location(0, 50, 0); //Moves to be able to park accurately after the score
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -56,7 +60,9 @@ public class BlueAutoRight extends LinearOpMode {
                 signals,
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
+//        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"), hardwareMap.get(DcMotorEx.class, "liftM"), hardwareMap.get(DcMotorEx.class, "liftB"), hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
+        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), hardwareMap, telemetry);
         signals.put("Orange", Signals.ORANGE);
         signals.put("Purple", Signals.PURPLE);
         signals.put("Green", Signals.GREEN);
@@ -74,13 +80,47 @@ public class BlueAutoRight extends LinearOpMode {
         waitForStart();
         String detection = detector.getDetection();
 
-        drivetrain.moveToPositionMod(terminal, 5, 5, 0, 0.2, 2000);
+        //Grabs cone
+        claw.close();
         sleep(250);
+        //Moves to the initial location to avoid breaking the plane of the field
+        drivetrain.moveToPositionMod(avoidPenalty, 5, 5, 0, 0.2, 2000);
+        sleep(250);
+        //Moves the arm to scoring position
+        arm.move(150);
+        while(arm.currentState == Arm.State.MOVING) {
+            arm.write();
+        }
+        sleep(250);
+        drivetrain.moveToPositionMod(prescore, 5, 5, 0, 0.2, 2000);
+        sleep(250);
+        arm.move(111);
+        while(arm.currentState == Arm.State.MOVING){
+            arm.write();
+        }
+        sleep(250);
+        //Moves robot to scoring position
+        drivetrain.moveToPositionMod(scoring, 5, 5, 0, 0.2, 1000);
+        sleep(2000);
+        //Opens claw
+        claw.open();
+        sleep(250);
+        //Returns the robot back to the prescore position
+        drivetrain.moveToPositionMod(postscore, 5, 5, 0, 0.2, 1000);
+        sleep(250);
+        //Moves arm down
+        arm.move(0);
+        while(arm.currentState == Arm.State.MOVING) {
+            arm.write();
+        }
+        sleep(250);
+        //Returns the robot to the origin
         drivetrain.moveToPositionMod(origin, 5, 5, 0, 0.3, 2000);
         sleep(250);
+        //Moves the robot to the middle zone
         drivetrain.moveToPositionMod(middleZone, 5, 5, 0, 0.3, 2000);
         sleep(250);
-
+        //Moves the robot to the detected position
             switch (detection) {
                 case "Orange":
                     drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 2000);
@@ -93,7 +133,11 @@ public class BlueAutoRight extends LinearOpMode {
                 default:
                     break;
             }
-
+        //Moves arm down
+        arm.move(-1);
+        sleep(500);
+        arm.move(0);
+        //Retracts the odometry pods
         drivetrain.odoUp();
         sleep(5000);
     }

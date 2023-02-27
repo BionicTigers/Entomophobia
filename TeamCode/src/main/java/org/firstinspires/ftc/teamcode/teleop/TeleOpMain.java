@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.mechanisms.Lift;
@@ -29,11 +31,17 @@ public class TeleOpMain extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "liftM"),
                 hardwareMap.get(DcMotorEx.class, "liftB"),
                 hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"));
-        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
+        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
+        arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), hardwareMap, telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         claw.init();
+        while(!isStarted() && !isStopRequested()){
+            telemetry.addData("Arm ticks: ", arm.controlHub.getEncoderTicks(3));
+            telemetry.addData("Arm degrees: ", arm.controlHub.getEncoderTicks(3)/(8192/360));
+            telemetry.update();
+            arm.controlHub.refreshBulkData();
+        }
 
         waitForStart();
 

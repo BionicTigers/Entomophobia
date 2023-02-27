@@ -33,6 +33,11 @@ public  class Robot {
     public HardwareMap hardwareMap;
     public Odometry odometry;
 
+    public DcMotorEx frontRight;
+    public DcMotorEx frontLeft;
+    public DcMotorEx backRight;
+    public DcMotorEx backLeft;
+
 
     public String[] motorNames = {"frontRight","frontLeft","backLeft","backRight"};
 
@@ -44,9 +49,13 @@ public  class Robot {
 
         motors = new ArrayList<>();
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"frontLeft"));
+        frontLeft = motors.get(0);
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"frontRight"));
+        frontRight = motors.get(1);
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"backLeft"));
+        backLeft = motors.get(2);
         motors.add((DcMotorEx)hardwareMap.get(DcMotorEx.class,"backRight"));
+        backRight = motors.get(3);
         motors.get(0).setDirection(DcMotorSimple.Direction.REVERSE);
         motors.get(1).setDirection(DcMotorSimple.Direction.REVERSE);
         motors.get(3).setDirection(DcMotorSimple.Direction.REVERSE);
