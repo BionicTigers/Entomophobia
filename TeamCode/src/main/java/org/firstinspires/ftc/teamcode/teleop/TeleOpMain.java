@@ -31,7 +31,7 @@ public class TeleOpMain extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "liftM"),
                 hardwareMap.get(DcMotorEx.class, "liftB"),
                 hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw")/*, hardwareMap.get(DistanceSensor.class, "distance")*/, hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), hardwareMap, telemetry/*, hardwareMap.get(DigitalChannel.class, "CBFront"), hardwareMap.get(DigitalChannel.class, "CBBack")*/);
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 

@@ -48,7 +48,7 @@ public class NoTerminalAuto extends LinearOpMode {
                 signals,
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw")/*, hardwareMap.get(DistanceSensor.class*, "distance")*/, hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
         //signals.put("Orange", new Signal(new Scalar(6, 103, 147), new Scalar(89, 182, 255), 1000));
         signals.put("Orange", Signals.ORANGE);
         signals.put("Purple", Signals.PURPLE);

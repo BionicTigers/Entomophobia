@@ -25,13 +25,13 @@ public class Claw extends Mechanism {
 
     public Deadline fastDrop = new Deadline (1, TimeUnit.SECONDS);
 
-    public Claw (Servo grab, DistanceSensor distance, RevBlinkinLedDriver blinkin) {
+    public Claw (Servo grab/*, DistanceSensor distance*/, RevBlinkinLedDriver blinkin) {
         super();
         //Servos.get(0), bigger # = Counter-clockwise
         servo = grab;
         servos.add(grab);
 
-        this.distance = distance;
+//        this.distance = distance;
         this.blinkin = blinkin;
     }
 
@@ -59,9 +59,9 @@ public class Claw extends Mechanism {
             hijack = false;
         }
 
-        if(coneDetected()) {
-            blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-        } else blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+//        if(coneDetected()) {
+//            blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+//        } else blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
     }
 
     public void open() {
@@ -84,12 +84,12 @@ public class Claw extends Mechanism {
         return distance.getDistance(DistanceUnit.MM);
     }
 
-    public boolean coneDetected() {
-        if(getDistance() < 20) {
-            return true;
-        }
-        else return false;
-    }
+//    public boolean coneDetected() {
+//        if(getDistance() < 20) {
+//            return true;
+//        }
+//        else return false;
+//    }
 
     public void quickDrop() {
         open();

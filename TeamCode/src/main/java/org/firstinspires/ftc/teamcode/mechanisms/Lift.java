@@ -127,6 +127,24 @@ public class Lift extends Mechanism {
                 motor.setPower(1);
             }
         }
+        if(limitSwitch.getState() && (middle.getCurrentPosition() == 0)){
+            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            middle.setPower(-0.2);
+            top.setPower(0.2);
+            bottom.setPower(0.2);
+        } else if(!limitSwitch.getState() && (middle.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)){
+            middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            middle.setTargetPosition(0);
+            top.setTargetPosition(0);
+            bottom.setTargetPosition(0);
+            middle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            top.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
 
         //Telemetry information
         telemetry.addData("Trim", trim);
@@ -155,7 +173,7 @@ public class Lift extends Mechanism {
         bottom.setTargetPosition(targetHeight);
 
         //Moves the motors
-        if (!limitSwitch.getState() && targetHeight == 0 && trim == 0) {
+        if (!limitSwitch.getState() && targetHeight == 0) {
             top.setPower(0);
             middle.setPower(0);
             bottom.setPower(0);
