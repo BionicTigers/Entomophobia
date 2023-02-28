@@ -61,7 +61,7 @@ public class BlueAutoRight extends LinearOpMode {
                 signals,
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
-        claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
+        claw = new Claw(hardwareMap.get(Servo.class, "claw")/*, hardwareMap.get(DistanceSensor.class, "distance")*/, hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"), hardwareMap.get(DcMotorEx.class, "liftM"), hardwareMap.get(DcMotorEx.class, "liftB"), hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), hardwareMap, telemetry);
         signals.put("Orange", VisionConstants.ORANGE);
