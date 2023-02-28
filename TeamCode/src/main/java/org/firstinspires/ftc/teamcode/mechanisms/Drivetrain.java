@@ -237,7 +237,6 @@ public class Drivetrain extends Mechanism {
     @Override
     public void write() {
         if (currentState == State.MOVE_TO_POSITION) {
-            telemetry.addData("funny if", (robot.getTimeMS() - startTime < maxTime));
             error = findErrorMod(goalPosition, this.modifier);
             if ((robot.getTimeMS() - startTime < maxTime)
                     && (Math.abs(error.getLocation(0)) > tolerance.getLocation(0)
