@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
-import org.firstinspires.ftc.teamcode.util.Signals;
 
 import java.util.HashMap;
 
@@ -18,6 +17,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
+import org.firstinspires.ftc.teamcode.util.Vision;
+import org.firstinspires.ftc.teamcode.util.VisionConstants;
 
 @Autonomous (name="Blue Auto Right", group="autonomous")
 public class BlueAutoRight extends LinearOpMode {
@@ -63,9 +64,9 @@ public class BlueAutoRight extends LinearOpMode {
         claw = new Claw(hardwareMap.get(Servo.class, "claw"), hardwareMap.get(DistanceSensor.class, "distance"), hardwareMap.get(RevBlinkinLedDriver.class, "blinkin"));
 //        lift = new Lift(hardwareMap.get(DcMotorEx.class, "liftT"), hardwareMap.get(DcMotorEx.class, "liftM"), hardwareMap.get(DcMotorEx.class, "liftB"), hardwareMap.get(DigitalChannel.class, "Lift"), telemetry);
         arm = new Arm(hardwareMap.get(CRServo.class, "armL"), hardwareMap.get(CRServo.class, "armR"), hardwareMap, telemetry);
-        signals.put("Orange", Signals.ORANGE);
-        signals.put("Purple", Signals.PURPLE);
-        signals.put("Green", Signals.GREEN);
+        signals.put("Orange", VisionConstants.ORANGE);
+        signals.put("Purple", VisionConstants.PURPLE);
+        signals.put("Green", VisionConstants.GREEN);
 
 //comments are original, new ones are bc of messed up lighting
         drivetrain.odoDown();

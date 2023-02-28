@@ -103,7 +103,7 @@ public class Lift extends Mechanism {
             bumpedDown = false;
         }
     }
-//🍦
+    //🍦
     public void write() {
         //Sets the target position for each motor, middle being reversed
         top.setTargetPosition(targetHeight + trim);

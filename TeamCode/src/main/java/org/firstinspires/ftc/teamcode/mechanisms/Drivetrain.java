@@ -25,7 +25,6 @@ public class Drivetrain extends Mechanism {
     //Declares variables
     public Robot robot; //declares a new instance of Robot
     public double[] motorPowers; //declares an array of motor powers
-    public int[] motorIndices; //declares a new array of motor indices
     public Telemetry telemetry; //declares a new instance of Telemetry
     public MultipleTelemetry dashboardTelemetry;
     private FtcDashboard dashboard;
@@ -73,11 +72,9 @@ public class Drivetrain extends Mechanism {
     private double modifier = 0;
     public State currentState;
 
-    //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
-    public Drivetrain(Robot bot, @NonNull int[] motorNumbers, Telemetry T, Servo LeftOdo, Servo RightOdo, Servo BackOdo) {
+    public Drivetrain(Robot bot, int[] _, Telemetry T, Servo LeftOdo, Servo RightOdo, Servo BackOdo) {
         DcMotorEx motorPlaceholder;
         robot = bot;
-        motorIndices = motorNumbers;
         telemetry = T;
 
         currentState = State.IDLE;
@@ -97,7 +94,38 @@ public class Drivetrain extends Mechanism {
         servos.add(RightOdo);
         servos.add(BackOdo);
 
-        for (int motNum : motorNumbers) {
+        for (int motNum = 0; motNum<4; motNum++) {
+            motorPlaceholder = robot.motors.get(motNum);
+            motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motors.add(motorPlaceholder);
+        }
+        motorPowers = new double[]{0, 0, 0, 0};
+    }
+
+    //Constructs a drivetrain object with parameters of the robot, motor numbers, telemetry, and 3 servos
+    public Drivetrain(Robot bot, Telemetry T, Servo LeftOdo, Servo RightOdo, Servo BackOdo) {
+        DcMotorEx motorPlaceholder;
+        robot = bot;
+        telemetry = T;
+
+        currentState = State.IDLE;
+
+        xIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
+        yIndependentPid = new IndependentPID(1, 0.1, 0, -100, 10000);
+        rIndependentPid = new IndependentPID(1, 0.1, 0, -10000, 10000);
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        dashboard.updateConfig();
+        odo = bot.odometry;
+        dashboard = FtcDashboard.getInstance();
+        dashboardTelemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+
+        servos.add(LeftOdo);
+        servos.add(RightOdo);
+        servos.add(BackOdo);
+
+        for (int motNum = 0; motNum<4; motNum++) {
             motorPlaceholder = robot.motors.get(motNum);
             motorPlaceholder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motors.add(motorPlaceholder);

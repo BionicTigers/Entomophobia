@@ -7,11 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
-import org.firstinspires.ftc.teamcode.util.Signals;
-import org.opencv.core.Scalar;
+import org.firstinspires.ftc.teamcode.util.VisionConstants;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Autonomous(name = "newVision")
 public class NewVis extends LinearOpMode {
@@ -21,9 +19,9 @@ public class NewVis extends LinearOpMode {
         FtcDashboard.getInstance().getTelemetry().update();
 
         HashMap<String, Signal> signals = new HashMap<>();
-        signals.put("Orange", Signals.ORANGE);
-        signals.put("Purple", Signals.PURPLE);
-        signals.put("Green", Signals.GREEN);
+        signals.put("Orange", VisionConstants.ORANGE);
+        signals.put("Purple", VisionConstants.PURPLE);
+        signals.put("Green", VisionConstants.GREEN);
 
         OpenCv detector = new OpenCv(
                 hardwareMap.get(WebcamName.class, "Webcam 1"),
