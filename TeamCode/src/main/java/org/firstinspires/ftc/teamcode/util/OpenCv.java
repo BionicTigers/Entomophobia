@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Range;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -23,27 +25,30 @@ import java.util.concurrent.TimeUnit;
 //This is the pipeline we use for Vision
 //It is ran on every new frame
 class Pipeline extends OpenCvPipeline {
-    public HashMap<String, Signal> signals;
+    public OpenCv injection;
 
     private String detection = "None";
 
-    public Pipeline(HashMap<String, Signal> signals) {
-        this.signals = signals;
+    public Pipeline(OpenCv injection) {
+        this.injection = injection;
     }
 
     //This is essentially the Main method for the pipeline
     //On every new frame from the camera, this is ran
     @Override
     public Mat processFrame(Mat input) {
-        Mat hsvMat = new Mat();
+        Mat hsvMatUncropped = new Mat();
+
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         //Convert the input image into HSV
-        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(input, hsvMatUncropped, Imgproc.COLOR_RGB2HSV);
+
+        Mat hsvMat = injection.crop != null ? hsvMatUncropped.submat(injection.crop) : hsvMatUncropped;
 
         //Highest Area found during every signal process
         double high = 0;
 
-        for (Map.Entry<String, Signal> entry : signals.entrySet()) {
+        for (Map.Entry<String, Signal> entry : injection.signals.entrySet()) {
             String name = entry.getKey();
             Signal signal = entry.getValue();
 
@@ -66,8 +71,9 @@ class Pipeline extends OpenCvPipeline {
         Imgproc.drawContours(input, contours, -1, new Scalar(250,0,250),2);
 
         //Release so we don't get any memory leaks
+        hsvMatUncropped.release();
         hsvMat.release();
-        return input;
+        return injection != null ? input.submat(injection.crop) : input;
     }
 
     public String getDetection() {
@@ -77,7 +83,8 @@ class Pipeline extends OpenCvPipeline {
 
 public class OpenCv {
     private OpenCvWebcam camera;
-    private HashMap<String, Signal> signals;
+    public HashMap<String, Signal> signals;
+    public Rect crop;
     private Pipeline pipeline;
 
     //Create a new OpenCV Wrapper WITH a live monitor view
@@ -86,7 +93,10 @@ public class OpenCv {
         this.camera = OpenCvCameraFactory.getInstance()
                 .createWebcam(webcamName, monitorId);
 
-        pipeline = new Pipeline(signals);
+        this.signals = signals;
+
+        //Use dependency injection for real-time updating
+        pipeline = new Pipeline(this);
 
         startCameraStream();
     }
@@ -96,14 +106,22 @@ public class OpenCv {
         this.camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
         this.signals = signals;
 
-        pipeline = new Pipeline(signals);
+        pipeline = new Pipeline(this);
 
         startCameraStream();
+    }
+
+    public void setCrop(Rect zone) {
+        this.crop = zone;
     }
 
     //Return the current detection from the pipeline, NONE if there isn't a detection
     public String getDetection() {
         return pipeline.getDetection();
+    }
+
+    public void stopDetection() {
+        camera.stopStreaming();
     }
 
     private void startCameraStream() {
@@ -113,7 +131,7 @@ public class OpenCv {
             @Override
             public void onOpened() {
                 camera.getExposureControl().setMode(ExposureControl.Mode.Manual);
-                camera.getExposureControl().setExposure(50, TimeUnit.MILLISECONDS);
+                camera.getExposureControl().setExposure(VisionConstants.EXPOSURE, TimeUnit.MILLISECONDS);
                 //Start streaming at 1280x720, in the upright orientation
                 //Start the detection pipeline
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);

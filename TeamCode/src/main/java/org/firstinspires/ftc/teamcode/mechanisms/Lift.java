@@ -73,7 +73,7 @@ public class Lift extends Mechanism {
         }
         //Sets targetHeight to the lowest point
         if (gp2.dpad_right) {
-            targetHeight = 0;
+            targetHeight = 10464;
         }
 
         //Increase the trim
@@ -111,12 +111,16 @@ public class Lift extends Mechanism {
         bottom.setTargetPosition(targetHeight + trim);
 
         //If the limit switch is pressed and we're trying to go down
-        if (!limitSwitch.getState() && (middle.getTargetPosition() == 0)) {
+        if (!limitSwitch.getState() && (targetHeight == 10464)) {
             //Sets powers to 0 to prevent motor strain
             for (DcMotorEx motor : motors) {
                 motor.setPower(0);
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                trim = 0;
+                targetHeight = 0;
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-        } else if (middle.getTargetPosition() == 0) {
+        } else if (targetHeight == 10464) {
             //Sets powers to 0.2 when going down to prevent crashing
             for (DcMotorEx motor : motors) {
                 motor.setPower(0.2);
@@ -127,24 +131,24 @@ public class Lift extends Mechanism {
                 motor.setPower(1);
             }
         }
-        if(limitSwitch.getState() && (middle.getCurrentPosition() == 0)){
-            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            middle.setPower(-0.2);
-            top.setPower(0.2);
-            bottom.setPower(0.2);
-        } else if(!limitSwitch.getState() && (middle.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)){
-            middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            middle.setTargetPosition(0);
-            top.setTargetPosition(0);
-            bottom.setTargetPosition(0);
-            middle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            top.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            bottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+//        if(limitSwitch.getState() && (middle.getCurrentPosition() == 0)){
+//            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            middle.setPower(-0.2);
+//            top.setPower(0.2);
+//            bottom.setPower(0.2);
+//        } else if(!limitSwitch.getState() && (middle.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)){
+//            middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            bottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            middle.setTargetPosition(0);
+//            top.setTargetPosition(0);
+//            bottom.setTargetPosition(0);
+//            middle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            top.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            bottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
 
         //Telemetry information
         telemetry.addData("Trim", trim);

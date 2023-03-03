@@ -29,7 +29,7 @@ public class Arm extends Mechanism {
 
     private int junkTicks;
     public PID pid;
-    public static final double kP = 1, kI = 0, kD = 0;
+    public static final double kP = 2, kI = 0, kD = 0;
 
 
     public ControlHub controlHub;
@@ -38,7 +38,11 @@ public class Arm extends Mechanism {
     public CRServo left;
     public CRServo right;
 
-    public double setPosition = 0;
+    public double setPosition = 26;
+
+    public Arm() {
+
+    }
 
     public Arm (CRServo l, CRServo r, HardwareMap hardwareMap, Telemetry T) {
         super();
@@ -61,6 +65,8 @@ public class Arm extends Mechanism {
         controlHub.refreshBulkData();
         junkTicks = controlHub.getEncoderTicks(3);
 
+//        move(26);
+
         pid = new PID(kP, kI, kD, 0, 5578, -1, 1);
     }
 
@@ -69,15 +75,13 @@ public class Arm extends Mechanism {
         //Resets lift encoder position
         encoderPos = controlHub.getEncoderTicks(3);
 
-        //Defaults to a 0 power move
-//        move(0);
         //Moves the arm upward slowly
         if (gp2.right_bumper) {
-            setPosition += 5;
+            setPosition += 2.5;
         }
         //Moves the arm downward slowly
         if (gp2.left_bumper) {
-            setPosition -= 5;
+            setPosition -= 2.5;
         }
         //Moves the arm upward quickly
         if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down) {
@@ -102,19 +106,22 @@ public class Arm extends Mechanism {
 
         int ticksError = Math.abs(currentTicks - targetTicks);
 
-        if (ticksError <= 20) {
+        if (ticksError < Integer.MAX_VALUE) {
             currentState = State.IDLE;
         }
+
+        if (Math.abs(output) < .07)
+            output = 0;
 
         //Moves the servos
         left.setPower(output);
         right.setPower(output);
 
-        telemetry.addData("Arm ticks: ", controlHub.getEncoderTicks(3));
-        telemetry.addData("Current Arm ticks: ", currentTicks);
-        telemetry.addData("Set position: ", setPosition);
-        telemetry.addData("Arm degrees: ", controlHub.getEncoderTicks(3)/(8192/360));
+        telemetry.addData("Arm Ticks", currentTicks);
+//        telemetry.addData("Set position", setPosition);
+        telemetry.addData("Arm degrees", currentTicks/(8192/360));
         telemetry.addData("PID: ", output);
+        telemetry.addData("SetPosition", setPosition);
         telemetry.update();
     }
 

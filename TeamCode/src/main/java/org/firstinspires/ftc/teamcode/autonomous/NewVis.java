@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.VisionConstants;
+import org.opencv.core.Rect;
 
 import java.util.HashMap;
 
@@ -29,6 +30,8 @@ public class NewVis extends LinearOpMode {
                 hardwareMap.appContext.getResources().getIdentifier(
                         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName())
         );
+
+        detector.setCrop(new Rect(200, 200, 400, 500));
         while (opModeInInit()) {
             telemetry.addData("Reading", detector.getDetection());
             telemetry.update();
