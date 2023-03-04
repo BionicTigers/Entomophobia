@@ -23,6 +23,8 @@ public class Lift extends Mechanism {
     public boolean bumpedUp = false;
     public boolean bumpedDown = false;
 
+    public boolean killPower = false;
+
     public enum Position {GROUND, LOW, MEDIUM, HIGH, STACK}
 
     public Lift(DcMotorEx t, DcMotorEx m, DcMotorEx b, DigitalChannel limit, Telemetry telem) {
@@ -62,18 +64,25 @@ public class Lift extends Mechanism {
         //Sets targetHeight to the high height
         if (gp2.dpad_up) {
             targetHeight = -800;
+            killPower = false;
         }
         //Sets targetHeight to the middle height
         if (gp2.dpad_left) {
             targetHeight = -380;
+            killPower = false;
         }
         //Sets targetHeight to the low height
         if (gp2.dpad_down) {
             targetHeight = -120;
+            killPower = false;
         }
         //Sets targetHeight to the lowest point
         if (gp2.dpad_right) {
-            targetHeight = 10464;
+            targetHeight = 100;
+        }
+
+        if (trim != 0) {
+            killPower = false;
         }
 
         //Increase the trim
@@ -106,21 +115,35 @@ public class Lift extends Mechanism {
     //🍦
     public void write() {
         //Sets the target position for each motor, middle being reversed
-        top.setTargetPosition(targetHeight + trim);
-        middle.setTargetPosition(-(targetHeight + trim));
-        bottom.setTargetPosition(targetHeight + trim);
+
+        if (!killPower) {
+            for (DcMotorEx motor : motors) {
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            top.setTargetPosition(targetHeight + trim);
+            middle.setTargetPosition(-(targetHeight + trim));
+            bottom.setTargetPosition(targetHeight + trim);
+        }
+
+        if (!limitSwitch.getState()) {
+            killPower = true;
+        }
+
+        if (!limitSwitch.getState() && killPower) {
+            for (DcMotorEx motor : motors) {
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            trim = 0;
+            targetHeight = 0;
+        }
 
         //If the limit switch is pressed and we're trying to go down
-        if (!limitSwitch.getState() && (targetHeight == 10464)) {
+        if (killPower) {
             //Sets powers to 0 to prevent motor strain
             for (DcMotorEx motor : motors) {
                 motor.setPower(0);
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                trim = 0;
-                targetHeight = 0;
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-        } else if (targetHeight == 10464) {
+        } else if (targetHeight == 100) {
             //Sets powers to 0.2 when going down to prevent crashing
             for (DcMotorEx motor : motors) {
                 motor.setPower(0.2);
@@ -163,6 +186,7 @@ public class Lift extends Mechanism {
                 targetHeight = -1400;
                 break;
             case MEDIUM:
+                targetHeight = -380;
                 targetHeight = -380;
                 break;
             case LOW:

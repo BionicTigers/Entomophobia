@@ -47,7 +47,7 @@ public class Claw extends Mechanism {
             hijack = true;
         }
 
-        open = (gp1.left_trigger >= 0.3) || (gp2.left_trigger >= 0.3);
+        open = (gp1.a || (gp2.left_trigger >= 0.3));
     }
 
     @Override
@@ -72,19 +72,19 @@ public class Claw extends Mechanism {
     }
 
     public void open() {
-        servo.setPosition(0.4);
+        servo.setPosition(1);
     }
 
     public void close() {
-        servo.setPosition(0);
+        servo.setPosition(0.1);
     }
 
     public void littleClose() {
-        servo.setPosition(0.2);
+        servo.setPosition(0.7);
     }
 
     public void init() {
-        servo.setPosition(0.4);
+        servo.setPosition(1);
     }
 
     public double getDistance() {
