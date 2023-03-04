@@ -5,12 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.util.OpenCv;
-import org.firstinspires.ftc.teamcode.util.Signal;
-import org.firstinspires.ftc.teamcode.util.VisionConstants;
-import org.opencv.core.Scalar;
-import java.util.HashMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -19,15 +13,17 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
+import org.firstinspires.ftc.teamcode.util.OpenCv;
 import org.firstinspires.ftc.teamcode.util.Signal;
 import org.firstinspires.ftc.teamcode.util.TensorFlow;
+import org.firstinspires.ftc.teamcode.util.VisionConstants;
 import org.opencv.core.Scalar;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Autonomous (name="Blue Auto Right", group="autonomous")
-public class BlueAutoRight extends LinearOpMode {
+@Autonomous (name="Red Auto Left", group="autonomous")
+public class RedAutoLeft extends LinearOpMode {
 
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
 
@@ -35,19 +31,18 @@ public class BlueAutoRight extends LinearOpMode {
     public Drivetrain drivetrain;
     public Claw claw;
     public Lift lift;
+
     public OpenCv detector;
     public HashMap<String, Signal> signals = new HashMap<>();
 
-    public boolean a = false;
-
-    public Location reset = new Location(-15,-25,0);
-    public Location middleZone = new Location(0, 650, 0);
+    public Location reset = new Location(-15, -25, 0);
+    public Location middleZone = new Location(0, 625, 0);
     public Location leftZone = new Location(-585, 675, 0);
-    public Location rightZone = new Location(600, 675,0);
+    public Location rightZone = new Location(600, 650, 0);
 
     public Location origin = new Location(0, 0, 0);
 
-    public Location terminal = new Location(300, 0, 0);
+    public Location terminal = new Location(-300, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,7 +58,7 @@ public class BlueAutoRight extends LinearOpMode {
         signals.put("Purple", VisionConstants.PURPLE);
         signals.put("Green", VisionConstants.GREEN);
 
-//comments are original, new ones are bc of messed up lighting
+
         drivetrain.odoDown();
         robot.odometry.reset();
         claw.open();
@@ -85,7 +80,7 @@ public class BlueAutoRight extends LinearOpMode {
 
         switch (detection) {
             case "Orange":
-                drivetrain.moveToPositionMod(leftZone, 5, 5,1, .3, 2000);
+                drivetrain.moveToPositionMod(leftZone, 5, 5, 1, .3, 2000);
                 break;
             case "Purple":
                 break;
