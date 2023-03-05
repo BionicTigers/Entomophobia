@@ -73,7 +73,7 @@ class Pipeline extends OpenCvPipeline {
         //Release so we don't get any memory leaks
         hsvMatUncropped.release();
         hsvMat.release();
-        return injection != null ? input.submat(injection.crop) : input;
+        return injection.crop != null ? input.submat(injection.crop) : input;
     }
 
     public String getDetection() {

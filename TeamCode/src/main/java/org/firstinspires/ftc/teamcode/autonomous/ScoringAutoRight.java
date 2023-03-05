@@ -19,11 +19,10 @@ import org.firstinspires.ftc.teamcode.teleop.Robot;
 import org.firstinspires.ftc.teamcode.util.Location;
 import org.firstinspires.ftc.teamcode.util.VisionConstants;
 
-@Autonomous (name="Blue Auto Right", group="autonomous")
+@Autonomous (name="Junction Auto Right", group="autonomous")
 public class ScoringAutoRight extends LinearOpMode {
 
     public int[] motorNumbers = {0, 1, 2, 3}; //creates motor numbers array
-
     public Robot robot;
     public Drivetrain drivetrain;
     public Claw claw;
