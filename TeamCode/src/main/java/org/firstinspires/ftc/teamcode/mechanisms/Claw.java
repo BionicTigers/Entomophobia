@@ -27,6 +27,8 @@ public class Claw extends Mechanism {
     private int cycles = 0;
     private double dist = 0;
 
+    private boolean cachedConeDetect;
+
     public Deadline fastDrop = new Deadline (1, TimeUnit.SECONDS);
 
     public Claw (Servo grab, DistanceSensor distance, RevBlinkinLedDriver blinkin, Telemetry T) {
@@ -47,7 +49,7 @@ public class Claw extends Mechanism {
             hijack = true;
         }
 
-        open = (gp1.a || (gp2.left_trigger >= 0.3));
+        open = (gp1.b || (gp2.left_trigger >= 0.3));
     }
 
     @Override
@@ -63,11 +65,21 @@ public class Claw extends Mechanism {
             open();
             hijack = false;
         }
+        telemetry.addData("cone", dist);
 
-        if(cycles == 10 && coneDetected()) {
+//        if (cachedConeDetect == coneDetected()) {
+//            return;
+//        }
+//
+//        cachedConeDetect = coneDetected();
+
+        if (coneDetected()) {
+
             blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            System.out.println("green");
         } else {
             blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+            System.out.println("red");
         }
     }
 
@@ -89,8 +101,10 @@ public class Claw extends Mechanism {
 
     public double getDistance() {
         cycles++;
-        if (cycles == 30)
-            dist = distance.getDistance(DistanceUnit.MM);
+        if (cycles == 20) {
+            dist = distance.getDistance(DistanceUnit.CM);
+            cycles = 0;
+        }
 
         return dist;
     }

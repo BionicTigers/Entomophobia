@@ -29,7 +29,7 @@ public class Arm extends Mechanism {
 
     private int junkTicks;
     public PID pid;
-    public static final double kP = 1.75, kI = 0, kD = 0;
+    public static final double kP = 2.75, kI = 0, kD = 0;
 
 
     public ControlHub controlHub;
@@ -39,10 +39,6 @@ public class Arm extends Mechanism {
     public CRServo right;
 
     public double setPosition = 26;
-
-    public Arm() {
-
-    }
 
     public Arm (CRServo l, CRServo r, HardwareMap hardwareMap, Telemetry T) {
         super();
@@ -67,73 +63,84 @@ public class Arm extends Mechanism {
 
 //        move(26);
 
-        pid = new PID(kP, kI, kD, 0, 5578, -1, 1);
+        pid = new PID(kP, kI, kD, 0, 5848, -1, 1);
     }
 
     @Override
     public void update(Gamepad gp1, Gamepad gp2) {
-//        //Resets lift encoder position
-//        encoderPos = controlHub.getEncoderTicks(3);
-//
-//        //Moves the arm upward slowly
-//        if (gp2.right_bumper) {
-//            setPosition += 2.5;
-//        }
-//        //Moves the arm downward slowly
-//        if (gp2.left_bumper) {
-//            setPosition -= 2.5;
-//        }
-//        //Moves the arm upward quickly
-//        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down) {
-//            setPosition = 257;
-//        }
-//        //Moves the arm downward quickly
-//        if (gp2.dpad_right) {
-//            setPosition = 0;
-//        }
-//
-//        setPosition = Math.max(-30, Math.min(260, setPosition));
-//
-//        move(setPosition);
-        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down || gp2.right_bumper) {
-            left.setPower(-1);
-            right.setPower(-1);
-        } else if (gp2.dpad_right || gp2.left_bumper) {
-            left.setPower(1);
-            right.setPower(1);
-        } else {
-            left.setPower(0);
-            right.setPower(0);
+
+        //PID CODE
+
+        //Resets lift encoder position
+        encoderPos = controlHub.getEncoderTicks(3);
+
+        //Moves the arm upward slowly
+        if (gp2.right_bumper) {
+            setPosition += 2.5;
         }
+        //Moves the arm downward slowly
+        if (gp2.left_bumper) {
+            setPosition -= 2.5;
+        }
+        //Moves the arm upward quickly
+        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down) {
+            setPosition = 257;
+        }
+        //Moves the arm downward quickly
+        if (gp2.dpad_right) {
+            setPosition = 0;
+        }
+
+        setPosition = Math.max(-30, Math.min(260, setPosition));
+
+        move(setPosition);
+
+        //NON PID CODE
+//
+//        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down || gp2.right_bumper) {
+//            left.setPower(-1);
+//            right.setPower(-1);
+//        } else if (gp2.dpad_right || gp2.left_bumper) {
+//            left.setPower(1);
+//            right.setPower(1);
+//        } else {
+//            left.setPower(0);
+//            right.setPower(0);
+//        }
     }
 
     @Override
     public void write() {
-        //📝
-//        controlHub.refreshBulkData();
-//        int currentTicks = controlHub.getEncoderTicks(3) - junkTicks;
-//        double output = pid.calculate(targetTicks, currentTicks);
-//
-//        int ticksError = Math.abs(currentTicks - targetTicks);
-//
-//        if (ticksError < Integer.MAX_VALUE) {
-//            currentState = State.IDLE;
-//        }
-//
-//        if (Math.abs(output) < .07)
-//            output = 0;
-//
-//        //Moves the servos
-//        left.setPower(output);
-//        right.setPower(output);
-//
-//        telemetry.addData("Arm Ticks", currentTicks);
-////        telemetry.addData("Set position", setPosition);
-//        telemetry.addData("Arm degrees", currentTicks/(8192/360));
-//        telemetry.addData("PID: ", output);
-//        telemetry.addData("SetPosition", setPosition);
-//        telemetry.update();
 
+        //PID CODE
+
+        controlHub.refreshBulkData();
+        int currentTicks = controlHub.getEncoderTicks(3) - junkTicks;
+        double output = pid.calculate(targetTicks, currentTicks) + .2;
+
+        int ticksError = Math.abs(currentTicks - targetTicks);
+        telemetry.addData("error", Math.abs(ticksError));
+
+        if (ticksError < 400) {
+            currentState = State.IDLE;
+        }
+
+        if ((currentTicks < 300 && targetTicks < 300) || (currentTicks > 5348 && targetTicks > 5348)) {
+            output = 0;
+        }
+
+        //Moves the servos
+        left.setPower(-output);
+        right.setPower(-output);
+
+        telemetry.addData("Arm Ticks", currentTicks);
+        telemetry.addData("Set position", setPosition);
+        telemetry.addData("Arm degrees", currentTicks/(8192/360));
+        telemetry.addData("PID: ", output);
+        telemetry.update();
+
+        //NON PID CODE
+        //None lmao
     }
 
     //Moves the lift forward

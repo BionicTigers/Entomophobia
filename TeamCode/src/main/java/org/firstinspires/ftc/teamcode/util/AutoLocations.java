@@ -4,10 +4,10 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class AutoLocations {
-    public static Location origin = new Location(-100, 105, 0);
+    public static Location origin = new Location(-100, 20, 0);
     public static Location center = new Location(-100, 640, 0);
 
-    public static Location closeLow = new Location(-400, 30, 0);
+    public static Location closeLow = new Location(-340, 30, 0);
     public static Location farLow = new Location(-34, 700, 45);
 
     public static Location stackLineUp = new Location(-149, 1244, 90);

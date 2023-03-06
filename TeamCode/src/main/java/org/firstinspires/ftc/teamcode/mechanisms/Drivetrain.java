@@ -419,7 +419,8 @@ public class Drivetrain extends Mechanism {
         lastSidewaysError = sidePow;
         lastRotationError = rotPow;
 
-        determineMotorPowers(sidePow,forwardPow,rotPow * 40, mod);
+        determineMotorPowers(sidePow,forwardPow,rotPow, mod);
+        telemetry.addData("data!", forwardError+" "+sidePow+" "+rotPow);
         return error;
     }
 

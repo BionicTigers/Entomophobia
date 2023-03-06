@@ -78,7 +78,7 @@ public class Lift extends Mechanism {
         }
         //Sets targetHeight to the lowest point
         if (gp2.dpad_right) {
-            targetHeight = 100;
+            targetHeight = 400;
         }
 
         if (trim != 0) {
@@ -143,7 +143,7 @@ public class Lift extends Mechanism {
             for (DcMotorEx motor : motors) {
                 motor.setPower(0);
             }
-        } else if (targetHeight == 100) {
+        } else if (targetHeight == 400) {
             //Sets powers to 0.2 when going down to prevent crashing
             for (DcMotorEx motor : motors) {
                 motor.setPower(0.2);

@@ -12,5 +12,5 @@ public class OdoPods {
     public static double MIDDLE_DOWN = .23;
 
     public static double RIGHT_UP = .25;
-    public static double RIGHT_DOWN = 0.78;
+    public static double RIGHT_DOWN = 0.7;
 }
