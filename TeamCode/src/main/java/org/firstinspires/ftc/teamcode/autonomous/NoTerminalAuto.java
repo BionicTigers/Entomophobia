@@ -69,16 +69,25 @@ public class NoTerminalAuto extends LinearOpMode {
         waitForStart();
         String detection = detector.getDetection();
         drivetrain.moveToPositionMod(middleZone, 5, 5, 0, 0.3, 2000);
+        while (drivetrain.currentState == Drivetrain.State.MOVE_TO_POSITION && opModeIsActive()) {
+            drivetrain.write();
+        }
         sleep(250);
 
         switch (detection) {
             case "Orange":
                 drivetrain.moveToPositionMod(leftZone, 5, 5, 1, .3, 2000);
+                while (drivetrain.currentState == Drivetrain.State.MOVE_TO_POSITION && opModeIsActive()) {
+                    drivetrain.write();
+                }
                 break;
             case "Purple":
                 break;
             case "Green":
                 drivetrain.moveToPositionMod(rightZone, 5, 5, 1, .3, 2000);
+                while (drivetrain.currentState == Drivetrain.State.MOVE_TO_POSITION && opModeIsActive()) {
+                    drivetrain.write();
+                }
                 break;
             default:
                 break;

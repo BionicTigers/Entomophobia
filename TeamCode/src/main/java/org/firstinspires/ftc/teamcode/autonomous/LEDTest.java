@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class LEDTest extends LinearOpMode {
 
     RevBlinkinLedDriver blinkin;
-    RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_PARTY_PALETTE;
+    RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
 
     @Override
     public void runOpMode() throws InterruptedException {
         blinkin = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
 
         blinkin.setPattern(pattern);
+
+        waitForStart();
     }
 }

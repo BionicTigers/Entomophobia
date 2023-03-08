@@ -59,7 +59,7 @@ public class PID {
 
         if (dt > sampleTime / 1000) {
             //Turn to percentage
-            double scaledPV = (maxPV - minPV);
+            double scaledPV = PV / (maxPV - minPV);
             double E = (SP - PV) / (maxPV - minPV);
 
             double P = E - E1;
@@ -72,13 +72,18 @@ public class PID {
 
             double D = 60 * Td * ((scaledPV - 2 * PV1 + PV2) / dt);
 
-            telem.addData("E", E * (maxPV - minPV));
+            telem.addData("E", E);
             telem.addData("P", Kp * P);
             telem.addData("I", Kp * I);
             telem.addData("D", Kp * D);
+            telem.addData("PV", PV / (maxPV - minPV));
+            telem.addData("SP", SP / (maxPV - minPV));
 
             //Clamp CV to the min and the max
             CV = Math.max(minCV, Math.min(maxCV, CV + Kp * (P + I + D)));
+
+            telem.addData("CV", CV);
+            telem.update();
 
             //Set Futures
             E1 = E;

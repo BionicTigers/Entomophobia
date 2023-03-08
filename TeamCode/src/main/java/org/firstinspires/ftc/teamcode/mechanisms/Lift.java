@@ -24,6 +24,9 @@ public class Lift extends Mechanism {
     public boolean bumpedDown = false;
 
     public boolean killPower = false;
+    public boolean limitPressed = false;
+
+    private int cycles = 0;
 
     public enum Position {GROUND, LOW, MEDIUM, HIGH, STACK}
 
@@ -73,12 +76,12 @@ public class Lift extends Mechanism {
         }
         //Sets targetHeight to the low height
         if (gp2.dpad_down) {
-            targetHeight = -120;
+            targetHeight = 0;
             killPower = false;
         }
         //Sets targetHeight to the lowest point
         if (gp2.dpad_right) {
-            targetHeight = 400;
+            targetHeight = 50;
         }
 
         if (trim != 0) {
@@ -125,11 +128,18 @@ public class Lift extends Mechanism {
             bottom.setTargetPosition(targetHeight + trim);
         }
 
-        if (!limitSwitch.getState()) {
+        cycles++;
+
+        if (cycles > 3) {
+            limitPressed = limitSwitch.getState();
+            cycles = 0;
+        }
+
+        if (!limitPressed) {
             killPower = true;
         }
 
-        if (!limitSwitch.getState() && killPower) {
+        if (!limitPressed && killPower) {
             for (DcMotorEx motor : motors) {
                 motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
@@ -143,7 +153,7 @@ public class Lift extends Mechanism {
             for (DcMotorEx motor : motors) {
                 motor.setPower(0);
             }
-        } else if (targetHeight == 400) {
+        } else if (targetHeight == 50) {
             //Sets powers to 0.2 when going down to prevent crashing
             for (DcMotorEx motor : motors) {
                 motor.setPower(0.2);
@@ -154,29 +164,11 @@ public class Lift extends Mechanism {
                 motor.setPower(1);
             }
         }
-//        if(limitSwitch.getState() && (middle.getCurrentPosition() == 0)){
-//            middle.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            top.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            bottom.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            middle.setPower(-0.2);
-//            top.setPower(0.2);
-//            bottom.setPower(0.2);
-//        } else if(!limitSwitch.getState() && (middle.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)){
-//            middle.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            top.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            bottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            middle.setTargetPosition(0);
-//            top.setTargetPosition(0);
-//            bottom.setTargetPosition(0);
-//            middle.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            top.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            bottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        }
 
         //Telemetry information
         telemetry.addData("Trim", trim);
         telemetry.addData("Height Value", targetHeight);
-        telemetry.addData("Limit Switch Pressed", limitSwitch.getState());
+        telemetry.addData("Limit Switch Pressed", limitPressed);
     }
 
     public void lift(Lift.Position pos) {
@@ -186,7 +178,6 @@ public class Lift extends Mechanism {
                 targetHeight = -1400;
                 break;
             case MEDIUM:
-                targetHeight = -380;
                 targetHeight = -380;
                 break;
             case LOW:

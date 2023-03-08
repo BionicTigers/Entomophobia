@@ -55,17 +55,16 @@ public class Claw extends Mechanism {
     @Override
     public void write() {
 
-        if (hijack) {
+        if (open) {
+            open();
+            hijack = false;
+        } else if (hijack) {
             littleClose();
         } else {
             close();
         }
 
-        if (open) {
-            open();
-            hijack = false;
-        }
-        telemetry.addData("cone", dist);
+//        telemetry.addData("cone", dist);
 
 //        if (cachedConeDetect == coneDetected()) {
 //            return;
@@ -74,7 +73,6 @@ public class Claw extends Mechanism {
 //        cachedConeDetect = coneDetected();
 
         if (coneDetected()) {
-
             blinkin.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
             System.out.println("green");
         } else {
@@ -88,7 +86,7 @@ public class Claw extends Mechanism {
     }
 
     public void close() {
-        servo.setPosition(0.1);
+        servo.setPosition(0.6);
     }
 
     public void littleClose() {
@@ -101,19 +99,18 @@ public class Claw extends Mechanism {
 
     public double getDistance() {
         cycles++;
-        if (cycles == 20) {
+        if (cycles == 10) {
             dist = distance.getDistance(DistanceUnit.CM);
             cycles = 0;
+            System.out.println(dist);
         }
 
         return dist;
     }
 
+    //Checks if the cone is within 5 CM
     public boolean coneDetected() {
-        if(getDistance() < 20) {
-            return true;
-        }
-        else return false;
+        return getDistance() < 5;
     }
 
     public void quickDrop() {

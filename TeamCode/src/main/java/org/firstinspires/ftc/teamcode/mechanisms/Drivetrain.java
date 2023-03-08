@@ -213,7 +213,7 @@ public class Drivetrain extends Mechanism {
         if (gp1.left_stick_button) {
             odoUp();
         } else if (gp1.right_stick_button) {
-            odoDown();
+//            odoDown();
         }
 
 //        if (gp1.right_bumper && gp1.dpad_up) {
@@ -282,6 +282,7 @@ public class Drivetrain extends Mechanism {
                 dashboardTelemetry.update();
             } else {
                 currentState = State.IDLE;
+                determineMotorPowers(0,0,0);
             }
         }
 

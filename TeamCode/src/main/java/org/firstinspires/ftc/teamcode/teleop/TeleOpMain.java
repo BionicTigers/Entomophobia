@@ -38,12 +38,6 @@ public class TeleOpMain extends LinearOpMode {
         Mechanism[] mechanisms = {drive, lift, claw, arm};
 
         claw.init();
-        while(!isStarted() && !isStopRequested()){
-            telemetry.addData("Arm ticks: ", arm.controlHub.getEncoderTicks(3));
-            telemetry.addData("Arm degrees: ", arm.controlHub.getEncoderTicks(3)/(8192/360));
-            telemetry.update();
-            arm.controlHub.refreshBulkData();
-        }
 
         waitForStart();
 

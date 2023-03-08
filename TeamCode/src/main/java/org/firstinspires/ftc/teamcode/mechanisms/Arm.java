@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanisms;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,6 +18,7 @@ import org.firstinspires.ftc.teamcode.util.PID;
 
 import java.util.concurrent.TimeUnit;
 
+@Config
 public class Arm extends Mechanism {
     public Telemetry telemetry;
 
@@ -25,45 +28,41 @@ public class Arm extends Mechanism {
     }
     public State currentState;
 
-    private int targetTicks = 0;
+    private double targetDegrees = 0;
 
-    private int junkTicks;
     public PID pid;
-    public static final double kP = 2.75, kI = 0, kD = 0;
+    public static double kP = 1.25, kI = 0, kD = 0;
+    public static double biasMultiplier = .12;
 
+    private final int angleOffset = 8;
 
-    public ControlHub controlHub;
-    public int encoderPos = 0;
+    private ControlHub controlHub;
 
     public CRServo left;
     public CRServo right;
 
     public double setPosition = 26;
 
-    public Arm (CRServo l, CRServo r, HardwareMap hardwareMap, Telemetry T) {
-        super();
-        //Declares the left motor
-        crServos.add(l);
-        left = l;
-        //Declares the right motor
-        crServos.add(r);
-        right = r;
+    public double lastTime;
 
-        //Flips the right servo so it rotates the right way
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+    public Arm (CRServo left, CRServo right, HardwareMap hardwareMap, Telemetry telemetry) {
+        this.left = left;
+        this.right = right;
 
-        //Declares telemetry
-        telemetry = T;
+        this.telemetry = telemetry;
 
-        //Declares Control Hub
+        //Makes the left servo rotate the opposite direction
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Allows access to encoder ticks and removes old ticks
         controlHub = new ControlHub(hardwareMap, hardwareMap.get(LynxDcMotorController.class, "Control Hub"));
+        controlHub.setJunkTicks(3);
 
-        controlHub.refreshBulkData();
-        junkTicks = controlHub.getEncoderTicks(3);
+        move(-30);
 
-//        move(26);
+        pid = new PID(kP, kI, kD, 0, 270, -1, 1);
 
-        pid = new PID(kP, kI, kD, 0, 5848, -1, 1);
+        lastTime = System.currentTimeMillis();
     }
 
     @Override
@@ -71,38 +70,42 @@ public class Arm extends Mechanism {
 
         //PID CODE
 
-        //Resets lift encoder position
-        encoderPos = controlHub.getEncoderTicks(3);
+//        //Change in time (in seconds) so we can have accurate position changes
+        double dt = (System.currentTimeMillis() - lastTime) / 1000;
+        lastTime = System.currentTimeMillis();
 
         //Moves the arm upward slowly
         if (gp2.right_bumper) {
-            setPosition += 2.5;
+            setPosition += 150 * dt;
         }
         //Moves the arm downward slowly
         if (gp2.left_bumper) {
-            setPosition -= 2.5;
+            setPosition -= 150 * dt;
         }
         //Moves the arm upward quickly
-        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down) {
-            setPosition = 257;
+        if (gp2.dpad_up || gp2.dpad_left) {
+            setPosition = 260;
+        }
+        if(gp2.dpad_down) {
+            setPosition = 117.5;
         }
         //Moves the arm downward quickly
         if (gp2.dpad_right) {
             setPosition = 0;
         }
 
-        setPosition = Math.max(-30, Math.min(260, setPosition));
+        setPosition = Math.max(-30, Math.min(270, setPosition));
 
         move(setPosition);
 
         //NON PID CODE
-//
+
 //        if (gp2.dpad_up || gp2.dpad_left || gp2.dpad_down || gp2.right_bumper) {
-//            left.setPower(-1);
-//            right.setPower(-1);
-//        } else if (gp2.dpad_right || gp2.left_bumper) {
 //            left.setPower(1);
 //            right.setPower(1);
+//        } else if (gp2.dpad_right || gp2.left_bumper) {
+//            left.setPower(-1);
+//            right.setPower(-1);
 //        } else {
 //            left.setPower(0);
 //            right.setPower(0);
@@ -115,39 +118,38 @@ public class Arm extends Mechanism {
         //PID CODE
 
         controlHub.refreshBulkData();
-        int currentTicks = controlHub.getEncoderTicks(3) - junkTicks;
-        double output = pid.calculate(targetTicks, currentTicks) + .2;
 
-        int ticksError = Math.abs(currentTicks - targetTicks);
-        telemetry.addData("error", Math.abs(ticksError));
+        //Translate current ticks into degrees and localize to 0
+        double currentDegrees = ((double) controlHub.getEncoderTicks(3) / 8192 * 360) + angleOffset;
 
-        if (ticksError < 400) {
+        //Calculate the bias to add to the output then calculate the output of the PID
+        double bias = Math.sin(Math.toRadians(currentDegrees)) * biasMultiplier;
+        double output = pid.calculate(targetDegrees, currentDegrees) + bias;
+
+        //Check if the arm is within a range to see if the move is completed
+        if (Math.abs(currentDegrees - targetDegrees) < 4) {
             currentState = State.IDLE;
         }
 
-        if ((currentTicks < 300 && targetTicks < 300) || (currentTicks > 5348 && targetTicks > 5348)) {
+        //Check if the arm is in a deadzone where no power should be applied (lower and upper bounds)
+        if ((currentDegrees < 10 && targetDegrees < 10) || (currentDegrees > 260 && targetDegrees > 260)) {
             output = 0;
         }
 
         //Moves the servos
-        left.setPower(-output);
-        right.setPower(-output);
+        left.setPower(output);
+        right.setPower(output);
 
-        telemetry.addData("Arm Ticks", currentTicks);
-        telemetry.addData("Set position", setPosition);
-        telemetry.addData("Arm degrees", currentTicks/(8192/360));
-        telemetry.addData("PID: ", output);
-        telemetry.update();
 
         //NON PID CODE
-        //None lmao
+        //Literally none lmao
     }
 
-    //Moves the lift forward
+    //Controls the Position to where the arm moves
+    //Degrees is from 0 - 270 (starting - scoring)
     public void move(double degrees) {
-        //0 degrees = storing position; 150 = scoring position
-        //8192 ticks per revolution; 8192 / 360 = 22.756
-        targetTicks = (int) Math.round(degrees * (8192 / 360));
+        //Clamp degrees to 0 and 270 then localize to 0
+        targetDegrees = Math.max(0, Math.min(270, degrees)) - angleOffset;
         currentState = State.MOVING;
     }
 }

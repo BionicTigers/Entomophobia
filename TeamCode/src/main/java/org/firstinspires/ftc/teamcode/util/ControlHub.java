@@ -10,6 +10,7 @@ import java.util.List;
 public class ControlHub {
     LynxDcMotorController hub;
     int[] bulkDataCache;
+    int[] junkTicks = new int[4];
 
     public ControlHub(HardwareMap hardwareMap, LynxDcMotorController hub) {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -20,15 +21,20 @@ public class ControlHub {
         bulkDataCache = this.internalRefreshBulkData();
     }
 
-    public void ChangeMotorEncoder() {
+    public void setJunkTicks(int motor) {
+        refreshBulkData();
+        this.junkTicks[motor] = bulkDataCache[motor];
+    }
 
+    public void setJunkTicks(int motor, int junkTicks) {
+        this.junkTicks[motor] = junkTicks;
     }
 
     private int[] internalRefreshBulkData() {
         int[] bulkData = new int[4];
 
         for (int i=0; i<4; i++) {
-            bulkData[i] = hub.getMotorCurrentPosition(i);
+            bulkData[i] = hub.getMotorCurrentPosition(i) - junkTicks[i];
         }
 
         return bulkData;
